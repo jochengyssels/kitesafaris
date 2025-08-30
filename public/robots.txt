@@ -1,0 +1,27 @@
+User-agent: *
+Allow: /
+
+# Disallow admin and API routes
+Disallow: /admin/
+Disallow: /api/
+
+# Disallow checkout process
+Disallow: /shop/checkout
+
+# Allow important pages
+Allow: /small-groups
+Allow: /expert-guides  
+Allow: /premium-equipment
+Allow: /guaranteed-wind
+Allow: /destinations
+Allow: /booking
+Allow: /shop
+Allow: /guides
+Allow: /gallery
+Allow: /reviews
+
+# Sitemap location
+Sitemap: https://kitesafaris.com/sitemap.xml
+
+# Crawl delay for respectful crawling
+Crawl-delay: 1
