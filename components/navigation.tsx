@@ -7,42 +7,75 @@ import { usePathname } from "next/navigation"
 import { useState, useEffect, useRef, useCallback } from "react"
 import { CertificationBadges } from "./certification-badges"
 import Image from "next/image"
-import type { NavigationItem } from "@/lib/navigation-service"
 
 export function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const [isScrolled, setIsScrolled] = useState(false)
-  const [navigationItems, setNavigationItems] = useState<NavigationItem[]>([])
-  const [isLoading, setIsLoading] = useState(true)
   const pathname = usePathname()
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({})
   const menuItemRefs = useRef<{ [key: string]: HTMLDivElement | null }>({})
 
-  useEffect(() => {
-    const loadNavigationItems = async () => {
-      try {
-        console.log("[v0] Navigation: Loading dynamic navigation items")
-        const response = await fetch("/api/admin/navigation", { cache: "no-store" })
-        const result = await response.json()
-
-        if (result.success) {
-          setNavigationItems(result.data)
-          console.log("[v0] Navigation: Loaded", result.data.length, "navigation items")
-        } else {
-          console.error("[v0] Navigation: Failed to load navigation items:", result.error)
-        }
-      } catch (error) {
-        console.error("[v0] Navigation: Error loading navigation items:", error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    loadNavigationItems()
-  }, [])
+  const menuStructure = [
+    {
+      label: "Home",
+      href: "/",
+      isSimple: true,
+    },
+    {
+      label: "Destinations",
+      href: "/destinations",
+      isSimple: false,
+      submenu: [
+        { href: "/destinations/caribbean", label: "🏝️ Caribbean" },
+        { href: "/destinations/greece", label: "🇬🇷 Greece" },
+        { href: "/destinations/sardinia", label: "🇮🇹 Sardinia" },
+        { href: "/destinations/interactive-map", label: "🗺️ Interactive Map" },
+        { href: "/packages", label: "📋 Packages" },
+        { href: "/destinations/gallery", label: "📸 Gallery" },
+        { href: "/flights-europe-antigua", label: "✈️ Flight Options" },
+      ],
+    },
+    {
+      label: "Fleet & Booking",
+      href: "/fleet",
+      isSimple: false,
+      submenu: [
+        { href: "/fleet", label: "⛵ Our Fleet" },
+        { href: "/booking", label: "📅 Book Now" },
+        { href: "/antigua-trip-calendar", label: "🗓️ Trip Calendar" },
+      ],
+    },
+    {
+      label: "Shop",
+      href: "/shop",
+      icon: "shopping-bag",
+      isSimple: false,
+      submenu: [
+        { href: "/shop?category=all", label: "🛍️ All Products" },
+        { href: "/shop?category=apparel", label: "👕 Apparel" },
+        { href: "/shop?category=accessories", label: "🎒 Accessories" },
+        { href: "/shop?category=kite-gear", label: "🪁 Kite Gear" },
+        { href: "/shop?category=lifestyle", label: "🌊 Lifestyle" },
+      ],
+    },
+    {
+      label: "About",
+      href: "/why-us",
+      isSimple: false,
+      submenu: [
+        { href: "/why-us", label: "❓ Why Choose Us" },
+        { href: "/small-groups", label: "👥 Small Groups" },
+        { href: "/expert-guides", label: "🏆 Expert Guides" },
+        { href: "/premium-equipment", label: "⚡ Premium Equipment" },
+        { href: "/guaranteed-wind", label: "💨 Guaranteed Wind" },
+        { href: "/reviews", label: "⭐ Reviews" },
+        { href: "/contact", label: "📞 Contact" },
+      ],
+    },
+  ]
 
   useEffect(() => {
     const handleScroll = () => {
@@ -52,42 +85,6 @@ export function Navigation() {
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
-
-  const buildMenuStructure = () => {
-    if (isLoading || navigationItems.length === 0) {
-      return [
-        { label: "Home", href: "/", isSimple: true },
-        { label: "Destinations", href: "/destinations", submenu: [] },
-        { label: "Fleet & Booking", href: "/fleet", submenu: [] },
-        { label: "Shop", href: "/shop", icon: "shopping-bag", submenu: [] },
-        { label: "About", href: "/why-us", submenu: [] },
-      ]
-    }
-
-    const enabledItems = navigationItems.filter((item) => item.is_enabled).sort((a, b) => a.sort_order - b.sort_order)
-
-    const mainItems = enabledItems.filter((item) => item.type === "main")
-
-    return mainItems.map((mainItem) => {
-      const submenuItems = enabledItems
-        .filter((item) => item.type === "submenu" && item.parent_id === mainItem.id)
-        .sort((a, b) => a.sort_order - b.sort_order)
-        .map((subItem) => ({
-          href: subItem.url,
-          label: subItem.icon ? `${subItem.icon} ${subItem.label}` : subItem.label,
-        }))
-
-      return {
-        label: mainItem.label,
-        href: mainItem.url,
-        isSimple: submenuItems.length === 0,
-        icon: mainItem.icon || undefined,
-        submenu: submenuItems.length > 0 ? submenuItems : undefined,
-      }
-    })
-  }
-
-  const menuStructure = buildMenuStructure()
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/"
