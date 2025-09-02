@@ -20,7 +20,7 @@ interface ShippingInfo {
 }
 
 export function CheckoutPage() {
-  const { items, getTotalPrice, clearCart } = useCart()
+  const { items, getTotalPrice, clearCart, isHydrated } = useCart()
   const [shippingInfo, setShippingInfo] = useState<ShippingInfo>({
     firstName: "",
     lastName: "",
@@ -41,11 +41,26 @@ export function CheckoutPage() {
   const tax = subtotal * 0.08 // 8% tax estimate
   const total = subtotal + shipping + tax
 
+  // Wait for cart to hydrate from localStorage before checking if it's empty
   useEffect(() => {
-    if (items.length === 0 && !orderComplete) {
+    console.log("Checkout useEffect triggered:", { isHydrated, itemsLength: items.length, orderComplete })
+    
+    if (isHydrated && items.length === 0 && !orderComplete) {
+      console.log("Checkout redirect: Cart is empty after hydration")
+      console.log("Redirecting to /shop due to empty cart")
       window.location.href = "/shop"
     }
-  }, [items, orderComplete])
+  }, [items, orderComplete, isHydrated])
+
+  // Debug logging for cart state changes
+  useEffect(() => {
+    console.log("Cart state changed:", { 
+      isHydrated, 
+      itemsLength: items.length, 
+      items: items,
+      orderComplete 
+    })
+  }, [items, isHydrated, orderComplete])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -118,6 +133,23 @@ export function CheckoutPage() {
     } finally {
       setIsProcessing(false)
     }
+  }
+
+  // Show loading state while cart is hydrating
+  if (!isHydrated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-turquoise-blue via-sand-beige to-coral-orange flex items-center justify-center px-4">
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+          <h1 className="font-montserrat text-2xl font-bold text-gray-900 mb-4">Loading Checkout...</h1>
+          <p className="font-open-sans text-gray-600">
+            Please wait while we load your cart items.
+          </p>
+        </div>
+      </div>
+    )
   }
 
   if (orderComplete) {

@@ -15,23 +15,34 @@ export interface CartItem {
 
 export function useCart() {
   const [items, setItems] = useState<CartItem[]>([])
+  const [isHydrated, setIsHydrated] = useState(false)
 
   // Load cart from localStorage on mount
   useEffect(() => {
     const savedCart = localStorage.getItem("kitesafaris-cart")
     if (savedCart) {
       try {
-        setItems(JSON.parse(savedCart))
+        const parsedCart = JSON.parse(savedCart)
+        setItems(parsedCart)
+        console.log("Cart hydrated from localStorage:", parsedCart)
       } catch (error) {
         console.error("Error loading cart from localStorage:", error)
+        setItems([])
       }
+    } else {
+      console.log("No saved cart found in localStorage")
+      setItems([])
     }
+    setIsHydrated(true)
   }, [])
 
   // Save cart to localStorage whenever items change
   useEffect(() => {
-    localStorage.setItem("kitesafaris-cart", JSON.stringify(items))
-  }, [items])
+    if (isHydrated) {
+      localStorage.setItem("kitesafaris-cart", JSON.stringify(items))
+      console.log("Cart saved to localStorage:", items)
+    }
+  }, [items, isHydrated])
 
   const addItem = (item: CartItem) => {
     setItems((prevItems) => {
@@ -75,6 +86,7 @@ export function useCart() {
 
   return {
     items,
+    isHydrated,
     addItem,
     removeItem,
     updateQuantity,
