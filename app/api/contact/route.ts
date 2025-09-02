@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
-import nodemailer from "nodemailer"
+import { Resend } from 'resend'
+
+// Initialize Resend with your API key
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,29 +26,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if email service is configured
-    const smtpHost = process.env.SMTP_HOST
-    const smtpUser = process.env.SMTP_USER
-    const smtpPass = process.env.SMTP_PASS
-
-    if (!smtpHost || !smtpUser || !smtpPass) {
-      console.error("SMTP configuration missing. Please configure SMTP_HOST, SMTP_USER, and SMTP_PASS environment variables.")
+    // Check if Resend API key is configured
+    if (!process.env.RESEND_API_KEY) {
+      console.error("Resend API key not configured. Please set RESEND_API_KEY environment variable.")
       return NextResponse.json(
         { success: false, error: "Email service not configured" },
         { status: 500 }
       )
     }
-
-    // Create transporter
-    const transporter = nodemailer.createTransport({
-      host: smtpHost,
-      port: parseInt(process.env.SMTP_PORT || "587"),
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: smtpUser,
-        pass: smtpPass,
-      },
-    })
 
     // Prepare email content
     const emailContent = `
@@ -118,19 +106,29 @@ Timestamp: ${new Date().toISOString()}
 </html>
     `
 
-    // Send email
-    const mailOptions = {
-      from: `"KiteSafaris Contact Form" <${smtpUser}>`,
-      to: "info@kitesafaris.com",
+    console.log("Attempting to send email via Resend...")
+
+    // Send email using Resend
+    // Send to both your verified email and info@kitesafaris.com
+    // Note: info@kitesafaris.com will only work once you verify the domain in Resend
+    const { data, error } = await resend.emails.send({
+      from: 'onboarding@resend.dev', // Resend's default sender
+      to: ['jochengyssels@gmail.com', 'info@kitesafaris.com'], // Both email addresses
       replyTo: email, // Set reply-to as the user's email
       subject: `New Contact Form: ${subject}`,
       text: emailContent,
       html: htmlContent,
+    })
+
+    if (error) {
+      console.error("Resend API error:", error)
+      return NextResponse.json(
+        { success: false, error: `Failed to send email: ${error.message || 'Unknown error'}` },
+        { status: 500 }
+      )
     }
 
-    await transporter.sendMail(mailOptions)
-
-    console.log("Contact form email sent successfully to info@kitesafaris.com")
+    console.log("Contact form email sent successfully via Resend:", data)
 
     return NextResponse.json({
       success: true,
@@ -143,10 +141,11 @@ Timestamp: ${new Date().toISOString()}
     // Log the error details for debugging
     if (error instanceof Error) {
       console.error("Error details:", error.message)
+      console.error("Error stack:", error.stack)
     }
     
     return NextResponse.json(
-      { success: false, error: "Failed to send email. Please try again later." },
+      { success: false, error: `Failed to send email: ${error instanceof Error ? error.message : 'Unknown error'}` },
       { status: 500 }
     )
   }
