@@ -189,14 +189,36 @@ export class PrintfulService {
 
   async createOrder(orderData: PrintfulOrder): Promise<any> {
     try {
+      console.log("[PrintfulService] Creating order with data:", {
+        external_id: orderData.external_id,
+        itemCount: orderData.items?.length,
+        recipient: orderData.recipient?.name
+      })
+
       const response = await this.makeRequest("/orders", {
         method: "POST",
         body: JSON.stringify(orderData),
       })
+
+      console.log("[PrintfulService] Order created successfully:", response.result?.id)
       return response
     } catch (error) {
       console.error("[PrintfulService] Failed to create order:", error)
-      throw error
+      
+      // Provide more specific error information
+      if (error instanceof Error) {
+        if (error.message.includes("401")) {
+          throw new Error("Invalid Printful API key. Please check your configuration.")
+        } else if (error.message.includes("400")) {
+          throw new Error("Invalid order data. Please check your cart items.")
+        } else if (error.message.includes("429")) {
+          throw new Error("Rate limit exceeded. Please try again later.")
+        } else {
+          throw new Error(`Printful API error: ${error.message}`)
+        }
+      }
+      
+      throw new Error("Failed to create order with Printful")
     }
   }
 

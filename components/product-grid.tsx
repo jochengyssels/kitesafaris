@@ -60,11 +60,12 @@ export function ProductGrid({ products, onAddToCart }: ProductGridProps) {
             {/* Product Image */}
             <div className="relative aspect-square overflow-hidden bg-gray-100">
               <Image
-                src={product.thumbnail || "/placeholder.svg?height=300&width=300&query=KiteSafaris merchandise"}
+                src={product.thumbnail || "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop&crop=center"}
                 alt={product.name}
                 fill
                 className="object-cover group-hover:scale-110 transition-transform duration-300"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                unoptimized={product.thumbnail?.startsWith('http')}
               />
               {!product.available && (
                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center">

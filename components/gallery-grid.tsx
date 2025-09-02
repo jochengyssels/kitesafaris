@@ -22,7 +22,7 @@ const galleryItems: GalleryItem[] = [
   {
     id: "1",
     type: "image",
-    src: "/antigua-jolly-harbor-kiting.png",
+    src: "/antigua-caribbean-sunset-kiteboarding.png",
     destination: "Antigua",
     yacht: "Ocean Explorer",
     mood: "action",
@@ -43,7 +43,7 @@ const galleryItems: GalleryItem[] = [
   {
     id: "3",
     type: "image",
-    src: "/antigua-group-session.png",
+    src: "/antigua-tropical-landscape-palm-trees-beach.png",
     destination: "Antigua",
     yacht: "Luxury Catamaran",
     mood: "group",
@@ -54,7 +54,7 @@ const galleryItems: GalleryItem[] = [
   {
     id: "4",
     type: "image",
-    src: "/barbuda-pink-beach-aerial.png",
+    src: "/antigua-aerial-harbor-view.jpg",
     destination: "Barbuda",
     mood: "action",
     title: "Guest adventure in Barbuda",
@@ -64,14 +64,14 @@ const galleryItems: GalleryItem[] = [
   },
   {
     id: "5",
-    type: "video",
-    src: "/antigua-action-video.mp4",
-    thumbnail: "/antigua-jolly-harbor-kiting.png",
+    type: "image",
+    src: "/antigua-coral-reef-underwater-snorkeling.png",
+    thumbnail: "/antigua-coral-reef-underwater-snorkeling.png",
     destination: "Antigua",
     yacht: "Safari Yacht",
     mood: "action",
     title: "Epic kiteboarding session in Antigua",
-    description: "High-energy kiteboarding video showcasing perfect Caribbean wind conditions",
+    description: "High-energy kiteboarding image showcasing perfect Caribbean wind conditions",
     aspectRatio: 1.6,
   },
   {

@@ -57,7 +57,7 @@ export function ShopPage() {
         if (data.success) {
           setProducts(data.products)
         } else {
-          setError("Failed to load products")
+          setError(data.error || "Failed to load products")
         }
       } catch (err) {
         console.error("Error fetching products:", err)
@@ -121,27 +121,28 @@ export function ShopPage() {
       {/* Hero Section */}
       <section className="relative h-96 overflow-hidden">
         <div className="absolute inset-0">
-          <video autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover">
-            <source src="/shop-hero-video.mp4" type="video/mp4" />
-            <div className="absolute inset-0 bg-gradient-to-r from-deep-navy via-turquoise-blue to-coral-orange opacity-80" />
-          </video>
-          <div className="absolute inset-0 bg-deep-navy/40" />
+          {/* Beautiful gradient background with ocean-inspired patterns */}
+          <div className="absolute inset-0 bg-gradient-to-br from-deep-navy via-turquoise-blue to-coral-orange" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1),transparent_50%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.1),transparent_50%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_10%,rgba(255,255,255,0.05),transparent_50%)]" />
+          <div className="absolute inset-0 bg-deep-navy/20" />
         </div>
 
         <div className="relative z-10 flex h-full items-center justify-center px-4">
           <div className="text-center max-w-4xl">
-            <h1 className="font-montserrat text-4xl md:text-6xl font-bold text-white mb-6 text-balance">
+            <h1 className="font-montserrat text-4xl md:text-6xl font-bold text-white mb-6 text-balance animate-fade-in">
               KiteSafaris Gear
             </h1>
-            <p className="font-open-sans text-xl md:text-2xl text-turquoise-100 mb-8 text-pretty">
+            <p className="font-open-sans text-xl md:text-2xl text-turquoise-100 mb-8 text-pretty animate-fade-in-delay">
               Wear Your Adventure - Premium merchandise for ocean lovers and kiteboarding enthusiasts
             </p>
-            <div className="flex items-center justify-center gap-4">
-              <div className="px-6 py-3 bg-white/20 backdrop-blur-sm rounded-full border border-white/30">
-                <span className="font-montserrat text-white font-medium">Free Shipping Over $75</span>
+            <div className="flex items-center justify-center gap-4 animate-fade-in-delay-2">
+              <div className="px-6 py-3 bg-white/20 backdrop-blur-sm rounded-full border border-white/30 hover:bg-white/30 transition-all duration-300">
+                <span className="font-montserrat text-white font-medium">🚢 Free Shipping Over $75</span>
               </div>
-              <div className="px-6 py-3 bg-white/20 backdrop-blur-sm rounded-full border border-white/30">
-                <span className="font-montserrat text-white font-medium">Premium Quality</span>
+              <div className="px-6 py-3 bg-white/20 backdrop-blur-sm rounded-full border border-white/30 hover:bg-white/30 transition-all duration-300">
+                <span className="font-montserrat text-white font-medium">⭐ Premium Quality</span>
               </div>
             </div>
           </div>

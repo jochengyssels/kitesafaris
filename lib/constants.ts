@@ -6,7 +6,7 @@ export const SARDINIAN_AWAKENING = {
   // Ebook details
   TITLE: "Sardinian Awakening",
   SUBTITLE: "A Journey from Boardrooms to Boardshorts",
-  AUTHOR: "KiteSafaris Team",
+  AUTHOR: "Jochen Gyssels",
 
   // CTA button text variations
   CTA_TEXT: {

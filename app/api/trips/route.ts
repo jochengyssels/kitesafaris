@@ -13,17 +13,45 @@ console.log("[v0] API Route - Environment check:", {
 interface AirtableTrip {
   id: string
   fields: {
-    destination: string
-    startDate: string
-    endDate: string
-    price: number
+    // New Airtable schema fields
+    trip_id?: string
+    destination_id?: string
+    trip_name?: string
+    start_date?: string
+    end_date?: string
+    duration_days?: string
+    price_eur?: string
+    max_guests?: string
+    spots_available?: string
+    trip_status?: string
+    description?: string
+    inclusions?: string
+    exclusions?: string
+    special_notes?: string
+    early_bird_discount?: string
+    group_discount?: string
+    booking_deadline?: string
+    difficulty_level?: string
+    wind_forecast?: string
+    created_date?: string
+    last_modified?: string
+    // Legacy field names for backward compatibility
+    destination?: string
+    startDate?: string
+    endDate?: string
+    price?: number
     discountPercentage?: number
-    currency: string
-    totalSpots: number
-    availableSpots: number
-    status: string
-    createdAt: string
-    updatedAt: string
+    currency?: string
+    totalSpots?: number
+    availableSpots?: number
+    status?: string
+    createdAt?: string
+    updatedAt?: string
+    period_start?: string
+    period_end?: string
+    discount_percent?: number
+    total_spots?: number
+    available_spots?: number
   }
 }
 
@@ -42,8 +70,13 @@ interface Trip {
   updatedAt: string
 }
 
-const convertEuropeanDate = (dateStr: string): string => {
+const convertEuropeanDate = (dateStr: string | undefined): string => {
   try {
+    // Handle undefined/null values
+    if (!dateStr) {
+      return ""
+    }
+
     // If it's already in ISO format, return as is
     if (dateStr.includes("T") || dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
       return dateStr
@@ -61,24 +94,35 @@ const convertEuropeanDate = (dateStr: string): string => {
     return dateStr
   } catch (error) {
     console.log("[v0] Date conversion error:", error)
-    return dateStr
+    return dateStr || ""
   }
 }
 
-const convertFromAirtable = (airtableTrip: AirtableTrip): Trip => ({
-  id: airtableTrip.id,
-  destination: airtableTrip.fields.destination as Trip["destination"],
-  startDate: convertEuropeanDate(airtableTrip.fields.startDate),
-  endDate: convertEuropeanDate(airtableTrip.fields.endDate),
-  price: airtableTrip.fields.price,
-  discountPercentage: airtableTrip.fields.discountPercentage,
-  currency: airtableTrip.fields.currency as Trip["currency"],
-  totalSpots: airtableTrip.fields.totalSpots,
-  availableSpots: airtableTrip.fields.availableSpots,
-  status: airtableTrip.fields.status as Trip["status"],
-  createdAt: convertEuropeanDate(airtableTrip.fields.createdAt),
-  updatedAt: convertEuropeanDate(airtableTrip.fields.updatedAt),
-})
+const convertFromAirtable = (airtableTrip: AirtableTrip): Trip => {
+  // Use new schema fields with fallbacks to legacy fields
+  const destinationId = airtableTrip.fields.destination_id || airtableTrip.fields.destination || "caribbean"
+  const startDate = airtableTrip.fields.start_date || airtableTrip.fields.period_start || airtableTrip.fields.startDate
+  const endDate = airtableTrip.fields.end_date || airtableTrip.fields.period_end || airtableTrip.fields.endDate
+  const price = airtableTrip.fields.price_eur ? parseInt(airtableTrip.fields.price_eur) : (airtableTrip.fields.price || 0)
+  const maxGuests = airtableTrip.fields.max_guests ? parseInt(airtableTrip.fields.max_guests) : (airtableTrip.fields.total_spots || airtableTrip.fields.totalSpots || 6)
+  const availableSpots = airtableTrip.fields.spots_available ? parseInt(airtableTrip.fields.spots_available) : (airtableTrip.fields.available_spots || airtableTrip.fields.availableSpots || 0)
+  const status = airtableTrip.fields.trip_status || airtableTrip.fields.status || "available"
+  
+  return {
+    id: airtableTrip.id,
+    destination: (destinationId as Trip["destination"]) || "caribbean",
+    startDate: convertEuropeanDate(startDate),
+    endDate: convertEuropeanDate(endDate),
+    price: price,
+    discountPercentage: airtableTrip.fields.early_bird_discount ? parseInt(airtableTrip.fields.early_bird_discount) : (airtableTrip.fields.discount_percent || airtableTrip.fields.discountPercentage || 0),
+    currency: "EUR" as const, // Default to EUR for all trips
+    totalSpots: maxGuests,
+    availableSpots: availableSpots,
+    status: (status as Trip["status"]) || "available",
+    createdAt: convertEuropeanDate(airtableTrip.fields.created_date || airtableTrip.fields.createdAt),
+    updatedAt: convertEuropeanDate(airtableTrip.fields.last_modified || airtableTrip.fields.updatedAt),
+  }
+}
 
 const convertToAirtable = (trip: Partial<Trip>) => ({
   destination: trip.destination,
@@ -212,7 +256,7 @@ export async function GET() {
     }
 
     console.log("[v0] Converting", data.records.length, "records...")
-    const trips = data.records.map((record, index) => {
+    const trips = data.records.map((record: AirtableTrip, index: number) => {
       console.log(`[v0] Converting record ${index}:`, {
         id: record.id,
         fieldsKeys: Object.keys(record.fields || {}),

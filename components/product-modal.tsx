@@ -52,8 +52,8 @@ export function ProductModal({ product, isOpen, onClose, onAddToCart }: ProductM
 
       {/* Modal */}
       <div className="fixed inset-0 z-50 overflow-y-auto">
-        <div className="flex min-h-full items-center justify-center p-4">
-          <div className="relative bg-white rounded-2xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+        <div className="flex min-h-full items-center justify-center p-2 sm:p-4 py-4 sm:py-8">
+          <div className="relative bg-white rounded-2xl shadow-xl max-w-4xl w-full max-h-[90vh] min-h-[80vh] flex flex-col overflow-hidden">
             {/* Close Button */}
             <button
               onClick={onClose}
@@ -65,7 +65,11 @@ export function ProductModal({ product, isOpen, onClose, onAddToCart }: ProductM
               </svg>
             </button>
 
-            <div className="grid md:grid-cols-2 gap-8 p-8">
+            <div className="grid md:grid-cols-2 gap-6 md:gap-8 p-4 md:p-8 overflow-y-auto flex-1" style={{
+              scrollbarWidth: 'thin',
+              scrollbarColor: '#d1d5db #f3f4f6',
+              scrollBehavior: 'smooth'
+            }}>
               {/* Product Images */}
               <div className="space-y-4">
                 {/* Main Image */}

@@ -85,6 +85,11 @@ export function DestinationDetail({ destination }: DestinationDetailProps) {
     return coordinates[destinationId as keyof typeof coordinates] || coordinates.antigua
   }
 
+  const getDayName = (dayNumber: number) => {
+    const dayNames = ["", "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    return dayNames[dayNumber] || `Day ${dayNumber}`
+  }
+
   const locationData = getLocationCoordinates(destination.id)
 
   return (
@@ -260,7 +265,7 @@ export function DestinationDetail({ destination }: DestinationDetailProps) {
 
                               <div className="flex-1">
                                 <div className="flex items-center gap-3 mb-2">
-                                  <h3 className="font-montserrat font-bold text-xl text-coral-orange">{item.day}</h3>
+                                  <h3 className="font-montserrat font-bold text-xl text-coral-orange">{getDayName(item.day)}</h3>
                                   <div className="h-px bg-gradient-to-r from-coral-orange/30 to-transparent flex-1"></div>
                                 </div>
 
@@ -410,9 +415,12 @@ export function DestinationDetail({ destination }: DestinationDetailProps) {
             <p className="font-open-sans text-lg mb-6 max-w-2xl mx-auto">
               Book your kiteboarding safari to {destination.name} and experience the adventure of a lifetime.
             </p>
-            <button className="bg-coral-orange hover:bg-coral-orange/90 text-white font-montserrat font-semibold px-8 py-4 rounded-lg text-lg transition-colors duration-200">
+            <Link 
+              href="/booking" 
+              className="inline-block bg-coral-orange hover:bg-coral-orange/90 text-white font-montserrat font-semibold px-8 py-4 rounded-lg text-lg transition-colors duration-200"
+            >
               Book This Safari
-            </button>
+            </Link>
           </div>
         </section>
       </div>

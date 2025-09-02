@@ -118,9 +118,37 @@ export function TripManagementDashboard() {
   const [deletingTrip, setDeletingTrip] = useState<Trip | null>(null)
 
   useEffect(() => {
-    setTrips(tripDataService.getAllTrips())
+    // Directly fetch trips from API
+    const fetchTrips = async () => {
+      try {
+        console.log("Fetching trips directly from API...")
+        const response = await fetch("/api/trips")
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        
+        const data = await response.json()
+        console.log("Trips API response:", data)
+        
+        if (data.trips && Array.isArray(data.trips)) {
+          console.log("Setting trips:", data.trips.length, data.trips)
+          setTrips(data.trips)
+        } else {
+          console.error("Invalid trips data structure:", data)
+          setTrips([])
+        }
+      } catch (error) {
+        console.error("Failed to fetch trips:", error)
+        setTrips([])
+      }
+    }
 
+    fetchTrips()
+
+    // Keep the subscription for updates
     const unsubscribe = tripDataService.onTripsUpdate((updatedTrips) => {
+      console.log("Trips updated via service:", updatedTrips.length, updatedTrips)
       setTrips(updatedTrips)
     })
 
@@ -324,6 +352,14 @@ export function TripManagementDashboard() {
 
   const activeFilterCount = getActiveFilterCount()
 
+  const handleFilterChange = (key: keyof FilterState, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }))
+  }
+
+  const handleSortChange = (value: string) => {
+    setSortBy(value)
+  }
+
   return (
     <div className="space-y-6">
       <AirtableSetupGuide />
@@ -334,6 +370,32 @@ export function TripManagementDashboard() {
           <p className="font-open-sans text-gray-600">Organize and manage available trips across all destinations</p>
         </div>
         <div className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            className="border-sand-beige-300 bg-transparent"
+            onClick={async () => {
+              try {
+                console.log("Manual refresh triggered...")
+                const response = await fetch("/api/trips")
+                if (!response.ok) {
+                  throw new Error(`HTTP error! status: ${response.status}`)
+                }
+                const data = await response.json()
+                if (data.trips && Array.isArray(data.trips)) {
+                  console.log("Refreshed trips:", data.trips.length, data.trips)
+                  setTrips(data.trips)
+                } else {
+                  console.error("Invalid trips data structure for refresh:", data)
+                  setTrips([])
+                }
+              } catch (error) {
+                console.error("Failed to refresh trips:", error)
+              }
+            }}
+          >
+            <RotateCcw className="w-4 h-4 mr-2" />
+            Refresh
+          </Button>
           <Button
             variant="outline"
             className="border-sand-beige-300 bg-transparent"
@@ -434,7 +496,7 @@ export function TripManagementDashboard() {
                           <Label className="text-sm font-medium">Destination</Label>
                           <Select
                             value={filters.destination}
-                            onValueChange={(value) => setFilters({ ...filters, destination: value })}
+                            onValueChange={(value) => handleFilterChange("destination", value)}
                           >
                             <SelectTrigger className="h-8 text-sm">
                               <SelectValue />
@@ -452,7 +514,7 @@ export function TripManagementDashboard() {
                           <Label className="text-sm font-medium">Status</Label>
                           <Select
                             value={filters.status}
-                            onValueChange={(value) => setFilters({ ...filters, status: value })}
+                            onValueChange={(value) => handleFilterChange("status", value)}
                           >
                             <SelectTrigger className="h-8 text-sm">
                               <SelectValue />
@@ -474,14 +536,14 @@ export function TripManagementDashboard() {
                             type="number"
                             placeholder="Min"
                             value={filters.priceMin}
-                            onChange={(e) => setFilters({ ...filters, priceMin: e.target.value })}
+                            onChange={(e) => handleFilterChange("priceMin", e.target.value)}
                             className="h-8 text-sm"
                           />
                           <Input
                             type="number"
                             placeholder="Max"
                             value={filters.priceMax}
-                            onChange={(e) => setFilters({ ...filters, priceMax: e.target.value })}
+                            onChange={(e) => handleFilterChange("priceMax", e.target.value)}
                             className="h-8 text-sm"
                           />
                         </div>
@@ -493,13 +555,13 @@ export function TripManagementDashboard() {
                           <Input
                             type="date"
                             value={filters.dateFrom}
-                            onChange={(e) => setFilters({ ...filters, dateFrom: e.target.value })}
+                            onChange={(e) => handleFilterChange("dateFrom", e.target.value)}
                             className="h-8 text-sm"
                           />
                           <Input
                             type="date"
                             value={filters.dateTo}
-                            onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })}
+                            onChange={(e) => handleFilterChange("dateTo", e.target.value)}
                             className="h-8 text-sm"
                           />
                         </div>
@@ -512,14 +574,14 @@ export function TripManagementDashboard() {
                             type="number"
                             placeholder="Min"
                             value={filters.spotsMin}
-                            onChange={(e) => setFilters({ ...filters, spotsMin: e.target.value })}
+                            onChange={(e) => handleFilterChange("spotsMin", e.target.value)}
                             className="h-8 text-sm"
                           />
                           <Input
                             type="number"
                             placeholder="Max"
                             value={filters.spotsMax}
-                            onChange={(e) => setFilters({ ...filters, spotsMax: e.target.value })}
+                            onChange={(e) => handleFilterChange("spotsMax", e.target.value)}
                             className="h-8 text-sm"
                           />
                         </div>
@@ -545,7 +607,7 @@ export function TripManagementDashboard() {
                   </PopoverContent>
                 </Popover>
 
-                <Select value={sortBy} onValueChange={setSortBy}>
+                <Select value={sortBy} onValueChange={handleSortChange}>
                   <SelectTrigger className="w-48 border-sand-beige-300">
                     <SelectValue placeholder="Sort by" />
                   </SelectTrigger>
@@ -577,7 +639,7 @@ export function TripManagementDashboard() {
                   <Badge variant="secondary" className="bg-turquoise-100 text-turquoise-800">
                     Destination: {getDestinationName(filters.destination)}
                     <button
-                      onClick={() => setFilters({ ...filters, destination: "all" })}
+                      onClick={() => handleFilterChange("destination", "all")}
                       className="ml-1 hover:bg-turquoise-200 rounded-full p-0.5"
                     >
                       <X className="w-3 h-3" />
@@ -588,7 +650,7 @@ export function TripManagementDashboard() {
                   <Badge variant="secondary" className="bg-turquoise-100 text-turquoise-800">
                     Status: {filters.status}
                     <button
-                      onClick={() => setFilters({ ...filters, status: "all" })}
+                      onClick={() => handleFilterChange("status", "all")}
                       className="ml-1 hover:bg-turquoise-200 rounded-full p-0.5"
                     >
                       <X className="w-3 h-3" />
@@ -599,7 +661,10 @@ export function TripManagementDashboard() {
                   <Badge variant="secondary" className="bg-turquoise-100 text-turquoise-800">
                     Price: {filters.priceMin || "0"} - {filters.priceMax || "∞"}
                     <button
-                      onClick={() => setFilters({ ...filters, priceMin: "", priceMax: "" })}
+                      onClick={() => {
+                        handleFilterChange("priceMin", "")
+                        handleFilterChange("priceMax", "")
+                      }}
                       className="ml-1 hover:bg-turquoise-200 rounded-full p-0.5"
                     >
                       <X className="w-3 h-3" />

@@ -36,6 +36,8 @@ export function Navigation() {
         { href: "/packages", label: "📋 Packages" },
         { href: "/destinations/gallery", label: "📸 Gallery" },
         { href: "/flights-europe-antigua", label: "✈️ Flight Options" },
+        { href: "/trip-calendar", label: "🗓️ Trip Calendar" },
+        { href: "/blog", label: "📝 Travel Guides" },
       ],
     },
     {
@@ -44,8 +46,9 @@ export function Navigation() {
       isSimple: false,
       submenu: [
         { href: "/fleet", label: "⛵ Our Fleet" },
+        { href: "/pricing", label: "💰 Pricing" },
         { href: "/booking", label: "📅 Book Now" },
-        { href: "/antigua-trip-calendar", label: "🗓️ Trip Calendar" },
+        { href: "/trip-calendar", label: "🗓️ Trip Calendar" },
       ],
     },
     {
@@ -72,6 +75,7 @@ export function Navigation() {
         { href: "/premium-equipment", label: "⚡ Premium Equipment" },
         { href: "/guaranteed-wind", label: "💨 Guaranteed Wind" },
         { href: "/reviews", label: "⭐ Reviews" },
+        { href: "/blog", label: "📝 Blog" },
         { href: "/contact", label: "📞 Contact" },
       ],
     },
@@ -340,29 +344,6 @@ export function Navigation() {
               >
                 Book Your Safari
               </Link>
-              <button
-                className="text-white hover:text-coral-orange transition-colors p-2"
-                aria-label="Contact us on WhatsApp"
-              >
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                  />
-                </svg>
-              </button>
-              <button className="text-white hover:text-coral-orange transition-colors p-2" aria-label="Start live chat">
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2v-6a2 2 0 012-2h8z"
-                  />
-                </svg>
-              </button>
             </div>
 
             <button

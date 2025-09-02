@@ -116,6 +116,36 @@ export default function ApiManagementDashboard() {
           },
         },
         {
+          method: "GET",
+          path: "/api/destinations",
+          description: "Retrieve all destination records",
+          parameters: [
+            { name: "maxRecords", type: "number", required: false, description: "Maximum number of records to return" },
+            {
+              name: "filterByFormula",
+              type: "string",
+              required: false,
+              description: "Airtable formula to filter records",
+            },
+          ],
+          example: {
+            request: "GET /api/destinations?maxRecords=10",
+            response: {
+              destinations: [
+                {
+                  id: "recXXXXXXXXXXXXXX",
+                  name: "Antigua & Barbuda",
+                  location: "Caribbean Sea",
+                  headline: "Trade Wind Paradise",
+                  basePrice: 2700,
+                  currency: "EUR",
+                  available: true,
+                },
+              ],
+            },
+          },
+        },
+        {
           method: "POST",
           path: "/api/leads",
           description: "Create a new email lead record",
@@ -206,6 +236,7 @@ export default function ApiManagementDashboard() {
       errorCount: 2,
       topEndpoints: [
         { endpoint: "/api/trips", count: 47, avgTime: 180 },
+        { endpoint: "/api/destinations", count: 23, avgTime: 195 },
         { endpoint: "/api/pixabay/search", count: 23, avgTime: 320 },
         { endpoint: "/api/leads", count: 18, avgTime: 150 },
       ],
@@ -252,7 +283,7 @@ export default function ApiManagementDashboard() {
             responseTime: statusData.airtable?.responseTime || 0,
             icon: <Database className="w-6 h-6" />,
             description: "Trip data, bookings, and email leads storage",
-            endpoints: ["/api/trips", "/api/bookings", "/api/leads"],
+            endpoints: ["/api/trips", "/api/destinations", "/api/bookings", "/api/leads"],
           },
           {
             name: "Pixabay",
@@ -740,6 +771,45 @@ export default function ApiManagementDashboard() {
                     {testLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                     Send
                   </Button>
+                </div>
+
+                {/* Quick Endpoint Buttons */}
+                <div className="space-y-2">
+                  <Label className="font-montserrat text-deep-navy-900 text-sm">Quick Endpoints:</Label>
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setTestUrl("/api/trips")}
+                      className="text-xs h-8 px-3"
+                    >
+                      /api/trips
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setTestUrl("/api/destinations")}
+                      className="text-xs h-8 px-3"
+                    >
+                      /api/destinations
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setTestUrl("/api/pixabay/search?destination=antigua")}
+                      className="text-xs h-8 px-3"
+                    >
+                      /api/pixabay/search
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setTestUrl("/api/leads")}
+                      className="text-xs h-8 px-3"
+                    >
+                      /api/leads
+                    </Button>
+                  </div>
                 </div>
 
                 {/* Headers Section */}

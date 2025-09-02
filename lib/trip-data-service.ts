@@ -3,7 +3,7 @@
 // Shared trip data service for both admin and booking systems
 export interface Trip {
   id: string
-  destination: "caribbean" | "greece" | "sardinia"
+  destination: "caribbean" | "greece" | "sardinia" | "Antigua"
   startDate: string
   endDate: string
   price: number

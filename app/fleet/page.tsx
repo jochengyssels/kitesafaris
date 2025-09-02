@@ -2,6 +2,7 @@ import { Navigation } from "@/components/navigation"
 import { EnhancedFooter } from "@/components/enhanced-footer"
 import { FloatingActionButtons } from "@/components/floating-action-buttons"
 import Image from "next/image"
+import Link from "next/link"
 
 export default function FleetPage() {
   return (
@@ -24,173 +25,27 @@ export default function FleetPage() {
       {/* Fleet Grid */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Yacht 1 */}
-            <div className="bg-sand-beige rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
-              <div className="relative h-64">
-                <Image
-                  src="/luxury-catamaran-yacht-on-turquoise-water.png"
-                  alt="Serenity Explorer - 50ft luxury catamaran for Caribbean kiteboarding safaris with professional crew and kite equipment"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  priority
-                />
-                <div className="absolute top-4 left-4 bg-coral-orange text-white px-3 py-1 rounded-full font-montserrat font-bold text-sm">
-                  Flagship
-                </div>
-              </div>
-              <div className="p-8">
-                <h3 className="font-montserrat text-2xl font-bold text-deep-navy mb-4">Serenity Explorer</h3>
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="flex items-center">
-                    <svg className="h-5 w-5 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                      />
-                    </svg>
-                    <span className="font-open-sans text-gray-700">8 Guests</span>
-                  </div>
-                  <div className="flex items-center">
-                    <svg className="h-5 w-5 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
-                      />
-                    </svg>
-                    <span className="font-open-sans text-gray-700">50ft Length</span>
-                  </div>
-                  <div className="flex items-center">
-                    <svg className="h-5 w-5 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                      />
-                    </svg>
-                    <span className="font-open-sans text-gray-700">4 Cabins</span>
-                  </div>
-                  <div className="flex items-center">
-                    <svg className="h-5 w-5 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 10V3L4 14h7v7l9-11h-7z"
-                      />
-                    </svg>
-                    <span className="font-open-sans text-gray-700">2024 Model</span>
-                  </div>
-                </div>
-                <p className="font-open-sans text-gray-600 mb-6">
-                  Our flagship catamaran featuring spacious cabins, professional galley, and dedicated kite storage.
-                  Perfect for groups seeking luxury and performance.
-                </p>
-                <button className="w-full bg-deep-navy text-white font-montserrat font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors">
-                  View Details
-                </button>
-              </div>
-            </div>
-
-            {/* Yacht 2 */}
-            <div className="bg-sand-beige rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
-              <div className="relative h-64">
-                <Image
-                  src="/modern-catamaran-sailing-yacht-with-kite-equipment.png"
-                  alt="Wind Dancer - 45ft performance catamaran for Caribbean kiteboarding adventures with specialized kite storage and rescue boat"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  loading="lazy"
-                />
-                <div className="absolute top-4 left-4 bg-gold text-deep-navy px-3 py-1 rounded-full font-montserrat font-bold text-sm">
-                  Performance
-                </div>
-              </div>
-              <div className="p-8">
-                <h3 className="font-montserrat text-2xl font-bold text-deep-navy mb-4">Wind Dancer</h3>
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="flex items-center">
-                    <svg className="h-5 w-5 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                      />
-                    </svg>
-                    <span className="font-open-sans text-gray-700">6 Guests</span>
-                  </div>
-                  <div className="flex items-center">
-                    <svg className="h-5 w-5 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
-                      />
-                    </svg>
-                    <span className="font-open-sans text-gray-700">45ft Length</span>
-                  </div>
-                  <div className="flex items-center">
-                    <svg className="h-5 w-5 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                      />
-                    </svg>
-                    <span className="font-open-sans text-gray-700">3 Cabins</span>
-                  </div>
-                  <div className="flex items-center">
-                    <svg className="h-5 w-5 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 10V3L4 14h7v7l9-11h-7z"
-                      />
-                    </svg>
-                    <span className="font-open-sans text-gray-700">2023 Model</span>
-                  </div>
-                </div>
-                <p className="font-open-sans text-gray-600 mb-6">
-                  High-performance catamaran designed for speed and agility. Ideal for experienced kiters seeking
-                  adventure and optimal wind conditions.
-                </p>
-                <button className="w-full bg-deep-navy text-white font-montserrat font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors">
-                  View Details
-                </button>
-              </div>
-            </div>
-
-            {/* Yacht 3 */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Fleet Type 1 - Caribbean Catamaran */}
             <div className="bg-sand-beige rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
               <div className="relative h-64">
                 <Image
                   src="/antigua-jolly-harbor-kiting.png"
-                  alt="Antigua Jolly Harbor - 40ft luxury catamaran for Caribbean kiteboarding safaris with professional crew and kite equipment"
+                  alt="Caribbean Catamaran - Luxury catamaran for Caribbean kiteboarding safaris with professional crew and kite equipment"
                   fill
                   className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  sizes="(max-width: 1024px) 100vw, 33vw"
                   priority
                 />
                 <div className="absolute top-4 left-4 bg-coral-orange text-white px-3 py-1 rounded-full font-montserrat font-bold text-sm">
-                  Luxury
+                  Caribbean
                 </div>
               </div>
-              <div className="p-8">
-                <h3 className="font-montserrat text-2xl font-bold text-deep-navy mb-4">Antigua Jolly Harbor</h3>
-                <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="p-6">
+                <h3 className="font-montserrat text-xl font-bold text-deep-navy mb-4">Caribbean Catamaran</h3>
+                <div className="grid grid-cols-2 gap-3 mb-4">
                   <div className="flex items-center">
-                    <svg className="h-5 w-5 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="h-4 w-4 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -198,21 +53,10 @@ export default function FleetPage() {
                         d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
                       />
                     </svg>
-                    <span className="font-open-sans text-gray-700">4 Guests</span>
+                    <span className="font-open-sans text-sm text-gray-700">6 Guests</span>
                   </div>
                   <div className="flex items-center">
-                    <svg className="h-5 w-5 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
-                      />
-                    </svg>
-                    <span className="font-open-sans text-gray-700">40ft Length</span>
-                  </div>
-                  <div className="flex items-center">
-                    <svg className="h-5 w-5 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="h-4 w-4 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -220,10 +64,21 @@ export default function FleetPage() {
                         d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                       />
                     </svg>
-                    <span className="font-open-sans text-gray-700">2 Cabins</span>
+                    <span className="font-open-sans text-sm text-gray-700">3 Cabins</span>
                   </div>
                   <div className="flex items-center">
-                    <svg className="h-5 w-5 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="h-4 w-4 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
+                      />
+                    </svg>
+                    <span className="font-open-sans text-sm text-gray-700">Antigua Waters</span>
+                  </div>
+                  <div className="flex items-center">
+                    <svg className="h-4 w-4 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -231,16 +86,162 @@ export default function FleetPage() {
                         d="M13 10V3L4 14h7v7l9-11h-7z"
                       />
                     </svg>
-                    <span className="font-open-sans text-gray-700">2022 Model</span>
+                    <span className="font-open-sans text-sm text-gray-700">Professional Crew</span>
                   </div>
                 </div>
-                <p className="font-open-sans text-gray-600 mb-6">
-                  A luxurious catamaran offering comfort and style for those who want to enjoy the beauty of the
-                  Caribbean while kiteboarding.
+                <p className="font-open-sans text-gray-600 text-sm mb-4">
+                  Our flagship Caribbean catamaran featuring 3 cabins, professional galley, and dedicated kite storage.
+                  Perfect for groups seeking luxury and adventure in Antigua waters.
                 </p>
-                <button className="w-full bg-deep-navy text-white font-montserrat font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors">
+                <Link href="/fleet/caribbean-catamaran" className="block w-full bg-deep-navy text-white font-montserrat font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors text-center">
                   View Details
-                </button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Fleet Type 2 - Mediterranean Catamaran */}
+            <div className="bg-sand-beige rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+              <div className="relative h-64">
+                <Image
+                  src="/luxury-catamaran-yacht-on-turquoise-water.png"
+                  alt="Mediterranean Catamaran - Luxury catamaran for Greek Islands kiteboarding safaris with professional crew and kite equipment"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 33vw"
+                  loading="lazy"
+                />
+                <div className="absolute top-4 left-4 bg-gold text-deep-navy px-3 py-1 rounded-full font-montserrat font-bold text-sm">
+                  Mediterranean
+                </div>
+              </div>
+              <div className="p-6">
+                <h3 className="font-montserrat text-xl font-bold text-deep-navy mb-4">Mediterranean Catamaran</h3>
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  <div className="flex items-center">
+                    <svg className="h-4 w-4 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                      />
+                    </svg>
+                    <span className="font-open-sans text-sm text-gray-700">6 Guests</span>
+                  </div>
+                  <div className="flex items-center">
+                    <svg className="h-4 w-4 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                      />
+                    </svg>
+                    <span className="font-open-sans text-sm text-gray-700">3 Cabins</span>
+                  </div>
+                  <div className="flex items-center">
+                    <svg className="h-4 w-4 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
+                      />
+                    </svg>
+                    <span className="font-open-sans text-sm text-gray-700">Greek Islands</span>
+                  </div>
+                  <div className="flex items-center">
+                    <svg className="h-4 w-4 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
+                    </svg>
+                    <span className="font-open-sans text-sm text-gray-700">Expert Captain</span>
+                  </div>
+                </div>
+                <p className="font-open-sans text-gray-600 text-sm mb-4">
+                  High-performance catamaran designed for Mediterranean adventures. Explore Paros, Antiparos, Naxos, 
+                  and Koufonisia with our certified kiting instructor captain.
+                </p>
+                <Link href="/fleet/mediterranean-catamaran" className="block w-full bg-deep-navy text-white font-montserrat font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors text-center">
+                  View Details
+                </Link>
+              </div>
+            </div>
+
+            {/* Fleet Type 3 - Premium Catamaran */}
+            <div className="bg-sand-beige rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+              <div className="relative h-64">
+                <Image
+                  src="/modern-catamaran-sailing-yacht-with-kite-equipment.png"
+                  alt="Premium Catamaran - Luxury catamaran for premium kiteboarding safaris with professional crew and kite equipment"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 33vw"
+                  loading="lazy"
+                />
+                <div className="absolute top-4 left-4 bg-turquoise text-white px-3 py-1 rounded-full font-montserrat font-bold text-sm">
+                  Premium
+                </div>
+              </div>
+              <div className="p-6">
+                <h3 className="font-montserrat text-xl font-bold text-deep-navy mb-4">Premium Catamaran</h3>
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  <div className="flex items-center">
+                    <svg className="h-4 w-4 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                      />
+                    </svg>
+                    <span className="font-open-sans text-sm text-gray-700">6 Guests</span>
+                  </div>
+                  <div className="flex items-center">
+                    <svg className="h-4 w-4 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                      />
+                    </svg>
+                    <span className="font-open-sans text-sm text-gray-700">3 Cabins</span>
+                  </div>
+                  <div className="flex items-center">
+                    <svg className="h-4 w-4 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
+                      />
+                    </svg>
+                    <span className="font-open-sans text-sm text-gray-700">Global Destinations</span>
+                  </div>
+                  <div className="flex items-center">
+                    <svg className="h-4 w-4 text-turquoise mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
+                    </svg>
+                    <span className="font-open-sans text-sm text-gray-700">All-Inclusive</span>
+                  </div>
+                </div>
+                <p className="font-open-sans text-gray-600 text-sm mb-4">
+                  Our premium catamaran offering the ultimate luxury experience with professional chef service, 
+                  high-speed Wi-Fi, and personalized kiting instruction for discerning guests.
+                </p>
+                <Link href="/fleet/premium-catamaran" className="block w-full bg-deep-navy text-white font-montserrat font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors text-center">
+                  View Details
+                </Link>
               </div>
             </div>
           </div>

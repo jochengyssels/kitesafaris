@@ -11,6 +11,7 @@ import {
   Network,
   ShoppingBag,
   Menu,
+  GitBranch,
 } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -55,6 +56,13 @@ export default function AdminDashboard() {
       icon: Network,
       href: "/admin/api-management",
       color: "bg-deep-navy-600",
+    },
+    {
+      title: "Sitemap",
+      description: "Manage and monitor complete site structure",
+      icon: GitBranch,
+      href: "/admin/sitemap",
+      color: "bg-emerald-500",
     },
     {
       title: "Analytics",

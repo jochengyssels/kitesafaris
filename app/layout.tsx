@@ -5,6 +5,7 @@ import { GeistMono } from "geist/font/mono"
 import { Montserrat } from "next/font/google"
 import "./globals.css"
 import { EnhancedFooter } from "@/components/enhanced-footer"
+import { WhatsAppButton } from "@/components/whatsapp-button"
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -96,6 +97,7 @@ export default function RootLayout({
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} ${montserrat.variable}`}>
         {children}
         <EnhancedFooter />
+        <WhatsAppButton />
       </body>
     </html>
   )

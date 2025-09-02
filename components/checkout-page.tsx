@@ -52,6 +52,17 @@ export function CheckoutPage() {
     setIsProcessing(true)
 
     try {
+      // Validate cart has items
+      if (items.length === 0) {
+        throw new Error("Cart is empty")
+      }
+
+      // Validate all items have required data
+      const invalidItems = items.filter(item => !item.productId || !item.price)
+      if (invalidItems.length > 0) {
+        throw new Error("Some items in cart are invalid")
+      }
+
       // Create order with Printful
       const orderData = {
         external_id: `KS-${Date.now()}`,
@@ -59,27 +70,32 @@ export function CheckoutPage() {
         recipient: {
           name: `${shippingInfo.firstName} ${shippingInfo.lastName}`,
           address1: shippingInfo.address1,
-          address2: shippingInfo.address2,
+          address2: shippingInfo.address2 || "",
           city: shippingInfo.city,
           state_code: shippingInfo.state,
+          state_name: shippingInfo.state,
           country_code: shippingInfo.country,
+          country_name: shippingInfo.country,
           zip: shippingInfo.zip,
-          phone: shippingInfo.phone,
+          phone: shippingInfo.phone || "",
           email: shippingInfo.email,
         },
         items: items.map((item) => ({
-          sync_variant_id: item.variantId,
+          sync_variant_id: item.variantId || item.productId,
           quantity: item.quantity,
           retail_price: item.price.toFixed(2),
         })),
         retail_costs: {
           currency: "USD",
           subtotal: subtotal.toFixed(2),
+          discount: "0.00",
           shipping: shipping.toFixed(2),
           tax: tax.toFixed(2),
           total: total.toFixed(2),
         },
       }
+
+      console.log("Submitting order:", orderData)
 
       const response = await fetch("/api/shop/orders", {
         method: "POST",
@@ -87,15 +103,18 @@ export function CheckoutPage() {
         body: JSON.stringify(orderData),
       })
 
-      if (response.ok) {
+      const result = await response.json()
+
+      if (response.ok && result.success) {
         clearCart()
         setOrderComplete(true)
       } else {
-        throw new Error("Order failed")
+        throw new Error(result.error || "Order failed")
       }
     } catch (error) {
       console.error("Checkout error:", error)
-      alert("There was an error processing your order. Please try again.")
+      const errorMessage = error instanceof Error ? error.message : "There was an error processing your order. Please try again."
+      alert(errorMessage)
     } finally {
       setIsProcessing(false)
     }
@@ -133,8 +152,25 @@ export function CheckoutPage() {
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-8">
             <h1 className="font-montserrat text-2xl font-bold text-gray-900 mb-8">Checkout</h1>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Contact Information */}
+            {items.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                </div>
+                <h3 className="font-montserrat text-lg font-semibold text-gray-900 mb-2">Your cart is empty</h3>
+                <p className="font-open-sans text-gray-600 mb-6">Add some items to your cart before proceeding to checkout.</p>
+                <button
+                  onClick={() => window.location.href = "/shop"}
+                  className="px-6 py-2 bg-coral-orange text-white font-medium rounded-lg hover:bg-orange-500 transition-colors"
+                >
+                  Continue Shopping
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Contact Information */}
               <div>
                 <h2 className="font-montserrat text-lg font-semibold text-gray-900 mb-4">Contact Information</h2>
                 <div className="grid grid-cols-2 gap-4">
@@ -240,12 +276,22 @@ export function CheckoutPage() {
               {/* Submit Button */}
               <button
                 type="submit"
-                disabled={isProcessing}
+                disabled={isProcessing || items.length === 0}
                 className="w-full bg-coral-orange hover:bg-orange-500 text-white font-montserrat font-bold py-4 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isProcessing ? "Processing Order..." : `Complete Order - $${total.toFixed(2)}`}
+                {isProcessing ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Processing Order...
+                  </div>
+                ) : items.length === 0 ? (
+                  "Cart is Empty"
+                ) : (
+                  `Complete Order - $${total.toFixed(2)}`
+                )}
               </button>
             </form>
+            )}
           </div>
 
           {/* Order Summary */}

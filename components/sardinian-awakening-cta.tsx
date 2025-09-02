@@ -52,10 +52,7 @@ export function SardinianAwakeningCTA({ variant, className = "" }: SardinianAwak
     <section className={`py-12 ${className}`}>
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-sand-beige/20 via-turquoise/10 to-deep-navy/5 backdrop-blur-sm border border-sand-beige/30 shadow-xl">
-          {/* Glassmorphic overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-white/60 via-white/40 to-white/20 backdrop-blur-md" />
-
-          {/* Content */}
+          {/* Content - Removed blocking overlay */}
           <div className="relative p-8 md:p-12">
             <div className="grid md:grid-cols-3 gap-8 items-center">
               {/* Icon and visual element */}
@@ -78,7 +75,7 @@ export function SardinianAwakeningCTA({ variant, className = "" }: SardinianAwak
 
                 <p className="font-open-sans text-deep-navy/70 mb-6 leading-relaxed">{SARDINIAN_AWAKENING.SUBTEXT}</p>
 
-                {/* CTA Button */}
+                {/* CTA Button - Now clickable! */}
                 <Link
                   href={SARDINIAN_AWAKENING.LANDING_PAGE_URL}
                   className="inline-flex items-center gap-3 bg-coral-orange hover:bg-coral-orange/90 text-white font-montserrat font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-coral-orange/30"
@@ -97,7 +94,7 @@ export function SardinianAwakeningCTA({ variant, className = "" }: SardinianAwak
           </div>
 
           {/* Subtle background pattern */}
-          <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0 opacity-5 pointer-events-none">
             <div className="absolute top-4 left-4 w-32 h-32 bg-turquoise rounded-full blur-3xl" />
             <div className="absolute bottom-4 right-4 w-24 h-24 bg-coral-orange rounded-full blur-2xl" />
           </div>

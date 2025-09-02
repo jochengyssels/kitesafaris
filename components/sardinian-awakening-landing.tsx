@@ -12,6 +12,8 @@ import { ChevronLeft, ChevronRight, Download, Mail, Star, Wind, Waves, Sun } fro
 
 export function SardinianAwakeningLanding() {
   const [email, setEmail] = useState("")
+  const [firstName, setFirstName] = useState("")
+  const [consentMarketing, setConsentMarketing] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState("")
   const [currentPreview, setCurrentPreview] = useState(0)
@@ -38,22 +40,25 @@ export function SardinianAwakeningLanding() {
     setSubmitMessage("")
 
     try {
-      const response = await fetch("/api/leads", {
+      const response = await fetch("/api/ebook-leads", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email: email,
+          first_name: firstName,
+          consent_marketing: consentMarketing,
           source: "Sardinian Awakening Ebook Landing Page",
+          campaign: "ebook-download"
         }),
       })
 
       const result = await response.json()
 
       if (result.success) {
-        console.log("[v0] Lead captured successfully:", result.leadId)
-        setSubmitMessage("Success! Check your email for the download link.")
+        console.log("[v0] Ebook lead captured successfully:", result.leadId)
+        setSubmitMessage("Success! Your ebook is ready for download.")
         setEmail("")
 
         // Trigger actual download
@@ -62,11 +67,11 @@ export function SardinianAwakeningLanding() {
         downloadLink.download = "Sardinian-Awakening-Ebook.pdf"
         downloadLink.click()
       } else {
-        console.error("[v0] Lead capture failed:", result.error)
+        console.error("[v0] Ebook lead capture failed:", result.error)
         setSubmitMessage("Something went wrong. Please try again.")
       }
     } catch (error) {
-      console.error("[v0] Lead submission error:", error)
+      console.error("[v0] Ebook lead submission error:", error)
       setSubmitMessage("Network error. Please check your connection and try again.")
     }
 
@@ -76,18 +81,21 @@ export function SardinianAwakeningLanding() {
   const handleDirectDownload = async () => {
     if (email) {
       try {
-        await fetch("/api/leads", {
+        await fetch("/api/ebook-leads", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            email: email,
-            source: "Sardinian Awakening Direct Download",
-          }),
+                  body: JSON.stringify({
+          email: email,
+          first_name: firstName,
+          consent_marketing: consentMarketing,
+          source: "Sardinian Awakening Direct Download",
+          campaign: "ebook-download"
+        }),
         })
       } catch (error) {
-        console.error("[v0] Direct download lead capture error:", error)
+        console.error("[v0] Direct download ebook lead capture error:", error)
       }
     }
 
@@ -163,11 +171,19 @@ export function SardinianAwakeningLanding() {
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="font-bold text-3xl md:text-4xl mb-6 text-slate-900">Get Your Free Copy Now</h2>
 
-            <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-4 mb-6">
-              <div className="flex-1">
+            <form onSubmit={handleSubmit} className="space-y-4 mb-6">
+              <div className="grid md:grid-cols-2 gap-4">
+                <Input
+                  type="text"
+                  placeholder="First name (optional)"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="h-12 text-lg border-2 border-slate-200 focus:border-cyan-500 rounded-full px-6"
+                  aria-label="First name for personalization"
+                />
                 <Input
                   type="email"
-                  placeholder="Enter your email address"
+                  placeholder="Email address *"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -175,14 +191,33 @@ export function SardinianAwakeningLanding() {
                   aria-label="Email address for ebook download"
                 />
               </div>
+              
+              <div className="flex items-start space-x-3 p-4 bg-slate-50 rounded-lg">
+                <input
+                  type="checkbox"
+                  id="consent-marketing"
+                  checked={consentMarketing}
+                  onChange={(e) => setConsentMarketing(e.target.checked)}
+                  required
+                  className="mt-1 h-4 w-4 text-cyan-600 focus:ring-cyan-500 border-slate-300 rounded"
+                />
+                <label htmlFor="consent-marketing" className="text-sm text-slate-700 leading-relaxed">
+                  I agree to receive the ebook and occasional KiteSafaris updates about ocean lifestyle, 
+                  travel inspiration, and kiteboarding adventures. You can unsubscribe anytime. 
+                  <a href="/policies/privacy" className="text-cyan-600 hover:text-cyan-700 underline ml-1">
+                    Privacy Policy
+                  </a>
+                </label>
+              </div>
+
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white px-8 py-3 h-12 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
-                aria-label="Submit email and download ebook"
+                className="w-full bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white px-8 py-3 h-12 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+                aria-label="Submit form and download ebook"
               >
                 <Mail className="mr-2 h-5 w-5" />
-                {isSubmitting ? "Sending..." : "Get My Copy"}
+                {isSubmitting ? "Sending..." : "Get My Free Ebook"}
               </Button>
             </form>
 

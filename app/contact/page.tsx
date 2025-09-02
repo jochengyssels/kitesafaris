@@ -6,11 +6,12 @@ import { Navigation } from "@/components/navigation"
 import { EnhancedFooter } from "@/components/enhanced-footer"
 import { FloatingActionButtons } from "@/components/floating-action-buttons"
 import { DestinationFocusedMap } from "@/components/destination-focused-map"
-import { useState } from "react"
+import { useState, useRef } from "react"
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState("")
+  const formRef = useRef<HTMLFormElement>(null)
 
   const handleContactSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -18,31 +19,38 @@ export default function ContactPage() {
     setSubmitMessage("")
 
     const formData = new FormData(e.currentTarget)
-    const email = formData.get("email") as string
+    const formDataObj = {
+      firstName: formData.get("firstName") as string,
+      lastName: formData.get("lastName") as string,
+      email: formData.get("email") as string,
+      phone: formData.get("phone") as string,
+      subject: formData.get("subject") as string,
+      message: formData.get("message") as string,
+    }
 
     try {
-      const response = await fetch("/api/leads", {
+      const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email: email,
-          source: "Contact Form",
-        }),
+        body: JSON.stringify(formDataObj),
       })
 
       const result = await response.json()
 
       if (result.success) {
-        setSubmitMessage("Thank you! We'll get back to you within 24 hours.")
-        e.currentTarget.reset()
+        setSubmitMessage(result.message || "Thank you! We'll get back to you within 24 hours.")
+        // Safely reset the form using the ref
+        if (formRef.current) {
+          formRef.current.reset()
+        }
       } else {
-        setSubmitMessage("Message sent! We'll respond soon.")
+        setSubmitMessage(result.error || "There was an error sending your message. Please try again.")
       }
     } catch (error) {
-      console.error("[v0] Contact form lead capture error:", error)
-      setSubmitMessage("Message sent! We'll respond soon.")
+      console.error("[v0] Contact form submission error:", error)
+      setSubmitMessage("There was an error sending your message. Please try again or contact us directly.")
     }
 
     setIsSubmitting(false)
@@ -72,7 +80,7 @@ export default function ContactPage() {
             {/* Contact Form */}
             <div className="bg-sand-beige rounded-2xl p-8">
               <h2 className="font-montserrat text-2xl font-bold text-deep-navy mb-6">Send Us a Message</h2>
-              <form className="space-y-6" onSubmit={handleContactSubmit}>
+              <form className="space-y-6" onSubmit={handleContactSubmit} ref={formRef}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="firstName" className="block font-montserrat font-bold text-deep-navy mb-2">

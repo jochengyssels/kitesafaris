@@ -1,30 +1,28 @@
 import { Navigation } from "@/components/navigation"
-import { Anchor, MapPin, Waves } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
-import type { Metadata } from "next"
 
-export const metadata: Metadata = {
-  title: "Kite Safari Destinations | Caribbean, Greece & Sardinia | KiteSafaris.com",
-  description:
-    "Discover our three exclusive kite safari destinations: Caribbean Antigua, Greek Islands, and Sardinia. Premium catamaran kiteboarding adventures in the world's best locations.",
-  keywords:
-    "kite safari destinations, Caribbean kiteboarding, Greece kite trips, Sardinia kitesurfing, luxury catamaran adventures",
-  alternates: {
-    canonical: "https://kitesafaris.com/destinations",
-  },
+interface Destination {
+  id: string
+  name: string
+  location: string
+  headline: string
+  description: string
+  image: string
+  icon: string
+  available: boolean
 }
 
-const destinations = [
+// Fallback destinations data (will be replaced with API data when client-side issues are resolved)
+const destinations: Destination[] = [
   {
     id: "antigua",
-    name: "Caribbean",
+    name: "Antigua",
     location: "Antigua & Barbuda",
     headline: "Trade Wind Paradise",
-    description:
-      "Experience consistent 15-25 knot trade winds, crystal-clear turquoise waters, and luxury catamaran living in the heart of the Caribbean.",
+    description: "Experience consistent 15-25 knot trade winds, crystal-clear turquoise waters, and luxury catamaran living in the heart of the Caribbean.",
     image: "/antigua-aerial-harbor-view.jpg",
-    icon: Anchor,
+    icon: "Anchor",
     available: true,
   },
   {
@@ -32,10 +30,9 @@ const destinations = [
     name: "Greece",
     location: "Aegean Islands",
     headline: "Meltemi Wind Magic",
-    description:
-      "Sail through ancient waters with powerful Meltemi winds, explore hidden coves, and discover the perfect blend of history and kiteboarding.",
+    description: "Sail through ancient waters with powerful Meltemi winds, explore hidden coves, and discover the perfect blend of history and kiteboarding.",
     image: "/greek-aegean-islands-kiteboarding-destination.png",
-    icon: MapPin,
+    icon: "MapPin",
     available: true,
   },
   {
@@ -43,10 +40,9 @@ const destinations = [
     name: "Sardinia",
     location: "Mediterranean Coast",
     headline: "Mistral Wind Adventure",
-    description:
-      "Ride the legendary Mistral winds along pristine Mediterranean coastlines with dramatic landscapes and world-class kiteboarding conditions.",
+    description: "Ride the legendary Mistral winds along pristine Mediterranean coastlines with dramatic landscapes and world-class kiteboarding conditions.",
     image: "/sardinia-punta-trettu-kiteboarding-mediterranean-c.png",
-    icon: Waves,
+    icon: "Waves",
     available: true,
   },
 ]
@@ -93,7 +89,6 @@ export default function DestinationsPage() {
           <section className="mb-16">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
               {destinations.map((destination) => {
-                const IconComponent = destination.icon
                 return (
                   <div
                     key={destination.id}
@@ -114,7 +109,10 @@ export default function DestinationsPage() {
 
                       {/* Destination Icon */}
                       <div className="absolute top-6 left-6 w-14 h-14 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-turquoise-light shadow-lg">
-                        <IconComponent className="w-7 h-7 text-turquoise-dark stroke-2" />
+                        {/* Using simple emoji icons instead of lucide-react to avoid import issues */}
+                        <span className="text-2xl">
+                          {destination.icon === "Anchor" ? "⚓" : destination.icon === "MapPin" ? "📍" : "🌊"}
+                        </span>
                       </div>
 
                       {/* Location Badge */}
@@ -131,22 +129,17 @@ export default function DestinationsPage() {
                       >
                         {destination.name}
                       </h3>
-                      <h4 className="text-lg font-semibold text-turquoise-dark font-montserrat mb-4">
-                        {destination.headline}
-                      </h4>
-                      <p className="text-gray-600 font-open-sans leading-relaxed mb-8 text-balance">
+                      <p className="text-gray-600 font-open-sans mb-6 line-clamp-3">
                         {destination.description}
                       </p>
-
-                      {/* CTA Button */}
                       <Link
                         href={`/destinations/${destination.id}`}
-                        className="inline-flex items-center justify-center w-full bg-coral-orange hover:bg-coral-orange/90 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-coral-orange/30 shadow-lg hover:shadow-xl"
+                        className="inline-flex items-center text-coral-orange font-semibold hover:text-orange-500 transition-colors group"
                         aria-label={`Explore ${destination.name} kite safari destination`}
                       >
                         Explore {destination.name}
                         <svg
-                          className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1"
+                          className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -155,9 +148,9 @@ export default function DestinationsPage() {
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            strokeWidth={2}
+                            strokeWidth="2"
                             d="M17 8l4 4m0 0l-4 4m4-4H3"
-                          />
+                          ></path>
                         </svg>
                       </Link>
                     </div>
@@ -168,12 +161,9 @@ export default function DestinationsPage() {
           </section>
 
           <section className="text-center bg-gradient-to-r from-turquoise-light/10 to-coral-orange/10 rounded-3xl p-12 md:p-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-deep-navy font-montserrat mb-6">
-              Ready for Your Kite Safari Adventure?
-            </h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-deep-navy font-montserrat mb-6">Ready for Your Kite Safari Adventure?</h2>
             <p className="text-lg text-gray-600 font-open-sans max-w-2xl mx-auto mb-8 leading-relaxed">
-              Join us for an unforgettable kiteboarding experience aboard luxury catamarans. Expert instruction, perfect
-              conditions, and memories that last a lifetime.
+              Join us for an unforgettable kiteboarding experience aboard luxury catamarans. Expert instruction, perfect conditions, and memories that last a lifetime.
             </p>
             <Link
               href="/contact"
@@ -181,7 +171,7 @@ export default function DestinationsPage() {
             >
               Start Planning Your Trip
               <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
               </svg>
             </Link>
           </section>

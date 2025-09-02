@@ -1,8 +1,12 @@
-import { Navigation } from "@/components/navigation"
-import { DestinationDetail } from "@/components/destination-detail"
-import { DestinationFocusedMap } from "@/components/destination-focused-map"
-import { AntiguaTripCalendar } from "@/components/antigua-trip-calendar"
 import { notFound } from "next/navigation"
+import { DestinationDetail } from "@/components/destination-detail"
+import { Navigation } from "@/components/navigation"
+import { AntiguaTripCalendar } from "@/components/antigua-trip-calendar"
+import { DestinationFocusedMap } from "@/components/destination-focused-map"
+
+interface PageProps {
+  params: Promise<{ slug: string }>
+}
 
 const destinations = [
   {
@@ -10,15 +14,14 @@ const destinations = [
     name: "Antigua & Barbuda",
     region: "Caribbean",
     coordinates: { lat: 17.0608, lng: -61.7964 },
-    bannerImage: "/antigua-jolly-harbor-kiting.png",
+    bannerImage: "/antigua-aerial-harbor-view.jpg",
     windRating: 5,
     difficulty: "All Levels",
     tideRating: 5,
     season: "Dec - Apr",
     windSpeed: "15-25 knots",
     culture: "Caribbean island culture",
-    intro:
-      "7-day luxury catamaran kitesafari in Antigua & Barbuda. Ride the Caribbean trade winds, explore wild lagoons, and enjoy life on board. Limited to 6 spots. All meals, coaching, and fun included.",
+    intro: "7-day luxury catamaran kitesafari in Antigua & Barbuda. Ride the Caribbean trade winds, explore wild lagoons, and enjoy life on board. Limited to 6 spots. All meals, coaching, and fun included.",
     highlights: [
       "Hansons Bay - flat-water playground ideal for beginners and freestyle",
       "Nonsuch Bay and Green Island - protected by reef with butter-flat water",
@@ -28,49 +31,49 @@ const destinations = [
     ],
     itinerary: [
       {
-        day: "Saturday",
+        day: 1,
         activity: "Arrival and yacht orientation",
         description: "Welcome aboard at Jolly Harbor, safety briefing, and equipment setup",
       },
       {
-        day: "Sunday",
+        day: 2,
         activity: "Hansons Bay session",
         description: "Flat-water playground on northwest coast, perfect for beginners and freestyle",
       },
       {
-        day: "Monday",
+        day: 3,
         activity: "Nonsuch Bay exploration",
         description: "Protected by reef with butter-flat water and scenic green hills",
       },
       {
-        day: "Tuesday",
+        day: 4,
         activity: "Great Bird Island adventure",
         description: "Remote wildlife sanctuary with sea turtles and stunning sunsets",
       },
       {
-        day: "Wednesday",
+        day: 5,
         activity: "Barbuda expedition",
         description: "Coco Point shallow waters and Spanish Point wilder conditions",
       },
       {
-        day: "Thursday",
+        day: 6,
         activity: "Codrington Lagoon",
         description: "Large shallow lagoon with safe conditions for progression",
       },
       {
-        day: "Friday",
+        day: 7,
         activity: "Falmouth Harbor farewell",
         description: "Historic harbor near Nelson's Dockyard, departure Saturday morning",
       },
     ],
     gallery: [
-      "/antigua-jolly-harbor-kiting.png",
       "/antigua-caribbean-sunset-kiteboarding.png",
       "/antigua-coral-reef-underwater-snorkeling.png",
       "/antigua-tropical-landscape-palm-trees-beach.png",
       "/antigua-aerial-harbor-view-new.jpg",
       "/banner-kitesafari-antigua-branded.png",
       "/antigua-sunset-harbor-romantic.jpeg",
+      "/antigua-aerial-harbor-view.jpg",
     ],
   },
   {
@@ -85,8 +88,7 @@ const destinations = [
     season: "Coming Soon",
     windSpeed: "15-25 knots",
     culture: "Ancient Greek island heritage",
-    intro:
-      "Coming Soon: Experience the ultimate kitesurfing adventure in Greece with pristine islands, consistent meltemi winds, and boutique catamaran comfort.",
+    intro: "Coming Soon: Experience the ultimate kitesurfing adventure in Greece with pristine islands, consistent meltemi winds, and boutique catamaran comfort.",
     highlights: [
       "Consistent meltemi winds - daily 15-25 kt thermal breezes",
       "Aegean island playground - secluded bays and empty beaches",
@@ -109,8 +111,7 @@ const destinations = [
     season: "Coming Soon",
     windSpeed: "12-22 knots",
     culture: "Mediterranean island lifestyle",
-    intro:
-      "Coming Soon: Year-round kitesurfing from our home base location at Punta Trettu, Sardinia. Consistent conditions and authentic Mediterranean lifestyle.",
+    intro: "Coming Soon: Year-round kitesurfing from our home base location at Punta Trettu, Sardinia. Consistent conditions and authentic Mediterranean lifestyle.",
     highlights: [
       "Year-round kitesurfing conditions",
       "Home base location for KiteSafaris",
@@ -123,12 +124,9 @@ const destinations = [
   },
 ]
 
-interface PageProps {
-  params: { slug: string }
-}
-
-export default function DestinationDetailPage({ params }: PageProps) {
-  const destination = destinations.find((d) => d.id === params.slug)
+export default async function DestinationDetailPage({ params }: PageProps) {
+  const resolvedParams = await params
+  const destination = destinations.find((d) => d.id === resolvedParams.slug)
 
   if (!destination) {
     notFound()
@@ -167,23 +165,53 @@ export default function DestinationDetailPage({ params }: PageProps) {
   )
 }
 
-export async function generateStaticParams() {
-  return destinations.map((destination) => ({
-    slug: destination.id,
-  }))
-}
-
 export async function generateMetadata({ params }: PageProps) {
-  const destination = destinations.find((d) => d.id === params.slug)
+  const resolvedParams = await params
+  const destination = destinations.find((d) => d.id === resolvedParams.slug)
 
   if (!destination) {
     return {
       title: "Destination Not Found",
+      description: "The requested destination could not be found.",
     }
   }
 
   return {
     title: `${destination.name} - KiteSafaris.com`,
     description: destination.intro,
+    keywords: [
+      "Caribbean kite safari",
+      "Antigua kiteboarding trip",
+      "catamaran safari Antigua",
+      "book kiteboarding holiday Caribbean",
+      "luxury kitesafari",
+      "Antigua kite spots",
+      "Caribbean kitesurfing vacation",
+    ].join(", "),
+    robots: "index, follow",
+    googlebot: "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1",
+    "google-site-verification": "your-google-verification-code",
+    openGraph: {
+      title: `Caribbean Kite Safari Antigua | Luxury Catamaran Kiteboarding Adventures`,
+      description: `Experience the ultimate Caribbean kite safari in Antigua aboard luxury catamarans. 7-day trips with expert guides, premium equipment, and unforgettable adventures.`,
+      url: "https://kitesafaris.com",
+      siteName: "KiteSafaris.com",
+      locale: "en_US",
+      images: [
+        {
+          url: "http://localhost:3000/antigua-jolly-harbor-kiting.png",
+          width: 1200,
+          height: 630,
+          alt: "Caribbean catamaran kite safari Antigua luxury kiteboarding adventure",
+        },
+      ],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `Caribbean Kite Safari Antigua | Luxury Catamaran Adventures`,
+      description: `Book your Caribbean kite safari in Antigua! 7-day luxury catamaran kiteboarding trips from €1,900.`,
+      images: ["http://localhost:3000/antigua-jolly-harbor-kiting.png"],
+    },
   }
 }

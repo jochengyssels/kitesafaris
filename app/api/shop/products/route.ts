@@ -9,6 +9,21 @@ export async function GET(request: NextRequest) {
 
     console.log("[Shop API] Fetching products:", { category, productId })
 
+    // Check if Printful API key is configured
+    const printfulApiKey = process.env.PRINTFUL_API_KEY
+    if (!printfulApiKey) {
+      console.error("[Shop API] Printful API key not configured")
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Shop is not configured. Please contact support.",
+          products: [],
+          total: 0,
+        },
+        { status: 503 }
+      )
+    }
+
     if (productId) {
       // Fetch specific product with variants
       const product = await printfulService.getProduct(Number.parseInt(productId))
@@ -44,14 +59,15 @@ export async function GET(request: NextRequest) {
     })
   } catch (error) {
     console.error("[Shop API] Error fetching products:", error)
+    
     return NextResponse.json(
       {
         success: false,
-        error: "Failed to fetch products",
+        error: "Failed to fetch products. Please try again later.",
         products: [],
         total: 0,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

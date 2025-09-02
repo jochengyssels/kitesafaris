@@ -18,12 +18,72 @@ const blogPosts = [
     title: "Best Flights from Europe to Antigua for Kite Safaris (December–April)",
     excerpt:
       "Discover the top 10 flight routes from Europe to Antigua for your kite safari adventure. Direct and one-stop options with airlines, schedules, and pricing.",
-    coverImage: "/antigua-flights-kite-safari.png",
+    coverImage: "/airplane-flying-over-turquoise-caribbean-waters-wi.png",
     readTime: 8,
     author: "KiteSafaris Team",
     publishDate: "December 2024",
     category: "Travel Guide",
     featured: true,
+  },
+  {
+    slug: "caribbean-kiteboarding-wind-patterns",
+    title: "Understanding Caribbean Wind Patterns for Kiteboarding",
+    excerpt:
+      "Learn about the trade winds, seasonal variations, and best times to kiteboard in the Caribbean. Expert insights for optimal wind conditions.",
+    coverImage: "/antigua-caribbean-sunset-kiteboarding.png",
+    readTime: 6,
+    author: "KiteSafaris Team",
+    publishDate: "November 2024",
+    category: "Wind Guide",
+    featured: false,
+  },
+  {
+    slug: "packing-checklist-kite-safari",
+    title: "Ultimate Packing Checklist for Your Kite Safari Adventure",
+    excerpt:
+      "Don't forget anything! Complete packing guide for kiteboarding equipment, travel essentials, and luxury catamaran living.",
+    coverImage: "/premium-kiteboarding-equipment-on-luxury-yacht-dec.png",
+    readTime: 5,
+    author: "KiteSafaris Team",
+    publishDate: "November 2024",
+    category: "Travel Tips",
+    featured: false,
+  },
+  {
+    slug: "mediterranean-vs-caribbean-kiteboarding",
+    title: "Mediterranean vs Caribbean: Which Kiteboarding Destination is Right for You?",
+    excerpt:
+      "Compare wind conditions, water temperatures, and cultural experiences between Mediterranean and Caribbean kiteboarding destinations.",
+    coverImage: "/greece-sardinia-destinations-map-guide.png",
+    readTime: 7,
+    author: "KiteSafaris Team",
+    publishDate: "October 2024",
+    category: "Destination Guide",
+    featured: false,
+  },
+  {
+    slug: "kiteboarding-safety-tips-tropical-destinations",
+    title: "Essential Safety Tips for Kiteboarding in Tropical Destinations",
+    excerpt:
+      "Stay safe while kiteboarding in tropical waters. Learn about weather conditions, equipment checks, and emergency procedures.",
+    coverImage: "/tropical-kiteboarding-safety.png",
+    readTime: 4,
+    author: "KiteSafaris Team",
+    publishDate: "October 2024",
+    category: "Safety Guide",
+    featured: false,
+  },
+  {
+    slug: "photography-tips-kiteboarding-adventure",
+    title: "How to Capture Stunning Kiteboarding Photos on Your Safari",
+    excerpt:
+      "Professional photography tips for capturing your kiteboarding adventure. Equipment recommendations and composition techniques.",
+    coverImage: "/kiteboarding-photography-tips.png",
+    readTime: 6,
+    author: "KiteSafaris Team",
+    publishDate: "September 2024",
+    category: "Photography",
+    featured: false,
   },
 ]
 
@@ -122,7 +182,12 @@ export default function BlogPage() {
                   className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
                 >
                   <div className="relative h-48">
-                    <Image src={post.coverImage || "/placeholder.svg"} alt={post.title} fill className="object-cover" />
+                    <Image 
+                      src={post.coverImage || "/placeholder.svg"} 
+                      alt={post.title} 
+                      fill 
+                      className="object-cover"
+                    />
                   </div>
                   <div className="p-6">
                     <div className="flex items-center gap-2 mb-3">

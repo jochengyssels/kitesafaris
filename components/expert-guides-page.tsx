@@ -66,40 +66,7 @@ const instructors: Instructor[] = [
     safetyRecord: "Perfect safety record across 500+ charters",
     destinations: ["Caribbean", "Mediterranean", "Red Sea"],
   },
-  {
-    id: "jose-martinez",
-    name: "José Martinez",
-    role: "Advanced Instructor & Safety Specialist",
-    image: "/jose-martinez-instructor.jpg",
-    certifications: ["IKO Level 3 Instructor", "Lifeguard Certified", "Wilderness First Aid", "Drone Pilot License"],
-    specialties: ["Big Air Training", "Kite Loops", "Competition Coaching", "Action Photography"],
-    experience: "6+ Years Competition & Instruction",
-    languages: [
-      { code: "es", name: "Spanish", flag: "🇪🇸" },
-      { code: "en", name: "English", flag: "🇺🇸" },
-      { code: "pt", name: "Portuguese", flag: "🇵🇹" },
-    ],
-    bio: "Former competitive kiteboarder turned instructor, José specializes in advanced techniques and safety. His calm demeanor and technical expertise make complex maneuvers accessible to all skill levels.",
-    safetyRecord: "Advanced rescue specialist with 1500+ hours",
-    destinations: ["Cape Verde", "Canary Islands", "Brazil"],
-  },
-  {
-    id: "maria-santos",
-    name: "Maria Santos",
-    role: "Beginner Specialist & Youth Instructor",
-    image: "/maria-santos-instructor.jpg",
-    certifications: ["IKO Level 2 Instructor", "Youth Teaching Certified", "CPR/AED", "Marine Biology Degree"],
-    specialties: ["Beginner Progression", "Youth Instruction", "Marine Conservation", "Equipment Maintenance"],
-    experience: "5+ Years Specialized Instruction",
-    languages: [
-      { code: "pt", name: "Portuguese", flag: "🇵🇹" },
-      { code: "en", name: "English", flag: "🇺🇸" },
-      { code: "fr", name: "French", flag: "🇫🇷" },
-    ],
-    bio: "Marine biologist turned kite instructor, Maria combines her love for ocean conservation with patient, encouraging instruction. She excels at building confidence in new riders.",
-    safetyRecord: "Specialist in beginner safety with 1200+ hours",
-    destinations: ["Azores", "Madeira", "Morocco"],
-  },
+
 ]
 
 const certificationBadges = [
@@ -177,6 +144,51 @@ export function ExpertGuidesPage() {
                 <Play className="w-5 h-5" />
                 Watch Safety Video
               </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Video Section */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-deep-navy mb-4 font-montserrat">
+              See Our Expert Instruction in Action
+            </h2>
+            <p className="text-lg text-deep-navy/80 font-open-sans mb-8 max-w-2xl mx-auto">
+              Watch how our certified instructors provide world-class kiteboarding guidance with safety and expertise.
+            </p>
+            
+            <div className="relative w-full max-w-3xl mx-auto">
+              <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl">
+                <iframe
+                  src="https://www.youtube.com/embed/EIJu5ceQ1Y0"
+                  title="Expert Kiteboarding Instruction - KiteSafaris.com"
+                  className="w-full h-full"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+              <div className="absolute -top-4 -right-4 w-8 h-8 bg-coral-orange rounded-full flex items-center justify-center">
+                <Play className="w-4 h-4 text-white" />
+              </div>
+            </div>
+            
+            <div className="mt-8 flex flex-wrap justify-center gap-4 text-sm text-deep-navy/70">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-turquoise" />
+                <span>Professional IKO Certified Instructors</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-turquoise" />
+                <span>Safety-First Approach</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-turquoise" />
+                <span>Personalized Learning Experience</span>
+              </div>
             </div>
           </div>
         </div>
@@ -451,7 +463,7 @@ export function ExpertGuidesPage() {
                 </div>
               </div>
               <p className="text-deep-navy/80 font-open-sans mb-4">
-                "José's technical expertise helped me master kite loops and advanced jumps. The progression was
+                "Captain Enricco's maritime expertise and calm guidance helped me master advanced techniques. The progression was
                 incredible."
               </p>
               <div className="text-sm text-turquoise font-semibold">Advanced Skills Week</div>
@@ -468,7 +480,7 @@ export function ExpertGuidesPage() {
                 </div>
               </div>
               <p className="text-deep-navy/80 font-open-sans mb-4">
-                "Maria's patient approach helped me overcome my fear of water. Now I can't wait for my next kite
+                "Mattia's patient approach and deep knowledge helped me overcome my fear of water. Now I can't wait for my next kite
                 session!"
               </p>
               <div className="text-sm text-turquoise font-semibold">Beginner Confidence Program</div>

@@ -76,7 +76,7 @@ const destinations = [
     windType: "Trade Winds",
     avgWind: "15-25 knots",
     reliability: "90%",
-    image: "/antigua-jolly-harbor-kiting.png",
+    image: "/antigua-caribbean-sunset-kiteboarding.png",
   },
   {
     id: "greece",
@@ -103,25 +103,25 @@ const alternativeActivities = [
     title: "Stand-Up Paddleboarding",
     description: "Explore calm bays and hidden coves on SUP boards",
     icon: Waves,
-    image: "/sup-paddleboarding-calm-waters.png",
+    image: "/placeholder.png",
   },
   {
     title: "Snorkeling Adventures",
     description: "Discover vibrant coral reefs and marine life",
     icon: Camera,
-    image: "/snorkeling-coral-reef-adventure.png",
+    image: "/antigua-coral-reef-underwater-snorkeling.png",
   },
   {
     title: "Island Exploration",
     description: "Visit secluded beaches and local villages",
     icon: MapPin,
-    image: "/island-exploration-secluded-beach.png",
+    image: "/antigua-tropical-landscape-palm-trees-beach.png",
   },
   {
     title: "Sailing & Boat Trips",
     description: "Enjoy scenic cruises and sunset sails",
     icon: Anchor,
-    image: "/sailing-sunset-catamaran-cruise.png",
+    image: "/luxury-catamaran-yacht-on-turquoise-water.png",
   },
 ]
 
