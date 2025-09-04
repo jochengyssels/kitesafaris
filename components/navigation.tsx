@@ -327,13 +327,6 @@ export function Navigation() {
                 </div>
               ))}
 
-              <Link
-                href="/admin"
-                className="text-xs text-gray-400 hover:text-coral-orange transition-colors opacity-50 hover:opacity-100"
-                aria-label="Admin dashboard access"
-              >
-                Admin
-              </Link>
             </div>
 
             <div className="hidden lg:flex items-center space-x-4 ml-6">
