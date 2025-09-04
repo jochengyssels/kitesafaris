@@ -3,7 +3,7 @@
 import type React from "react"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect, useRef, useCallback } from "react"
 import { CertificationBadges } from "./certification-badges"
 import Image from "next/image"
@@ -13,6 +13,7 @@ export function Navigation() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
+  const router = useRouter()
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({})
@@ -107,40 +108,37 @@ export function Navigation() {
     }
   }, [])
 
-  const handleMouseEnter = useCallback(
-    (label: string) => {
-      clearDropdownTimeout()
-      setActiveDropdown(label)
-    },
-    [clearDropdownTimeout],
-  )
+  // Removed hover handlers - submenus now only open on click
 
-  const handleMouseLeave = useCallback(() => {
-    clearDropdownTimeout()
-    timeoutRef.current = setTimeout(() => {
-      setActiveDropdown(null)
-    }, 200)
-  }, [clearDropdownTimeout])
+  // Handle clicks outside dropdown to close it
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element
+      if (activeDropdown && !target.closest('[data-dropdown-container]')) {
+        setActiveDropdown(null)
+      }
+    }
 
-  const handleDropdownMouseEnter = useCallback(() => {
-    clearDropdownTimeout()
-  }, [clearDropdownTimeout])
+    if (activeDropdown) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
 
-  const handleDropdownMouseLeave = useCallback(() => {
-    clearDropdownTimeout()
-    timeoutRef.current = setTimeout(() => {
-      setActiveDropdown(null)
-    }, 200)
-  }, [clearDropdownTimeout])
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [activeDropdown])
 
   const handleMainMenuClick = useCallback(
     (e: React.MouseEvent, item: any) => {
       if (!item.isSimple) {
         e.preventDefault()
         setActiveDropdown(activeDropdown === item.label ? null : item.label)
+      } else {
+        // For simple items, navigate to the href
+        router.push(item.href)
       }
     },
-    [activeDropdown],
+    [activeDropdown, router],
   )
 
   const handleKeyDown = useCallback(
@@ -247,8 +245,6 @@ export function Navigation() {
                   data-dropdown-container
                   data-menu-item={item.label}
                   ref={(el) => (menuItemRefs.current[item.label] = el)}
-                  onMouseEnter={() => !item.isSimple && handleMouseEnter(item.label)}
-                  onMouseLeave={() => !item.isSimple && handleMouseLeave()}
                 >
                   <button
                     className={`font-montserrat font-bold text-sm transition-colors flex items-center focus:outline-none focus:ring-2 focus:ring-coral-orange focus:ring-opacity-50 rounded px-2 py-1 ${
@@ -291,8 +287,6 @@ export function Navigation() {
                       ref={(el) => (dropdownRefs.current[item.label] = el)}
                       className={`absolute top-full left-0 mt-1 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50 
                         animate-in fade-in slide-in-from-top-2 duration-200`}
-                      onMouseEnter={handleDropdownMouseEnter}
-                      onMouseLeave={handleDropdownMouseLeave}
                       role="menu"
                       aria-orientation="vertical"
                       aria-labelledby={`menu-${item.label}`}

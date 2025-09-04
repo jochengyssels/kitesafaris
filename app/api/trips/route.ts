@@ -125,17 +125,16 @@ const convertFromAirtable = (airtableTrip: AirtableTrip): Trip => {
 }
 
 const convertToAirtable = (trip: Partial<Trip>) => ({
-  destination: trip.destination,
-  startDate: trip.startDate,
-  endDate: trip.endDate,
-  price: trip.price,
-  discountPercentage: trip.discountPercentage,
-  currency: trip.currency,
-  totalSpots: trip.totalSpots,
-  availableSpots: trip.availableSpots,
-  status: trip.status,
-  createdAt: trip.createdAt,
-  updatedAt: trip.updatedAt,
+  destination_id: trip.destination,
+  start_date: trip.startDate,
+  end_date: trip.endDate,
+  price_eur: trip.price?.toString(),
+  early_bird_discount: trip.discountPercentage?.toString() || "0",
+  max_guests: trip.totalSpots?.toString(),
+  spots_available: trip.availableSpots?.toString(),
+  trip_status: trip.status,
+  created_date: trip.createdAt,
+  last_modified: trip.updatedAt,
 })
 
 // GET /api/trips - Get all trips

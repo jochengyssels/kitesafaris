@@ -369,7 +369,7 @@ export function TripManagementDashboard() {
           <h2 className="font-montserrat font-bold text-2xl text-navy-900">Trip Management</h2>
           <p className="font-open-sans text-gray-600">Organize and manage available trips across all destinations</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <Button
             variant="outline"
             className="border-sand-beige-300 bg-transparent"
@@ -408,7 +408,14 @@ export function TripManagementDashboard() {
             <Download className="w-4 h-4 mr-2" />
             Export Filtered ({filteredTrips.length})
           </Button>
-          <Button onClick={() => setShowAddModal(true)} className="bg-turquoise-600 hover:bg-turquoise-700">
+          <Button 
+            variant="outline"
+            className="border-turquoise-300 bg-turquoise-50 text-turquoise-700 hover:bg-turquoise-100"
+            onClick={() => {
+              console.log("Add New Trip button clicked!")
+              setShowAddModal(true)
+            }}
+          >
             <Plus className="w-4 h-4 mr-2" />
             Add New Trip
           </Button>

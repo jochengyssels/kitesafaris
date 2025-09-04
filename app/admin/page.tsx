@@ -12,6 +12,7 @@ import {
   ShoppingBag,
   Menu,
   GitBranch,
+  LogOut,
 } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -106,9 +107,20 @@ export default function AdminDashboard() {
                 <p className="text-sm text-gray-300">Administrative Dashboard</p>
               </div>
             </div>
-            <Link href="/" className="text-turquoise-400 hover:text-turquoise-300 transition-colors">
-              Back to Site
-            </Link>
+            <div className="flex items-center space-x-4">
+              <Link href="/" className="text-turquoise-400 hover:text-turquoise-300 transition-colors">
+                Back to Site
+              </Link>
+              <form action="/api/admin/logout" method="POST">
+                <button
+                  type="submit"
+                  className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </header>

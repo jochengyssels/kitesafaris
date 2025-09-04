@@ -138,7 +138,16 @@ const convertFromAirtable = (airtableDestination: AirtableDestination): Destinat
     description: airtableDestination.fields.short_description || airtableDestination.fields.description || "Experience world-class kiteboarding in this incredible location.",
     image: getDestinationImage(destinationName),
     icon: airtableDestination.fields.flag_emoji || airtableDestination.fields.icon || "Anchor",
-    available: airtableDestination.fields.is_active ?? true,
+    available: (() => {
+      const isActive = airtableDestination.fields.is_active
+      const result = isActive === true || isActive === 'TRUE' || isActive === 'true'
+      console.log("[v0] is_active conversion:", { 
+        original: isActive, 
+        type: typeof isActive, 
+        result: result 
+      })
+      return result
+    })(),
     basePrice: airtableDestination.fields.price_from || airtableDestination.fields.basePrice || 2700,
     currency: "EUR", // Default to EUR for all destinations
     windRating: 5, // Default wind rating
@@ -254,6 +263,8 @@ export async function GET(request: NextRequest) {
       console.log("[v0] Converting record", index + ":", {
         id: record.id,
         fieldsKeys: Object.keys(record.fields || {}),
+        is_active_value: record.fields.is_active,
+        is_active_type: typeof record.fields.is_active,
       })
 
       try {

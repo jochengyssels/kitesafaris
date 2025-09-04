@@ -265,6 +265,7 @@ export function BookingForm() {
         
         if (data.destinations && Array.isArray(data.destinations)) {
           console.log("[v0] Setting destinations:", data.destinations.length, data.destinations)
+          // Show all destinations, but we'll handle active/inactive styling in the UI
           setDestinations(data.destinations)
         } else {
           console.error("[v0] Invalid destinations data structure:", data)
@@ -821,61 +822,70 @@ export function BookingForm() {
                 </div>
               ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {destinations.map((dest) => (
-                    <div
-                      key={dest.id}
-                      className={`relative border-2 rounded-xl p-6 cursor-pointer transition-all duration-300 hover:shadow-lg ${
-                        bookingData.destination === dest.name
-                          ? "border-coral-orange bg-coral-orange/5 shadow-lg"
-                          : "border-gray-200 hover:border-coral-orange/50"
-                      } ${dest.basePrice === 0 ? "opacity-60 cursor-not-allowed" : ""}`}
-                      onClick={() => {
-                        if (dest.basePrice > 0) {
-                          setBookingData((prev) => ({ ...prev, destination: dest.name, selectedTripId: null }))
-                        }
-                      }}
-                    >
-                      {dest.basePrice === 0 && (
-                        <div className="absolute top-3 right-3 bg-gray-500 text-white text-xs px-2 py-1 rounded-full">
-                          Coming Soon
-                        </div>
-                      )}
-                      
-                                             <div className="h-32 bg-gray-200 rounded-lg mb-4 overflow-hidden">
-                         <img 
-                           src={dest.image} 
-                           alt={dest.name}
-                           className="w-full h-full object-cover"
-                           onError={(e) => {
-                             e.currentTarget.src = "/antigua-aerial-harbor-view.jpg"
-                           }}
-                         />
-                       </div>
-                      
-                      <h3 className="font-semibold text-deep-navy text-lg mb-2">{dest.name}</h3>
-                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">{dest.description}</p>
-                      
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center text-sm text-gray-600">
-                          <Wind className="w-4 h-4 mr-1" />
-                          {dest.windSpeed}
-                        </div>
-                        <div className="flex items-center text-sm text-gray-600">
-                          <Calendar className="w-4 h-4 mr-1" />
-                          {dest.season}
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="text-coral-orange font-bold text-lg">
-                          {dest.basePrice > 0 ? `From €${dest.basePrice.toLocaleString()}` : "Coming Soon"}
-                        </div>
-                        {bookingData.destination === dest.name && (
-                          <Check className="w-5 h-5 text-coral-orange" />
+                  {destinations.map((dest) => {
+                    const isActive = dest.available === true
+                    return (
+                      <div
+                        key={dest.id}
+                        className={`relative border-2 rounded-xl p-6 transition-all duration-300 ${
+                          isActive 
+                            ? "cursor-pointer hover:shadow-lg" 
+                            : "opacity-60 cursor-not-allowed"
+                        } ${
+                          bookingData.destination === dest.name
+                            ? "border-coral-orange bg-coral-orange/5 shadow-lg"
+                            : isActive 
+                              ? "border-gray-200 hover:border-coral-orange/50"
+                              : "border-gray-300"
+                        }`}
+                        onClick={() => {
+                          if (isActive) {
+                            setBookingData((prev) => ({ ...prev, destination: dest.name, selectedTripId: null }))
+                          }
+                        }}
+                      >
+                        {!isActive && (
+                          <div className="absolute top-3 right-3 bg-gray-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                            Coming Soon
+                          </div>
                         )}
+                        
+                        <div className="h-32 bg-gray-200 rounded-lg mb-4 overflow-hidden">
+                          <img 
+                            src={dest.image} 
+                            alt={dest.name}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.src = "/antigua-aerial-harbor-view.jpg"
+                            }}
+                          />
+                        </div>
+                        
+                        <h3 className="font-semibold text-deep-navy text-lg mb-2">{dest.name}</h3>
+                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{dest.description}</p>
+                        
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center text-sm text-gray-600">
+                            <Wind className="w-4 h-4 mr-1" />
+                            {dest.windSpeed}
+                          </div>
+                          <div className="flex items-center text-sm text-gray-600">
+                            <Calendar className="w-4 h-4 mr-1" />
+                            {dest.season}
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center justify-between">
+                          <div className="text-coral-orange font-bold text-lg">
+                            {isActive ? `From €${dest.basePrice.toLocaleString()}` : "Coming Soon"}
+                          </div>
+                          {bookingData.destination === dest.name && isActive && (
+                            <Check className="w-5 h-5 text-coral-orange" />
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
               {errors.destination && <p className="text-red-500 text-sm mt-2">{errors.destination}</p>}
