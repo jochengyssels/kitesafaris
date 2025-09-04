@@ -232,7 +232,7 @@ export function BookingForm() {
     selectedTripId: null,
     groupSize: 2,
     destination: "",
-    yacht: "",
+    yacht: "catamaran", // Default to the only available yacht
     guests: [
       { name: "", email: "", phone: "", dietary: "" },
       { name: "", email: "", phone: "", dietary: "" },
@@ -296,7 +296,11 @@ export function BookingForm() {
         
         console.log("[v0] Loading trips for destinations:", destinations.map((d: any) => ({ id: d.id, name: d.name })))
         const trips = tripDataService.getAllTrips()
-        console.log("[v0] All available trips:", trips)
+        console.log("[v0] All available trips from service:", trips)
+        
+        // Debug: Check if trip_005 is in the service
+        const trip005 = tripDataService.getTripById('trip_005')
+        console.log("[v0] trip_005 from service:", trip005)
         
         const tripsByDestination: Record<string, any[]> = {}
 
@@ -426,8 +430,74 @@ export function BookingForm() {
       yachtsLength: yachts.length
     })
 
+    // If we have a selected trip, we can calculate pricing even without yacht selection
+    if (bookingData.selectedTripId) {
+      console.log("[v0] Looking for trip with ID:", bookingData.selectedTripId)
+      const selectedTrip = tripDataService.getTripById(bookingData.selectedTripId)
+      console.log("[v0] Found trip:", selectedTrip)
+      if (selectedTrip) {
+        console.log("[v0] Using trip-specific pricing:", selectedTrip)
+        
+        // Trip price is the total price for the entire trip
+        const basePrice = selectedTrip.price
+        let tripDiscount = 0
+        let tripDiscountAmount = 0
+        
+        if (selectedTrip.discountPercentage && selectedTrip.discountPercentage > 0) {
+          tripDiscount = selectedTrip.discountPercentage / 100
+          tripDiscountAmount = basePrice * tripDiscount
+        }
+        
+        const startDate = new Date(selectedTrip.startDate)
+        const endDate = new Date(selectedTrip.endDate)
+        const nights = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
+        
+        // Calculate pricing for the entire trip
+        const totalTripPrice = basePrice
+        const perPerson = totalTripPrice / bookingData.groupSize
+        const perNight = totalTripPrice / nights
+        let total = totalTripPrice
+
+        // Apply trip-specific discount first
+        if (tripDiscountAmount > 0) {
+          total = total - tripDiscountAmount
+        }
+
+        // Group discounts (applied after trip discount)
+        let groupDiscount = 0
+        if (bookingData.groupSize >= 6) groupDiscount = 0.15
+        else if (bookingData.groupSize >= 4) groupDiscount = 0.1
+
+        const groupDiscountAmount = total * groupDiscount
+        const finalTotal = total - groupDiscountAmount
+
+        const breakdown = [
+          { item: `${selectedTrip.destination} Trip (${nights} nights)`, amount: totalTripPrice },
+          ...(tripDiscountAmount > 0
+            ? [{ item: `Trip discount (${Math.round(tripDiscount * 100)}%)`, amount: -tripDiscountAmount }]
+            : []),
+          ...(groupDiscount > 0
+            ? [{ item: `Group discount (${Math.round(groupDiscount * 100)}%)`, amount: -groupDiscountAmount }]
+            : []),
+        ]
+
+        setBookingData((prev) => ({
+          ...prev,
+          pricing: {
+            basePrice,
+            perPerson,
+            perNight,
+            total: finalTotal,
+            breakdown,
+          },
+        }))
+        return
+      }
+    }
+
+    // Fallback to destination-based pricing (requires both destination and yacht)
     if (!bookingData.destination || !bookingData.yacht) {
-      console.log("[v0] Missing destination or yacht, returning")
+      console.log("[v0] Missing destination or yacht for fallback pricing, returning")
       return
     }
 
@@ -439,27 +509,9 @@ export function BookingForm() {
       return
     }
 
-    // Use trip-specific pricing if available, otherwise use destination base pricing
-    let basePrice = destination.basePrice * yacht.multiplier
-    let tripDiscount = 0
-    let tripDiscountAmount = 0
-    let nights = 7 // Default to 7 nights if no specific trip selected
-
-    if (bookingData.selectedTripId) {
-      const selectedTrip = tripDataService.getTripById(bookingData.selectedTripId)
-      if (selectedTrip) {
-        // Trip price is the total price for the entire trip, not per night
-        basePrice = selectedTrip.price
-        if (selectedTrip.discountPercentage && selectedTrip.discountPercentage > 0) {
-          tripDiscount = selectedTrip.discountPercentage / 100
-          tripDiscountAmount = basePrice * tripDiscount
-        }
-        
-        const startDate = new Date(selectedTrip.startDate)
-        const endDate = new Date(selectedTrip.endDate)
-        nights = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
-      }
-    }
+    // Use destination base pricing with yacht multiplier
+    const basePrice = destination.basePrice * yacht.multiplier
+    const nights = 7 // Default to 7 nights
 
     // Calculate pricing for the entire trip (not per night)
     const totalTripPrice = basePrice // This is the total price for the entire trip
@@ -467,12 +519,7 @@ export function BookingForm() {
     const perNight = totalTripPrice / nights // Average per night (for display purposes only)
     let total = totalTripPrice
 
-    // Apply trip-specific discount first
-    if (tripDiscountAmount > 0) {
-      total = total - tripDiscountAmount
-    }
-
-    // Group discounts (applied after trip discount)
+    // Group discounts
     let groupDiscount = 0
     if (bookingData.groupSize >= 6) groupDiscount = 0.15
     else if (bookingData.groupSize >= 4) groupDiscount = 0.1
@@ -482,9 +529,6 @@ export function BookingForm() {
 
     const breakdown = [
       { item: `${destination.name} Trip (${nights} nights)`, amount: totalTripPrice },
-      ...(tripDiscountAmount > 0
-        ? [{ item: `Trip discount (${Math.round(tripDiscount * 100)}%)`, amount: -tripDiscountAmount }]
-        : []),
       ...(groupDiscount > 0
         ? [{ item: `Group discount (${Math.round(groupDiscount * 100)}%)`, amount: -groupDiscountAmount }]
         : []),

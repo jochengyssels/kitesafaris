@@ -8,7 +8,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
-import { ChevronLeft, ChevronRight, Download, Mail, Star, Wind, Waves, Sun } from "lucide-react"
+import { ChevronLeft, ChevronRight, Mail, Star, Wind, Waves, Sun } from "lucide-react"
 
 export function SardinianAwakeningLanding() {
   const [email, setEmail] = useState("")
@@ -58,14 +58,10 @@ export function SardinianAwakeningLanding() {
 
       if (result.success) {
         console.log("[v0] Ebook lead captured successfully:", result.leadId)
-        setSubmitMessage("Success! Your ebook is ready for download.")
+        setSubmitMessage("Thank you! We've received your request. You'll be among the first to receive the ebook by email once it's ready for release.")
         setEmail("")
-
-        // Trigger actual download
-        const downloadLink = document.createElement("a")
-        downloadLink.href = "/sardinian-awakening-ebook.pdf"
-        downloadLink.download = "Sardinian-Awakening-Ebook.pdf"
-        downloadLink.click()
+        setFirstName("")
+        setConsentMarketing(false)
       } else {
         console.error("[v0] Ebook lead capture failed:", result.error)
         setSubmitMessage("Something went wrong. Please try again.")
@@ -78,31 +74,11 @@ export function SardinianAwakeningLanding() {
     setIsSubmitting(false)
   }
 
-  const handleDirectDownload = async () => {
-    if (email) {
-      try {
-        await fetch("/api/ebook-leads", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-                  body: JSON.stringify({
-          email: email,
-          first_name: firstName,
-          consent_marketing: consentMarketing,
-          source: "Sardinian Awakening Direct Download",
-          campaign: "ebook-download"
-        }),
-        })
-      } catch (error) {
-        console.error("[v0] Direct download ebook lead capture error:", error)
-      }
-    }
-
-    const downloadLink = document.createElement("a")
-    downloadLink.href = "/sardinian-awakening-ebook.pdf"
-    downloadLink.download = "Sardinian-Awakening-Ebook.pdf"
-    downloadLink.click()
+  const scrollToForm = () => {
+    document.getElementById('signup-form')?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    })
   }
 
   return (
@@ -155,11 +131,11 @@ export function SardinianAwakeningLanding() {
             <Button
               size="lg"
               className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-              onClick={handleDirectDownload}
-              aria-label="Download Sardinian Awakening ebook PDF"
+              onClick={scrollToForm}
+              aria-label="Get your free ebook"
             >
-              <Download className="mr-2 h-5 w-5" />
-              Download Free Ebook
+              <Mail className="mr-2 h-5 w-5" />
+              Get Your Free Ebook
             </Button>
           </div>
         </div>
@@ -224,7 +200,7 @@ export function SardinianAwakeningLanding() {
             {submitMessage && (
               <div
                 className={`text-center mb-4 p-3 rounded-lg ${
-                  submitMessage.includes("Success")
+                  submitMessage.includes("Thank you") || submitMessage.includes("Success")
                     ? "bg-green-100 text-green-800 border border-green-200"
                     : "bg-red-100 text-red-800 border border-red-200"
                 }`}
@@ -446,16 +422,16 @@ export function SardinianAwakeningLanding() {
           <div className="max-w-2xl mx-auto">
             <h2 className="font-bold text-3xl md:text-4xl mb-6 text-slate-900">Ready for Your Own Awakening?</h2>
             <p className="text-xl mb-8 text-slate-700">
-              Download Sardinian Awakening now and discover what's possible when you choose freedom over fear.
+              Get your free copy of Sardinian Awakening and discover what's possible when you choose freedom over fear.
             </p>
 
             <Button
               size="lg"
               className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-              onClick={handleDirectDownload}
-              aria-label="Download Sardinian Awakening ebook PDF"
+              onClick={scrollToForm}
+              aria-label="Get your free ebook"
             >
-              <Download className="mr-2 h-5 w-5" />
+              <Mail className="mr-2 h-5 w-5" />
               Get Your Free Ebook
             </Button>
           </div>

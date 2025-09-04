@@ -109,12 +109,14 @@ const convertFromAirtable = (airtableTrip: AirtableTrip): Trip => {
   const status = airtableTrip.fields.trip_status || airtableTrip.fields.status || "available"
   
   return {
-    id: airtableTrip.id,
+    id: airtableTrip.fields.trip_id || airtableTrip.id, // Use trip_id from Airtable, fallback to record ID
     destination: (destinationId as Trip["destination"]) || "caribbean",
     startDate: convertEuropeanDate(startDate),
     endDate: convertEuropeanDate(endDate),
     price: price,
-    discountPercentage: airtableTrip.fields.early_bird_discount ? parseInt(airtableTrip.fields.early_bird_discount) : (airtableTrip.fields.discount_percent || airtableTrip.fields.discountPercentage || 0),
+    discountPercentage: airtableTrip.fields.early_bird_discount ? 
+      parseInt(airtableTrip.fields.early_bird_discount.replace('%', '')) : 
+      (airtableTrip.fields.discount_percent || airtableTrip.fields.discountPercentage || 0),
     currency: "EUR" as const, // Default to EUR for all trips
     totalSpots: maxGuests,
     availableSpots: availableSpots,
@@ -125,6 +127,7 @@ const convertFromAirtable = (airtableTrip: AirtableTrip): Trip => {
 }
 
 const convertToAirtable = (trip: Partial<Trip>) => ({
+  trip_id: trip.id, // Include trip_id when creating/updating
   destination_id: trip.destination,
   start_date: trip.startDate,
   end_date: trip.endDate,
@@ -264,7 +267,16 @@ export async function GET() {
     })
 
     console.log("[v0] Converted trips:", trips.length)
-    console.log("[v0] Sample trip:", trips[0])
+    console.log("[v0] All converted trips:")
+    trips.forEach((trip, index) => {
+      console.log(`[v0] Trip ${index + 1}:`, {
+        id: trip.id,
+        destination: trip.destination,
+        price: trip.price,
+        discountPercentage: trip.discountPercentage,
+        status: trip.status
+      })
+    })
 
     const result = { trips }
     console.log("[v0] Returning result with", result.trips.length, "trips")
