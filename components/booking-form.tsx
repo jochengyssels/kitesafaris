@@ -409,8 +409,10 @@ export function BookingForm() {
 
   // Recalculate pricing when relevant data changes
   useEffect(() => {
-    calculatePricing()
-  }, [bookingData.selectedTripId, bookingData.groupSize])
+    if (destinations.length > 0 && yachts.length > 0) {
+      calculatePricing()
+    }
+  }, [bookingData.selectedTripId, bookingData.groupSize, destinations, yachts])
 
   // Calculate pricing based on current selections
   const calculatePricing = () => {
@@ -418,7 +420,9 @@ export function BookingForm() {
       destination: bookingData.destination,
       yacht: bookingData.yacht,
       selectedTripId: bookingData.selectedTripId,
-      groupSize: bookingData.groupSize
+      groupSize: bookingData.groupSize,
+      destinationsLength: destinations.length,
+      yachtsLength: yachts.length
     })
 
     if (!bookingData.destination || !bookingData.yacht) {
@@ -608,13 +612,69 @@ export function BookingForm() {
 
       console.log("[v0] Booking submitted successfully:", result)
 
-      // Show success state
+      // Ensure pricing is calculated before proceeding
+      if (!bookingData.pricing || !bookingData.pricing.total || bookingData.pricing.total === 0) {
+        console.log("[v0] Pricing not calculated, calculating now...")
+        calculatePricing()
+        // Wait a moment for state update
+        setTimeout(() => {
+          console.log("[v0] Pricing after calculation:", bookingData.pricing)
+          if (bookingData.pricing && bookingData.pricing.total > 0) {
+            proceedToPayment()
+          } else {
+            throw new Error("Failed to calculate pricing")
+          }
+        }, 100)
+        return
+      }
+
+      proceedToPayment()
+    } catch (error) {
+      console.error("[v0] Booking error:", error)
+      setErrors({ booking: error instanceof Error ? error.message : "An error occurred while processing your booking" })
+      setIsSubmitting(false)
+    }
+  }
+
+  // Function to proceed to payment after successful booking
+  const proceedToPayment = () => {
+    try {
+      // Store booking data for payment step
+      const paymentData = {
+        tripId: bookingData.selectedTripId,
+        destination: bookingData.destination,
+        groupSize: bookingData.groupSize,
+        total: bookingData.pricing.total,
+        currency: 'EUR',
+        bookingId: `BK-${Date.now()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        email: bookingData.guests[0]?.email || '',
+        firstName: bookingData.guests[0]?.name?.split(' ')[0] || '',
+        lastName: bookingData.guests[0]?.name?.split(' ').slice(1).join(' ') || '',
+      }
+
+      console.log("[v0] Proceeding to payment with data:", paymentData)
+
+      // Store in localStorage for payment step
+      localStorage.setItem('kitesafaris_booking', JSON.stringify(paymentData))
+
+      // Redirect to payment page
+      window.location.href = `/booking/payment?${new URLSearchParams({
+        tripId: paymentData.tripId || '',
+        destination: paymentData.destination,
+        groupSize: paymentData.groupSize.toString(),
+        total: paymentData.total.toString(),
+        email: paymentData.email,
+        firstName: paymentData.firstName,
+        lastName: paymentData.lastName,
+      }).toString()}`
+
+      // Show success state (fallback)
       setIsSubmitting(false)
       setIsConfirmed(true)
       setCurrentStep(4)
     } catch (error) {
-      console.error("[v0] Booking error:", error)
-      setErrors({ booking: error instanceof Error ? error.message : "An error occurred while processing your booking" })
+      console.error("[v0] Error proceeding to payment:", error)
+      setErrors({ booking: "Failed to proceed to payment. Please try again." })
       setIsSubmitting(false)
     }
   }
@@ -1498,7 +1558,7 @@ export function BookingForm() {
                   ) : (
                     <>
                       <CheckCircle className="w-5 h-5 inline mr-2" />
-                      {paymentMethod === 'paypal' ? 'Continue to PayPal' : 'Complete Booking'} - €{bookingData.pricing.total.toLocaleString()}
+                      Proceed to Payment - €{bookingData.pricing.total.toLocaleString()}
                     </>
                   )}
                 </button>
