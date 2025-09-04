@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Navigation } from '@/components/navigation'
 import { EnhancedFooter } from '@/components/enhanced-footer'
@@ -8,7 +8,7 @@ import { PaymentStep } from '@/components/payment-step'
 import { PaymentConfirmation } from '@/components/payment-confirmation'
 import { FloatingActionButtons } from '@/components/floating-action-buttons'
 
-export default function PaymentPage() {
+function PaymentPageContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState<'payment' | 'confirmation'>('payment')
@@ -162,5 +162,20 @@ export default function PaymentPage() {
       <EnhancedFooter />
       <FloatingActionButtons />
     </>
+  )
+}
+
+export default function PaymentPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-turquoise mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading payment page...</p>
+        </div>
+      </div>
+    }>
+      <PaymentPageContent />
+    </Suspense>
   )
 }
