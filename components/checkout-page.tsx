@@ -31,7 +31,7 @@ export function CheckoutPage() {
     city: "",
     state: "",
     zip: "",
-    country: "US",
+    country: "BE",
   })
   const [isProcessing, setIsProcessing] = useState(false)
   const [orderComplete, setOrderComplete] = useState(false)
@@ -101,7 +101,7 @@ export function CheckoutPage() {
           retail_price: item.price.toFixed(2),
         })),
         retail_costs: {
-          currency: "USD",
+          currency: "EUR",
           subtotal: subtotal.toFixed(2),
           discount: "0.00",
           shipping: shipping.toFixed(2),
@@ -293,14 +293,51 @@ export function CheckoutPage() {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-coral-orange focus:border-transparent"
                     required
                   >
-                    <option value="US">United States</option>
-                    <option value="CA">Canada</option>
-                    <option value="GB">United Kingdom</option>
-                    <option value="AU">Australia</option>
-                    <option value="DE">Germany</option>
+                    <option value="AL">Albania</option>
+                    <option value="AD">Andorra</option>
+                    <option value="AT">Austria</option>
+                    <option value="BY">Belarus</option>
+                    <option value="BE">Belgium</option>
+                    <option value="BA">Bosnia and Herzegovina</option>
+                    <option value="BG">Bulgaria</option>
+                    <option value="HR">Croatia</option>
+                    <option value="CY">Cyprus</option>
+                    <option value="CZ">Czech Republic</option>
+                    <option value="DK">Denmark</option>
+                    <option value="EE">Estonia</option>
+                    <option value="FI">Finland</option>
                     <option value="FR">France</option>
-                    <option value="ES">Spain</option>
+                    <option value="DE">Germany</option>
+                    <option value="GR">Greece</option>
+                    <option value="HU">Hungary</option>
+                    <option value="IS">Iceland</option>
+                    <option value="IE">Ireland</option>
                     <option value="IT">Italy</option>
+                    <option value="LV">Latvia</option>
+                    <option value="LI">Liechtenstein</option>
+                    <option value="LT">Lithuania</option>
+                    <option value="LU">Luxembourg</option>
+                    <option value="MT">Malta</option>
+                    <option value="MD">Moldova</option>
+                    <option value="MC">Monaco</option>
+                    <option value="ME">Montenegro</option>
+                    <option value="NL">Netherlands</option>
+                    <option value="MK">North Macedonia</option>
+                    <option value="NO">Norway</option>
+                    <option value="PL">Poland</option>
+                    <option value="PT">Portugal</option>
+                    <option value="RO">Romania</option>
+                    <option value="RU">Russia</option>
+                    <option value="SM">San Marino</option>
+                    <option value="RS">Serbia</option>
+                    <option value="SK">Slovakia</option>
+                    <option value="SI">Slovenia</option>
+                    <option value="ES">Spain</option>
+                    <option value="SE">Sweden</option>
+                    <option value="CH">Switzerland</option>
+                    <option value="UA">Ukraine</option>
+                    <option value="GB">United Kingdom</option>
+                    <option value="VA">Vatican City</option>
                   </select>
                 </div>
               </div>
@@ -319,7 +356,7 @@ export function CheckoutPage() {
                 ) : items.length === 0 ? (
                   "Cart is Empty"
                 ) : (
-                  `Complete Order - $${total.toFixed(2)}`
+                  `Complete Order - €${total.toFixed(2)}`
                 )}
               </button>
             </form>
@@ -347,7 +384,7 @@ export function CheckoutPage() {
                     <h4 className="font-medium text-gray-900 text-sm line-clamp-2">{item.name}</h4>
                     <div className="flex items-center justify-between mt-1">
                       <span className="text-sm text-gray-600">Qty: {item.quantity}</span>
-                      <span className="font-medium text-coral-orange">${(item.price * item.quantity).toFixed(2)}</span>
+                      <span className="font-medium text-coral-orange">€{(item.price * item.quantity).toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
@@ -358,19 +395,19 @@ export function CheckoutPage() {
             <div className="border-t border-gray-200 pt-6 space-y-3">
               <div className="flex justify-between">
                 <span>Subtotal:</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>€{subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Shipping:</span>
-                <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+                <span>{shipping === 0 ? "Free" : `€${shipping.toFixed(2)}`}</span>
               </div>
               <div className="flex justify-between">
                 <span>Tax:</span>
-                <span>${tax.toFixed(2)}</span>
+                <span>€{tax.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-lg font-bold border-t border-gray-200 pt-3">
                 <span>Total:</span>
-                <span className="text-coral-orange">${total.toFixed(2)}</span>
+                <span className="text-coral-orange">€{total.toFixed(2)}</span>
               </div>
             </div>
 

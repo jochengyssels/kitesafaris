@@ -8,6 +8,7 @@ export interface CartItem {
   variantId?: number
   name: string
   price: number
+  currency: string
   image: string
   quantity: number
   options: Array<{ id: string; value: string }>

@@ -110,6 +110,7 @@ export function ShopPage() {
       variantId: variant?.id,
       name: product.name,
       price: Number.parseFloat(variant?.price || product.price),
+      currency: product.currency,
       image: variant?.image || product.thumbnail,
       quantity: 1,
       options: variant?.options || [],
@@ -139,7 +140,7 @@ export function ShopPage() {
             </p>
             <div className="flex items-center justify-center gap-4 animate-fade-in-delay-2">
               <div className="px-6 py-3 bg-white/20 backdrop-blur-sm rounded-full border border-white/30 hover:bg-white/30 transition-all duration-300">
-                <span className="font-montserrat text-white font-medium">🚢 Free Shipping Over $75</span>
+                <span className="font-montserrat text-white font-medium">🚢 Free Shipping Over €75</span>
               </div>
               <div className="px-6 py-3 bg-white/20 backdrop-blur-sm rounded-full border border-white/30 hover:bg-white/30 transition-all duration-300">
                 <span className="font-montserrat text-white font-medium">⭐ Premium Quality</span>

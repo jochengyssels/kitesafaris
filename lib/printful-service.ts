@@ -247,7 +247,7 @@ export class PrintfulService {
       name: product.name,
       thumbnail: product.thumbnail_url,
       price: mainVariant?.retail_price || "0.00",
-      currency: mainVariant?.currency || "USD",
+      currency: mainVariant?.currency || "EUR",
       variants: variants.map((variant) => ({
         id: variant.id,
         name: variant.name,

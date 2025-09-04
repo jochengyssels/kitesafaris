@@ -117,7 +117,7 @@ export function ProductModal({ product, isOpen, onClose, onAddToCart }: ProductM
                   <h1 className="font-montserrat text-3xl font-bold text-gray-900 mb-4">{product.name}</h1>
                   <div className="flex items-center gap-4 mb-6">
                     <span className="font-montserrat text-3xl font-bold text-coral-orange">
-                      ${selectedVariant?.price || product.price}
+                      {product.currency === 'EUR' ? '€' : product.currency === 'USD' ? '$' : product.currency}{selectedVariant?.price || product.price}
                     </span>
                     <span className="text-gray-500">{product.currency}</span>
                   </div>
@@ -140,7 +140,9 @@ export function ProductModal({ product, isOpen, onClose, onAddToCart }: ProductM
                           }`}
                         >
                           <div className="font-medium text-sm">{variant.name}</div>
-                          <div className="text-xs text-gray-600">${variant.price}</div>
+                          <div className="text-xs text-gray-600">
+                            {product.currency === 'EUR' ? '€' : product.currency === 'USD' ? '$' : product.currency}{variant.price}
+                          </div>
                           {variant.options.length > 0 && (
                             <div className="text-xs text-gray-500 mt-1">
                               {variant.options.map((option) => option.value).join(", ")}
@@ -200,7 +202,7 @@ export function ProductModal({ product, isOpen, onClose, onAddToCart }: ProductM
                   <div>
                     <h4 className="font-medium text-gray-900 mb-2">Shipping & Returns</h4>
                     <ul className="text-sm text-gray-600 space-y-1">
-                      <li>• Free shipping on orders over $75</li>
+                      <li>• Free shipping on orders over €75</li>
                       <li>• 5-7 business days processing</li>
                       <li>• 30-day return policy</li>
                       <li>• Worldwide shipping available</li>

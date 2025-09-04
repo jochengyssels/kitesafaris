@@ -23,6 +23,18 @@ export function ShoppingCart({
 }: ShoppingCartProps) {
   const [isCheckingOut, setIsCheckingOut] = useState(false)
 
+  // Helper function to get currency symbol
+  const getCurrencySymbol = (currency: string) => {
+    switch (currency) {
+      case 'EUR': return '€'
+      case 'USD': return '$'
+      default: return currency
+    }
+  }
+
+  // Get currency from first item (assuming all items have same currency)
+  const currency = items.length > 0 ? items[0].currency : 'EUR'
+
   const handleCheckout = () => {
     setIsCheckingOut(true)
     // Redirect to checkout page
@@ -108,7 +120,7 @@ export function ShoppingCart({
                       )}
 
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-coral-orange">${item.price.toFixed(2)}</span>
+                        <span className="font-bold text-coral-orange">{getCurrencySymbol(item.currency)}{item.price.toFixed(2)}</span>
 
                         {/* Quantity Controls */}
                         <div className="flex items-center gap-2">
@@ -162,14 +174,14 @@ export function ShoppingCart({
               {/* Subtotal */}
               <div className="flex items-center justify-between text-lg font-bold">
                 <span>Subtotal:</span>
-                <span className="text-coral-orange">${totalPrice.toFixed(2)}</span>
+                <span className="text-coral-orange">{getCurrencySymbol(currency)}{totalPrice.toFixed(2)}</span>
               </div>
 
               {/* Shipping Notice */}
               <p className="text-sm text-gray-600 text-center">
                 {totalPrice >= 75
                   ? "🎉 Free shipping included!"
-                  : `Add $${(75 - totalPrice).toFixed(2)} for free shipping`}
+                  : `Add ${getCurrencySymbol(currency)}${(75 - totalPrice).toFixed(2)} for free shipping`}
               </p>
 
               {/* Checkout Button */}

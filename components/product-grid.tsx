@@ -85,7 +85,9 @@ export function ProductGrid({ products, onAddToCart }: ProductGridProps) {
               <h3 className="font-montserrat font-bold text-lg text-gray-900 mb-2 line-clamp-2">{product.name}</h3>
 
               <div className="flex items-center justify-between mb-4">
-                <span className="font-montserrat text-2xl font-bold text-coral-orange">${product.price}</span>
+                <span className="font-montserrat text-2xl font-bold text-coral-orange">
+                  {product.currency === 'EUR' ? '€' : product.currency === 'USD' ? '$' : product.currency}{product.price}
+                </span>
                 <span className="text-sm text-gray-500">{product.currency}</span>
               </div>
 

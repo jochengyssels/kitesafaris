@@ -77,8 +77,12 @@ export function Navigation() {
         { href: "/guaranteed-wind", label: "💨 Guaranteed Wind" },
         { href: "/reviews", label: "⭐ Reviews" },
         { href: "/blog", label: "📝 Blog" },
-        { href: "/contact", label: "📞 Contact" },
       ],
+    },
+    {
+      label: "Contact Us",
+      href: "/contact",
+      isSimple: true,
     },
   ]
 
@@ -244,7 +248,9 @@ export function Navigation() {
                   className="relative"
                   data-dropdown-container
                   data-menu-item={item.label}
-                  ref={(el) => (menuItemRefs.current[item.label] = el)}
+                  ref={(el) => {
+                    menuItemRefs.current[item.label] = el
+                  }}
                 >
                   <button
                     className={`font-montserrat font-bold text-sm transition-colors flex items-center focus:outline-none focus:ring-2 focus:ring-coral-orange focus:ring-opacity-50 rounded px-2 py-1 ${
@@ -284,7 +290,9 @@ export function Navigation() {
 
                   {!item.isSimple && item.submenu && activeDropdown === item.label && (
                     <div
-                      ref={(el) => (dropdownRefs.current[item.label] = el)}
+                      ref={(el) => {
+                        dropdownRefs.current[item.label] = el
+                      }}
                       className={`absolute top-full left-0 mt-1 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50 
                         animate-in fade-in slide-in-from-top-2 duration-200`}
                       role="menu"
