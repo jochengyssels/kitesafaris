@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: "Kite Cruise Guides & Expert Tips | KiteSafaris.com",
   description:
     "Expert guides for catamaran kite cruising. Learn techniques, safety protocols, and destination insights from our experienced crew.",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/guides"
+  },
 }
 
 export default function GuidesPage() {

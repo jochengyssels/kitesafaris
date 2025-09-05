@@ -7,6 +7,9 @@ import { PolicySection } from "@/components/policy-section"
 export const metadata: Metadata = {
   title: "Book Your Safari | KiteSafaris.com",
   description: "Book your unforgettable kiteboarding safari with transparent pricing and instant confirmation.",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/booking"
+  },
 }
 
 export default function BookingPage() {

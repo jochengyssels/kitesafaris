@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: "Pricing | Book Your Kite Safari from €1,900 | KiteSafaris",
   description: "Transparent pricing for KiteSafaris. From €1,900 for 7 days. See what's included and optional extras.",
   keywords: "kitesurf pricing, kite safari cost, €1,900 kitesurf trip, transparent pricing, all-inclusive kitesurfing",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/pricing"
+  },
   openGraph: {
     title: "Pricing | Book Your Kite Safari from €1,900 | KiteSafaris",
     description: "Transparent pricing for KiteSafaris. From €1,900 for 7 days. See what's included and optional extras.",

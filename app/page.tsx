@@ -3,7 +3,6 @@ import HeroSection from "@/components/hero-section"
 import HighlightCards from "@/components/highlight-cards"
 import DestinationsMap from "@/components/destinations-map"
 import { TestimonialCarousel } from "@/components/testimonial-carousel"
-import { InstagramFeed } from "@/components/instagram-feed"
 import { SardinianAwakeningCTA } from "@/components/sardinian-awakening-cta"
 import type { Metadata } from "next"
 
@@ -68,7 +67,6 @@ export default function HomePage() {
           <TestimonialCarousel />
         </div>
       </section>
-      <InstagramFeed />
     </main>
   )
 }

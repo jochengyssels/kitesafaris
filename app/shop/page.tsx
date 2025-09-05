@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   description:
     "Shop premium KiteSafaris branded merchandise including apparel, accessories, and lifestyle products. High-quality gear for kiteboarding enthusiasts and ocean lovers.",
   keywords: "kiteboarding merchandise, KiteSafaris gear, sailing apparel, ocean lifestyle, branded clothing",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/shop"
+  },
   openGraph: {
     title: "KiteSafaris Gear - Premium Kiteboarding Merchandise",
     description: "Discover premium KiteSafaris branded gear and accessories for your next adventure",

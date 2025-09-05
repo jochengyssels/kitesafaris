@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   description:
     "Expert kiteboarding travel guides, flight tips, destination insights, and kite safari advice from the KiteSafaris team.",
   keywords: "kiteboarding blog, kite safari guides, kitesurfing travel tips, Caribbean kiteboarding, flight guides",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/blog"
+  },
 }
 
 const blogPosts = [

@@ -5,6 +5,9 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "FAQ - KiteSafaris.com",
   description: "Frequently asked questions about kiteboarding safaris, bookings, and travel information.",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/faq"
+  },
 }
 
 export default function FAQPage() {

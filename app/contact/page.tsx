@@ -2,24 +2,12 @@
 
 import type React from "react"
 import { MessageCircle, MessageSquare, Phone, Mail, Send, CheckCircle, AlertCircle, Loader2, Globe, Shield, Clock } from "lucide-react"
-import type { Metadata } from "next"
 
 import { Navigation } from "@/components/navigation"
 import { EnhancedFooter } from "@/components/enhanced-footer"
 import { FloatingActionButtons } from "@/components/floating-action-buttons"
 import { DestinationFocusedMap } from "@/components/destination-focused-map"
 import { useState, useRef, useEffect } from "react"
-
-export const metadata: Metadata = {
-  title: "Contact KiteSafaris | Plan Your Kitesurfing Adventure",
-  description: "Get in touch with KiteSafaris. Ask questions, plan your kitesurf safari, or request custom packages.",
-  keywords: "contact KiteSafaris, kitesurf safari planning, custom packages, kitesurfing questions",
-  openGraph: {
-    title: "Contact KiteSafaris | Plan Your Kitesurfing Adventure",
-    description: "Get in touch with KiteSafaris. Ask questions, plan your kitesurf safari, or request custom packages.",
-    type: "website",
-  },
-}
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)

@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   title: "Kitesurf Packages | 7-Day Catamaran Trips | KiteSafaris",
   description: "Browse kitesurf packages: 7-day Caribbean safaris, all-inclusive adventures with expert crew and small groups.",
   keywords: "kitesurf packages, 7-day catamaran trips, Caribbean kitesurf safaris, all-inclusive kitesurfing, small group kitesurfing",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/packages"
+  },
   openGraph: {
     title: "Kitesurf Packages | 7-Day Catamaran Trips | KiteSafaris",
     description: "Browse kitesurf packages: 7-day Caribbean safaris, all-inclusive adventures with expert crew and small groups.",

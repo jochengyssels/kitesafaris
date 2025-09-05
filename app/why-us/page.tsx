@@ -6,6 +6,9 @@ export const metadata = {
   title: "Why Choose KiteSafaris.com - Expert Crew & Eco-Friendly Adventures",
   description:
     "Discover why KiteSafaris.com is the premier choice for luxury kiteboarding adventures. Safety certified, experienced crew, and eco-friendly practices.",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/why-us"
+  },
 }
 
 export default function WhyUsPage() {

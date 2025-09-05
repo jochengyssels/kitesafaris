@@ -6,6 +6,7 @@ import { Montserrat } from "next/font/google"
 import "./globals.css"
 import { EnhancedFooter } from "@/components/enhanced-footer"
 import { WhatsAppButton } from "@/components/whatsapp-button"
+import { JsonLd, organizationSchema, websiteSchema } from "@/components/seo/JsonLd"
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -67,32 +68,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "TravelAgency",
-              name: "KiteSafaris.com",
-              description: "Luxury Caribbean kite safari adventures in Antigua aboard premium catamarans",
-              url: "https://kitesafaris.com",
-              telephone: "+32 492 57 64 27",
-              address: {
-                "@type": "PostalAddress",
-                addressCountry: "BE",
-              },
-              sameAs: ["https://www.instagram.com/kitesafaris", "https://www.facebook.com/kitesafaris"],
-              offers: {
-                "@type": "Offer",
-                name: "Caribbean Kite Safari Antigua",
-                description: "7-day luxury catamaran kiteboarding adventure in Antigua",
-                price: "1900",
-                priceCurrency: "EUR",
-                availability: "https://schema.org/InStock",
-              },
-            }),
-          }}
-        />
+        <JsonLd data={organizationSchema} />
+        <JsonLd data={websiteSchema} />
       </head>
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} ${montserrat.variable}`}>
         {children}
