@@ -53,6 +53,7 @@
     "geist": "latest",
     "glob": "^11.0.3",
     "google-maps": "latest",
+    "hls.js": "^1.6.11",
     "input-otp": "1.4.1",
     "jose": "^6.1.0",
     "lucide-react": "^0.454.0",

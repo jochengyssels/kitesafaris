@@ -2,7 +2,7 @@ import { notFound } from "next/navigation"
 import { DestinationDetail } from "@/components/destination-detail"
 import { Navigation } from "@/components/navigation"
 import { AntiguaTripCalendar } from "@/components/antigua-trip-calendar"
-import { DestinationFocusedMap } from "@/components/destination-focused-map"
+import { SardiniaPartnerSchools } from "@/components/sardinia-partner-schools"
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -103,23 +103,60 @@ const destinations = [
     id: "sardinia",
     name: "Punta Trettu",
     region: "Sardinia",
-    coordinates: { lat: 39.0458, lng: 8.8394 },
+    coordinates: { lat: 39.112133995367714, lng: 8.437520043416788 },
     bannerImage: "/sardinia-punta-trettu-kiteboarding-mediterranean-c.png",
     windRating: 4,
     difficulty: "All Levels",
     tideRating: 4,
-    season: "Coming Soon",
+    season: "Apr - Oct",
     windSpeed: "12-22 knots",
     culture: "Mediterranean island lifestyle",
-    intro: "Coming Soon: Year-round kitesurfing from our home base location at Punta Trettu, Sardinia. Consistent conditions and authentic Mediterranean lifestyle.",
+    intro: "Discover Sardinia's premier kitesurfing destination at Punta Trettu, where flat shallow lagoons meet consistent thermal winds in one of Europe's most beginner-friendly locations. From April to October, experience world-class kitesurfing conditions with professional instruction from certified partner schools, exclusive KiteSafaris discounts, and the authentic charm of Mediterranean island life.",
     highlights: [
-      "Year-round kitesurfing conditions",
-      "Home base location for KiteSafaris",
-      "Consistent wind patterns and safe launches",
-      "Authentic Mediterranean island culture",
-      "Perfect for all skill levels and progression",
+      "World-class flat shallow lagoon - Europe's premier beginner destination",
+      "Consistent thermal winds 12-22 knots from April to October",
+      "Professional IKO certified instruction from partner schools",
+      "Exclusive KiteSafaris discounts on lessons and equipment",
+      "Authentic Mediterranean culture and world-renowned cuisine",
+      "Home base for KiteSafaris operations and expert guidance",
     ],
-    itinerary: [],
+    itinerary: [
+      {
+        day: 1,
+        activity: "Arrival and orientation",
+        description: "Welcome to Punta Trettu, meet your certified instructors and get familiar with the world-class lagoon conditions",
+      },
+      {
+        day: 2,
+        activity: "Beginner kitesurf lesson",
+        description: "Learn kite control and safety in the flat, shallow waters of the lagoon with professional guidance",
+      },
+      {
+        day: 3,
+        activity: "Water start practice",
+        description: "Master the water start technique in ideal beginner conditions with personalized instruction",
+      },
+      {
+        day: 4,
+        activity: "Riding and progression",
+        description: "Practice riding upwind and basic maneuvers with expert coaching and modern equipment",
+      },
+      {
+        day: 5,
+        activity: "Independent practice",
+        description: "Apply your new skills with supervised practice sessions in the perfect learning environment",
+      },
+      {
+        day: 6,
+        activity: "Advanced techniques",
+        description: "Learn transitions, turns, and build confidence in your riding with professional support",
+      },
+      {
+        day: 7,
+        activity: "Graduation and celebration",
+        description: "Showcase your progress and celebrate your kitesurfing journey with fellow students",
+      },
+    ],
     gallery: [],
   },
 ]
@@ -132,34 +169,92 @@ export default async function DestinationDetailPage({ params }: PageProps) {
     notFound()
   }
 
+  // Generate JSON-LD for Sardinia
+  const sardiniaJsonLd = destination.id === "sardinia" ? {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Kitesurf Sardinia | Punta Trettu - Best Kitesurfing Destination Italy",
+    "description": "Discover why Sardinia is Italy's premier kitesurfing destination. Punta Trettu offers perfect conditions for all levels with consistent winds, flat water, and professional instruction.",
+    "url": "https://kitesafaris.com/destinations/sardinia",
+    "mainEntity": {
+      "@type": "Place",
+      "name": "Punta Trettu, Sardinia",
+      "description": "Italy's premier kitesurfing destination with world-class flat water conditions",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "San Giovanni Suergiu",
+        "addressRegion": "Sardinia",
+        "addressCountry": "Italy"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 39.112133995367714,
+        "longitude": 8.437520043416788
+      },
+      "amenityFeature": [
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Kitesurfing",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification", 
+          "name": "Beginner Friendly",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Flat Water",
+          "value": true
+        }
+      ]
+    },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://kitesafaris.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Destinations",
+          "item": "https://kitesafaris.com/destinations"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Sardinia",
+          "item": "https://kitesafaris.com/destinations/sardinia"
+        }
+      ]
+    }
+  } : null
+
   return (
     <div className="min-h-screen bg-white">
+      {sardiniaJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(sardiniaJsonLd) }}
+        />
+      )}
       <Navigation />
       <div className="pt-20">
-        <div className="container mx-auto px-4 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-              <DestinationDetail destination={destination} />
-              {destination.id === "antigua" && (
-                <div className="mt-8">
-                  <AntiguaTripCalendar />
-                </div>
-              )}
-            </div>
-            <div className="lg:col-span-1">
-              <div className="sticky top-24">
-                <DestinationFocusedMap
-                  destination={{
-                    id: destination.id,
-                    name: destination.name,
-                    coordinates: destination.coordinates,
-                    zoom: 9,
-                  }}
-                />
-              </div>
-            </div>
+        <DestinationDetail destination={destination} />
+        {destination.id === "antigua" && (
+          <div className="mt-8">
+            <AntiguaTripCalendar />
           </div>
-        </div>
+        )}
+        {destination.id === "sardinia" && (
+          <div className="mt-8">
+            <SardiniaPartnerSchools />
+          </div>
+        )}
       </div>
     </div>
   )
@@ -176,42 +271,152 @@ export async function generateMetadata({ params }: PageProps) {
     }
   }
 
+  // Generate destination-specific metadata
+  const getDestinationMetadata = (dest: typeof destinations[0]) => {
+    switch (dest.id) {
+      case "sardinia":
+        return {
+          title: `Kitesurf Sardinia | Punta Trettu - Best Kitesurfing Destination Italy - KiteSafaris`,
+          description: `Discover why Sardinia is Italy's premier kitesurfing destination. Punta Trettu offers perfect conditions for all levels with consistent winds, flat water, and professional instruction April-October. Exclusive KiteSafaris discounts.`,
+          keywords: [
+            "kitesurf Sardinia",
+            "Punta Trettu",
+            "kitesurf school Sardinia", 
+            "kitesurfing Sardinia",
+            "Punta Trettu kitesurfing",
+            "kitesurf Punta Trettu",
+            "Sardinia kitesurfing",
+            "kitesurf Italy",
+            "beginner kitesurfing Sardinia",
+            "kitesurfing lessons Sardinia",
+            "kitesurf instruction Sardinia",
+            "Sardinia kiteboarding",
+            "kitesurfing beginner Italy",
+            "Punta Trettu kitesurf school",
+            "Sardinia wind conditions"
+          ].join(", "),
+          openGraph: {
+            title: `Kitesurf Sardinia | Punta Trettu - Best Kitesurfing Destination Italy`,
+            description: `Discover why Sardinia is Italy's premier kitesurfing destination. Punta Trettu offers perfect conditions for all levels with consistent winds and professional instruction.`,
+            images: [
+              {
+                url: "https://kitesafaris.com/sardinia-punta-trettu-kiteboarding-mediterranean-c.png",
+                width: 1200,
+                height: 630,
+                alt: "Kitesurfing Sardinia Punta Trettu best kitesurfing destination Italy",
+              },
+            ],
+          },
+          twitter: {
+            title: `Kitesurf Sardinia | Punta Trettu - Best Kitesurfing Destination Italy`,
+            description: `Discover why Sardinia is Italy's premier kitesurfing destination. Punta Trettu offers perfect conditions for all levels with consistent winds.`,
+            images: ["https://kitesafaris.com/sardinia-punta-trettu-kiteboarding-mediterranean-c.png"],
+          },
+        }
+      case "antigua":
+        return {
+          title: `Caribbean Kite Safari Antigua | Luxury Catamaran Kiteboarding Adventures - KiteSafaris`,
+          description: `Experience the ultimate Caribbean kite safari in Antigua aboard luxury catamarans. 7-day trips with expert guides, premium equipment, and unforgettable adventures.`,
+          keywords: [
+            "Caribbean kite safari",
+            "Antigua kiteboarding trip",
+            "catamaran safari Antigua",
+            "book kiteboarding holiday Caribbean",
+            "luxury kitesafari",
+            "Antigua kite spots",
+            "Caribbean kitesurfing vacation",
+          ].join(", "),
+          openGraph: {
+            title: `Caribbean Kite Safari Antigua | Luxury Catamaran Kiteboarding Adventures`,
+            description: `Experience the ultimate Caribbean kite safari in Antigua aboard luxury catamarans. 7-day trips with expert guides, premium equipment, and unforgettable adventures.`,
+            images: [
+              {
+                url: "http://localhost:3000/antigua-jolly-harbor-kiting.png",
+                width: 1200,
+                height: 630,
+                alt: "Caribbean catamaran kite safari Antigua luxury kiteboarding adventure",
+              },
+            ],
+          },
+          twitter: {
+            title: `Caribbean Kite Safari Antigua | Luxury Catamaran Adventures`,
+            description: `Book your Caribbean kite safari in Antigua! 7-day luxury catamaran kiteboarding trips from €1,900.`,
+            images: ["http://localhost:3000/antigua-jolly-harbor-kiting.png"],
+          },
+        }
+      case "greece":
+        return {
+          title: `${dest.name} - KiteSafaris.com`,
+          description: dest.intro,
+          keywords: [
+            "Greek islands kitesurfing",
+            "Aegean kitesurfing",
+            "Greece kiteboarding",
+            "Mediterranean kitesurfing",
+          ].join(", "),
+          openGraph: {
+            title: `${dest.name} - KiteSafaris.com`,
+            description: dest.intro,
+            images: [
+              {
+                url: "http://localhost:3000/greek-aegean-islands-kiteboarding-meltemi-winds.png",
+                width: 1200,
+                height: 630,
+                alt: `${dest.name} kitesurfing destination`,
+              },
+            ],
+          },
+          twitter: {
+            title: `${dest.name} - KiteSafaris.com`,
+            description: dest.intro,
+            images: ["http://localhost:3000/greek-aegean-islands-kiteboarding-meltemi-winds.png"],
+          },
+        }
+      default:
+        return {
+          title: `${dest.name} - KiteSafaris.com`,
+          description: dest.intro,
+          keywords: ["kitesurfing", "kiteboarding", "safari", "adventure"].join(", "),
+          openGraph: {
+            title: `${dest.name} - KiteSafaris.com`,
+            description: dest.intro,
+            images: [
+              {
+                url: dest.bannerImage ? `http://localhost:3000${dest.bannerImage}` : "http://localhost:3000/placeholder.svg",
+                width: 1200,
+                height: 630,
+                alt: `${dest.name} kitesurfing destination`,
+              },
+            ],
+          },
+          twitter: {
+            title: `${dest.name} - KiteSafaris.com`,
+            description: dest.intro,
+            images: [dest.bannerImage ? `http://localhost:3000${dest.bannerImage}` : "http://localhost:3000/placeholder.svg"],
+          },
+        }
+    }
+  }
+
+  const metadata = getDestinationMetadata(destination)
+
   return {
-    title: `${destination.name} - KiteSafaris.com`,
-    description: destination.intro,
-    keywords: [
-      "Caribbean kite safari",
-      "Antigua kiteboarding trip",
-      "catamaran safari Antigua",
-      "book kiteboarding holiday Caribbean",
-      "luxury kitesafari",
-      "Antigua kite spots",
-      "Caribbean kitesurfing vacation",
-    ].join(", "),
+    title: metadata.title,
+    description: metadata.description,
+    keywords: metadata.keywords,
     robots: "index, follow",
     googlebot: "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1",
     "google-site-verification": "your-google-verification-code",
     openGraph: {
-      title: `Caribbean Kite Safari Antigua | Luxury Catamaran Kiteboarding Adventures`,
-      description: `Experience the ultimate Caribbean kite safari in Antigua aboard luxury catamarans. 7-day trips with expert guides, premium equipment, and unforgettable adventures.`,
-      url: "https://kitesafaris.com",
+      ...metadata.openGraph,
+      url: `https://kitesafaris.com/destinations/${destination.id}`,
       siteName: "KiteSafaris.com",
       locale: "en_US",
-      images: [
-        {
-          url: "http://localhost:3000/antigua-jolly-harbor-kiting.png",
-          width: 1200,
-          height: 630,
-          alt: "Caribbean catamaran kite safari Antigua luxury kiteboarding adventure",
-        },
-      ],
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: `Caribbean Kite Safari Antigua | Luxury Catamaran Adventures`,
-      description: `Book your Caribbean kite safari in Antigua! 7-day luxury catamaran kiteboarding trips from €1,900.`,
-      images: ["http://localhost:3000/antigua-jolly-harbor-kiting.png"],
+      ...metadata.twitter,
     },
   }
 }

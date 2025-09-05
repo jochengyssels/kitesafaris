@@ -13,6 +13,7 @@ import {
   Menu,
   GitBranch,
   LogOut,
+  Camera,
 } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -85,6 +86,13 @@ export default function AdminDashboard() {
       icon: Users,
       href: "/admin/users",
       color: "bg-sand-beige-600",
+    },
+    {
+      title: "Kite Counter",
+      description: "AI-powered kite counting from live webcam feed",
+      icon: Camera,
+      href: "/admin/kite-counter",
+      color: "bg-purple-500",
     },
     {
       title: "Settings",

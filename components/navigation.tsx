@@ -495,14 +495,6 @@ export function Navigation() {
                 </div>
               ))}
 
-              <Link
-                href="/admin"
-                className="block text-sm text-gray-400 hover:text-coral-orange transition-colors py-2 px-4 border-t border-white border-opacity-20 mt-4 pt-4"
-                onClick={() => setIsMobileMenuOpen(false)}
-                aria-label="Admin dashboard access"
-              >
-                Admin Dashboard
-              </Link>
 
               <div className="flex items-center justify-center space-x-8 pt-6 border-t border-white border-opacity-20">
                 <button

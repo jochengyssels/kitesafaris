@@ -22,6 +22,9 @@ import {
 import Link from "next/link"
 import { PixabayGallery } from "./pixabay-gallery"
 import { SardinianAwakeningCTA } from "./sardinian-awakening-cta"
+import { DestinationFocusedMap } from "./destination-focused-map"
+import PuntaTrettuWebcam from "./webcam/PuntaTrettuWebcam"
+import WindConditionsCard from "./wind/WindConditionsCard"
 
 interface Destination {
   id: string
@@ -42,6 +45,10 @@ interface Destination {
     description: string
   }>
   gallery: string[]
+  coordinates?: {
+    lat: number
+    lng: number
+  }
 }
 
 interface DestinationDetailProps {
@@ -93,82 +100,138 @@ export function DestinationDetail({ destination }: DestinationDetailProps) {
   const locationData = getLocationCoordinates(destination.id)
 
   return (
-    <div className="pt-16">
+    <div>
       {/* Full-width banner */}
-      <div className="relative h-[60vh] md:h-[70vh] w-full overflow-hidden">
-        <Image
-          src={
-            destination.bannerImage ||
-            "/placeholder.svg?height=600&width=1200&query=tropical kiteboarding destination with turquoise water and luxury catamaran" ||
-            "/placeholder.svg" ||
-            "/placeholder.svg" ||
-            "/placeholder.svg" ||
-            "/placeholder.svg"
-          }
-          alt={`Kiteboarding scene in ${destination.name}`}
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+      {destination.id === "sardinia" ? (
+        /* Live webcam hero for Sardinia */
+        <div className="relative h-[60vh] md:h-[70vh] w-full overflow-hidden">
+          <div className="absolute inset-0">
+            <PuntaTrettuWebcam
+              className="w-full h-full object-cover"
+              ariaLabel="Live webcam stream: Punta Trettu, Sardinia - Current kitesurfing conditions"
+            />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+          
+          {/* Live indicator */}
+          <div className="absolute top-6 right-6 bg-red-600 text-white px-3 py-1 rounded-full flex items-center gap-2 text-sm font-medium">
+            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+            LIVE
+          </div>
 
-        {/* Overlay content */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="font-montserrat font-bold text-4xl md:text-6xl text-white mb-4 text-balance">
-              {destination.name}
-            </h1>
+          {/* Overlay content */}
+          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12">
+            <div className="max-w-4xl mx-auto">
+              <h1 className="font-montserrat font-bold text-4xl md:text-6xl text-white mb-4 text-balance">
+                {destination.name}
+              </h1>
+              <p className="font-open-sans text-lg md:text-xl text-white/90 mb-6">
+                Watch live conditions at Sardinia's premier kitesurfing destination
+              </p>
 
-            {/* Stats bar */}
-            <div className="flex flex-wrap gap-6 text-white">
-              <div className="flex items-center gap-2">
-                <Wind className="w-6 h-6 text-coral-orange" />
-                <span className="font-open-sans">
-                  {Array.from({ length: destination.windRating }, (_, i) => "★").join("")} Wind
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Waves className="w-6 h-6 text-coral-orange" />
-                <span className="font-open-sans">
-                  {Array.from({ length: destination.tideRating }, (_, i) => "★").join("")} Tides
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Star className="w-6 h-6 text-coral-orange" />
-                <span className="font-open-sans">{destination.difficulty}</span>
+              {/* Stats bar */}
+              <div className="flex flex-wrap gap-6 text-white">
+                <div className="flex items-center gap-2">
+                  <Wind className="w-6 h-6 text-coral-orange" />
+                  <span className="font-open-sans">
+                    {Array.from({ length: destination.windRating }, (_, i) => "★").join("")} Wind
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Waves className="w-6 h-6 text-coral-orange" />
+                  <span className="font-open-sans">
+                    {Array.from({ length: destination.tideRating }, (_, i) => "★").join("")} Tides
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Star className="w-6 h-6 text-coral-orange" />
+                  <span className="font-open-sans">{destination.difficulty}</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      ) : (
+        /* Static image hero for other destinations */
+        <div className="relative h-[60vh] md:h-[70vh] w-full overflow-hidden">
+          <Image
+            src={
+              destination.bannerImage ||
+              "/placeholder.svg?height=600&width=1200&query=tropical kiteboarding destination with turquoise water and luxury catamaran" ||
+              "/placeholder.svg" ||
+              "/placeholder.svg" ||
+              "/placeholder.svg" ||
+              "/placeholder.svg"
+            }
+            alt={`Kiteboarding scene in ${destination.name}`}
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+
+          {/* Overlay content */}
+          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12">
+            <div className="max-w-4xl mx-auto">
+              <h1 className="font-montserrat font-bold text-4xl md:text-6xl text-white mb-4 text-balance">
+                {destination.name}
+              </h1>
+
+              {/* Stats bar */}
+              <div className="flex flex-wrap gap-6 text-white">
+                <div className="flex items-center gap-2">
+                  <Wind className="w-6 h-6 text-coral-orange" />
+                  <span className="font-open-sans">
+                    {Array.from({ length: destination.windRating }, (_, i) => "★").join("")} Wind
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Waves className="w-6 h-6 text-coral-orange" />
+                  <span className="font-open-sans">
+                    {Array.from({ length: destination.tideRating }, (_, i) => "★").join("")} Tides
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Star className="w-6 h-6 text-coral-orange" />
+                  <span className="font-open-sans">{destination.difficulty}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="max-w-4xl mx-auto px-6 py-12">
         <div className="space-y-12">
           {/* Introduction */}
           <section>
             <p className="font-open-sans text-lg text-gray-700 leading-relaxed">{destination.intro}</p>
+            {destination.id === "sardinia" && (
+              <div className="mt-4 p-4 bg-turquoise/10 border border-turquoise/20 rounded-lg">
+                <p className="font-open-sans text-sm text-deep-navy">
+                  <strong>Live Conditions:</strong> The hero video above shows real-time conditions at Punta Trettu. 
+                  Watch the live stream to see current wind, water conditions, and kitesurfing activity at Sardinia's premier kitesurfing destination.
+                </p>
+              </div>
+            )}
           </section>
 
+          {/* Live Wind Conditions - Sardinia only */}
+          {destination.id === "sardinia" && (
+            <section>
+              <WindConditionsCard />
+            </section>
+          )}
+
           <section>
-            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-lg">
-              <div className="p-4 bg-sand-beige border-b border-gray-200">
-                <h2 className="font-montserrat font-bold text-2xl text-deep-navy flex items-center gap-2">
-                  <MapPin className="w-6 h-6 text-turquoise" />
-                  {destination.name} Location
-                </h2>
-              </div>
-              <div className="relative h-64 w-full bg-gradient-to-br from-turquoise/20 to-deep-navy/20 flex items-center justify-center">
-                {/* Static location display */}
-                <div className="text-center">
-                  <MapPin className="w-12 h-12 text-turquoise mx-auto mb-3" />
-                  <h3 className="font-montserrat font-semibold text-deep-navy text-lg mb-1">{destination.name}</h3>
-                  <p className="font-open-sans text-gray-600 text-sm">
-                    Coordinates: {locationData.lat}°, {locationData.lng}°
-                  </p>
-                  <p className="font-open-sans text-xs text-gray-500 mt-2">Interactive map coming soon</p>
-                </div>
-              </div>
-            </div>
+            <DestinationFocusedMap
+              destination={{
+                id: destination.id,
+                name: destination.name,
+                coordinates: destination.coordinates || locationData,
+                zoom: 9,
+              }}
+            />
           </section>
 
           <section>
@@ -201,6 +264,98 @@ export function DestinationDetail({ destination }: DestinationDetailProps) {
           </section>
 
           <SardinianAwakeningCTA variant="destinations" />
+
+          {/* Sardinia-specific resources section */}
+          {destination.id === "sardinia" && (
+            <section>
+              <div className="bg-gradient-to-br from-deep-navy to-turquoise rounded-lg p-8 text-white">
+                <h2 className="font-montserrat font-bold text-3xl mb-6">Complete Sardinia Kitesurfing Guide</h2>
+                <p className="font-open-sans text-lg mb-8 leading-relaxed">
+                  Explore our comprehensive resources for kitesurfing in Sardinia. From detailed spot information to beginner guides, 
+                  find everything you need to plan your perfect kitesurfing adventure.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <Link
+                    href="/destinations/sardinia/punta-trettu"
+                    className="block bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-6 transition-all duration-200 hover:scale-105"
+                  >
+                    <div className="flex items-center gap-3 mb-3">
+                      <MapPin className="w-6 h-6 text-coral-orange" />
+                      <h3 className="font-montserrat font-bold text-xl">Punta Trettu</h3>
+                    </div>
+                    <p className="font-open-sans text-gray-200 text-sm leading-relaxed">
+                      Discover Sardinia's premier kitesurfing destination with flat shallow lagoons perfect for beginners.
+                    </p>
+                  </Link>
+                  
+                  <Link
+                    href="/destinations/sardinia/kitesurf-schools"
+                    className="block bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-6 transition-all duration-200 hover:scale-105"
+                  >
+                    <div className="flex items-center gap-3 mb-3">
+                      <Users className="w-6 h-6 text-coral-orange" />
+                      <h3 className="font-montserrat font-bold text-xl">Kitesurf Schools</h3>
+                    </div>
+                    <p className="font-open-sans text-gray-200 text-sm leading-relaxed">
+                      Professional kitesurfing schools with certified instructors and exclusive KiteSafaris discounts.
+                    </p>
+                  </Link>
+                  
+                  <Link
+                    href="/destinations/sardinia/kitesurf-sardinia"
+                    className="block bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-6 transition-all duration-200 hover:scale-105"
+                  >
+                    <div className="flex items-center gap-3 mb-3">
+                      <Wind className="w-6 h-6 text-coral-orange" />
+                      <h3 className="font-montserrat font-bold text-xl">Kitesurf Sardinia</h3>
+                    </div>
+                    <p className="font-open-sans text-gray-200 text-sm leading-relaxed">
+                      Complete overview of Sardinia as Italy's premier kitesurfing destination with multiple world-class spots.
+                    </p>
+                  </Link>
+                  
+                  <Link
+                    href="/destinations/sardinia/beginner-guide"
+                    className="block bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-6 transition-all duration-200 hover:scale-105"
+                  >
+                    <div className="flex items-center gap-3 mb-3">
+                      <Star className="w-6 h-6 text-coral-orange" />
+                      <h3 className="font-montserrat font-bold text-xl">Beginner's Guide</h3>
+                    </div>
+                    <p className="font-open-sans text-gray-200 text-sm leading-relaxed">
+                      Step-by-step guide to learning kitesurfing in Sardinia with safety tips and progression timeline.
+                    </p>
+                  </Link>
+                  
+                  <Link
+                    href="/destinations/sardinia/wind-conditions"
+                    className="block bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-6 transition-all duration-200 hover:scale-105"
+                  >
+                    <div className="flex items-center gap-3 mb-3">
+                      <Calendar className="w-6 h-6 text-coral-orange" />
+                      <h3 className="font-montserrat font-bold text-xl">Wind Conditions</h3>
+                    </div>
+                    <p className="font-open-sans text-gray-200 text-sm leading-relaxed">
+                      Detailed wind patterns, seasonal conditions, and forecast resources for optimal kitesurfing.
+                    </p>
+                  </Link>
+                  
+                  <Link
+                    href="/destinations/sardinia/punta-trettu"
+                    className="block bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-6 transition-all duration-200 hover:scale-105"
+                  >
+                    <div className="flex items-center gap-3 mb-3">
+                      <Anchor className="w-6 h-6 text-coral-orange" />
+                      <h3 className="font-montserrat font-bold text-xl">Live Webcam</h3>
+                    </div>
+                    <p className="font-open-sans text-gray-200 text-sm leading-relaxed">
+                      Watch live conditions at Punta Trettu with our embedded webcam feed from partner schools.
+                    </p>
+                  </Link>
+                </div>
+              </div>
+            </section>
+          )}
 
           {/* Trip highlights */}
           <section>
