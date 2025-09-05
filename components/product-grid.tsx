@@ -51,7 +51,7 @@ export function ProductGrid({ products, onAddToCart }: ProductGridProps) {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6">
         {products.map((product) => (
           <div
             key={product.id}
@@ -75,37 +75,38 @@ export function ProductGrid({ products, onAddToCart }: ProductGridProps) {
             </div>
 
             {/* Product Info */}
-            <div className="p-6">
-              <div className="mb-3">
-                <span className="inline-block px-3 py-1 bg-turquoise-blue/20 text-turquoise-900 text-xs font-medium rounded-full capitalize">
+            <div className="p-4 sm:p-6">
+              <div className="mb-2 sm:mb-3">
+                <span className="inline-block px-2 sm:px-3 py-1 bg-turquoise-blue/20 text-turquoise-900 text-xs font-medium rounded-full capitalize">
                   {product.category.replace("-", " ")}
                 </span>
               </div>
 
-              <h3 className="font-montserrat font-bold text-lg text-gray-900 mb-2 line-clamp-2">{product.name}</h3>
+              <h3 className="font-montserrat font-bold text-sm sm:text-lg text-gray-900 mb-2 line-clamp-2">{product.name}</h3>
 
-              <div className="flex items-center justify-between mb-4">
-                <span className="font-montserrat text-2xl font-bold text-coral-orange">
+              <div className="flex items-center justify-between mb-3 sm:mb-4">
+                <span className="font-montserrat text-lg sm:text-2xl font-bold text-coral-orange">
                   {product.currency === 'EUR' ? '€' : product.currency === 'USD' ? '$' : product.currency}{product.price}
                 </span>
-                <span className="text-sm text-gray-500">{product.currency}</span>
+                <span className="text-xs sm:text-sm text-gray-500">{product.currency}</span>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <button
                   onClick={() => setSelectedProduct(product)}
-                  className="flex-1 px-4 py-2 bg-deep-navy text-white font-medium rounded-lg hover:bg-deep-navy/90 transition-colors focus:outline-none focus:ring-2 focus:ring-deep-navy focus:ring-opacity-50"
+                  className="flex-1 px-3 sm:px-4 py-2 bg-deep-navy text-white font-medium rounded-lg hover:bg-deep-navy/90 transition-colors focus:outline-none focus:ring-2 focus:ring-deep-navy focus:ring-opacity-50 text-sm sm:text-base"
                 >
-                  View Details
+                  <span className="hidden sm:inline">View Details</span>
+                  <span className="sm:hidden">Details</span>
                 </button>
                 <button
                   onClick={() => onAddToCart(product)}
                   disabled={!product.available}
-                  className="px-4 py-2 bg-coral-orange text-white font-medium rounded-lg hover:bg-orange-500 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-coral-orange focus:ring-opacity-50"
+                  className="px-3 sm:px-4 py-2 bg-coral-orange text-white font-medium rounded-lg hover:bg-orange-500 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-coral-orange focus:ring-opacity-50"
                   aria-label={`Add ${product.name} to cart`}
                 >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
                 </button>

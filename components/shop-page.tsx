@@ -43,6 +43,7 @@ export function ShopPage() {
     searchQuery: "",
   })
   const [isCartOpen, setIsCartOpen] = useState(false)
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false)
 
   const { items: cartItems, addItem, removeItem, updateQuantity, getTotalItems, getTotalPrice } = useCart()
 
@@ -120,7 +121,7 @@ export function ShopPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-turquoise-blue via-sand-beige to-coral-orange">
       {/* Hero Section */}
-      <section className="relative h-96 overflow-hidden">
+      <section className="relative h-80 md:h-96 overflow-hidden">
         <div className="absolute inset-0">
           {/* Beautiful gradient background with ocean-inspired patterns */}
           <div className="absolute inset-0 bg-gradient-to-br from-deep-navy via-turquoise-blue to-coral-orange" />
@@ -132,18 +133,18 @@ export function ShopPage() {
 
         <div className="relative z-10 flex h-full items-center justify-center px-4">
           <div className="text-center max-w-4xl">
-            <h1 className="font-montserrat text-4xl md:text-6xl font-bold text-white mb-6 text-balance animate-fade-in">
+            <h1 className="font-montserrat text-3xl sm:text-4xl md:text-6xl font-bold text-white mb-4 md:mb-6 text-balance animate-fade-in">
               KiteSafaris Gear
             </h1>
-            <p className="font-open-sans text-xl md:text-2xl text-turquoise-100 mb-8 text-pretty animate-fade-in-delay">
+            <p className="font-open-sans text-lg sm:text-xl md:text-2xl text-turquoise-100 mb-6 md:mb-8 text-pretty animate-fade-in-delay px-2">
               Wear Your Adventure - Premium merchandise for ocean lovers and kiteboarding enthusiasts
             </p>
-            <div className="flex items-center justify-center gap-4 animate-fade-in-delay-2">
-              <div className="px-6 py-3 bg-white/20 backdrop-blur-sm rounded-full border border-white/30 hover:bg-white/30 transition-all duration-300">
-                <span className="font-montserrat text-white font-medium">🚢 Free Shipping Over €75</span>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 animate-fade-in-delay-2">
+              <div className="px-4 sm:px-6 py-2 sm:py-3 bg-white/20 backdrop-blur-sm rounded-full border border-white/30 hover:bg-white/30 transition-all duration-300">
+                <span className="font-montserrat text-white font-medium text-sm sm:text-base">🚢 Free Shipping Over €75</span>
               </div>
-              <div className="px-6 py-3 bg-white/20 backdrop-blur-sm rounded-full border border-white/30 hover:bg-white/30 transition-all duration-300">
-                <span className="font-montserrat text-white font-medium">⭐ Premium Quality</span>
+              <div className="px-4 sm:px-6 py-2 sm:py-3 bg-white/20 backdrop-blur-sm rounded-full border border-white/30 hover:bg-white/30 transition-all duration-300">
+                <span className="font-montserrat text-white font-medium text-sm sm:text-base">⭐ Premium Quality</span>
               </div>
             </div>
           </div>
@@ -152,7 +153,7 @@ export function ShopPage() {
         {/* Shopping Cart Button */}
         <button
           onClick={() => setIsCartOpen(true)}
-          className="fixed top-20 right-4 z-50 bg-coral-orange hover:bg-orange-500 text-white p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-105"
+          className="fixed top-24 sm:top-20 right-4 z-50 bg-coral-orange hover:bg-orange-500 text-white p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-105"
           aria-label={`Shopping cart with ${getTotalItems()} items`}
         >
           <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -171,11 +172,41 @@ export function ShopPage() {
         </button>
       </section>
 
+      {/* Mobile Filter Toggle */}
+      <div className="lg:hidden sticky top-16 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => setIsFiltersOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-deep-navy text-white rounded-lg hover:bg-deep-navy/90 transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+              </svg>
+              <span className="font-medium">Filters</span>
+            </button>
+            
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600">{filteredProducts.length} products</span>
+              <select
+                value={filters.sortBy}
+                onChange={(e) => setFilters({ ...filters, sortBy: e.target.value })}
+                className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-coral-orange focus:border-transparent"
+              >
+                <option value="name">Name A-Z</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
+      <div className="max-w-7xl mx-auto px-4 py-6 lg:py-12">
         <div className="grid lg:grid-cols-4 gap-8">
-          {/* Filters Sidebar */}
-          <div className="lg:col-span-1">
+          {/* Desktop Filters Sidebar */}
+          <div className="hidden lg:block lg:col-span-1">
             <ProductFilters filters={filters} onFiltersChange={setFilters} />
           </div>
 
@@ -201,6 +232,48 @@ export function ShopPage() {
           </div>
         </div>
       </div>
+
+      {/* Mobile Filter Drawer */}
+      {isFiltersOpen && (
+        <>
+          {/* Backdrop */}
+          <div className="fixed inset-0 bg-black/50 z-50 lg:hidden" onClick={() => setIsFiltersOpen(false)} />
+          
+          {/* Filter Drawer */}
+          <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl z-50 lg:hidden transform transition-transform duration-300">
+            <div className="p-6">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="font-montserrat text-xl font-bold text-gray-900">Filters</h2>
+                <button
+                  onClick={() => setIsFiltersOpen(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  aria-label="Close filters"
+                >
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              
+              {/* Mobile Filters Content */}
+              <div className="max-h-96 overflow-y-auto">
+                <ProductFilters filters={filters} onFiltersChange={setFilters} />
+              </div>
+              
+              {/* Apply Button */}
+              <div className="mt-6 pt-4 border-t border-gray-200">
+                <button
+                  onClick={() => setIsFiltersOpen(false)}
+                  className="w-full px-6 py-3 bg-coral-orange text-white font-medium rounded-lg hover:bg-orange-500 transition-colors"
+                >
+                  Apply Filters
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Shopping Cart Sidebar */}
       <ShoppingCart
