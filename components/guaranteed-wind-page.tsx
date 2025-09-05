@@ -550,11 +550,16 @@ export function GuaranteedWindPage() {
               {testimonials.map((testimonial, index) => (
                 <div key={index} className="bg-white rounded-2xl p-6 shadow-lg">
                   <div className="flex items-center gap-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
+                    {[...Array(Math.floor(testimonial.rating))].map((_, i) => (
                       <div key={i} className="w-5 h-5 text-gold">
                         ★
                       </div>
                     ))}
+                    {testimonial.rating % 1 !== 0 && (
+                      <div className="w-5 h-5 text-gold opacity-50">
+                        ★
+                      </div>
+                    )}
                   </div>
                   <p className="font-open-sans text-deep-navy/80 mb-4 italic">"{testimonial.text}"</p>
                   <div className="border-t border-deep-navy/10 pt-4">
