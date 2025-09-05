@@ -233,9 +233,12 @@ export function SmallGroupsPage() {
                 className="bg-sand-beige rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
                 <div className="flex items-center gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
+                  {[...Array(Math.floor(testimonial.rating))].map((_, i) => (
                     <Star key={i} className="w-5 h-5 fill-coral-orange text-coral-orange" />
                   ))}
+                  {testimonial.rating % 1 !== 0 && (
+                    <Star className="w-5 h-5 fill-coral-orange text-coral-orange opacity-50" />
+                  )}
                 </div>
 
                 <blockquote className="font-open-sans text-gray-700 italic mb-6 leading-relaxed">

@@ -188,9 +188,12 @@ export function TestimonialGrid() {
 
               {/* Star rating */}
               <div className="flex items-center gap-1 mb-3">
-                {[...Array(testimonial.rating ?? 5)].map((_, i) => (
+                {[...Array(Math.floor(testimonial.rating ?? 5))].map((_, i) => (
                   <Star key={i} className="w-4 h-4 fill-coral-orange text-coral-orange" />
                 ))}
+                {(testimonial.rating ?? 5) % 1 !== 0 && (
+                  <Star className="w-4 h-4 fill-coral-orange text-coral-orange opacity-50" />
+                )}
                 <span className="font-open-sans text-sm text-gray-500 ml-2">{testimonial.date}</span>
               </div>
 
