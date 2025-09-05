@@ -11,6 +11,7 @@ import Image from "next/image"
 export function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
@@ -199,14 +200,33 @@ export function Navigation() {
     }
   }, [router])
 
+
   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  // Close dropdown on outside click — desktop only
+  useEffect(() => {
+    if (!activeDropdown || isMobile) return
+
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element
-      if (!target.closest("[data-dropdown-container]")) {
+      if (!target.closest('[data-dropdown-container]')) {
         setActiveDropdown(null)
       }
     }
 
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
+  }, [activeDropdown, isMobile])
+
+  // Handle escape key for both desktop and mobile
+  useEffect(() => {
     const handleEscapeKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setActiveDropdown(null)
@@ -214,11 +234,8 @@ export function Navigation() {
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside)
     document.addEventListener("keydown", handleEscapeKey)
-
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
       document.removeEventListener("keydown", handleEscapeKey)
       clearDropdownTimeout()
     }
@@ -363,7 +380,7 @@ export function Navigation() {
         </div>
 
         <div
-          className={`border-t border-gray-700 bg-deep-navy transition-all duration-300 overflow-hidden ${
+          className={`hidden lg:block border-t border-gray-700 bg-deep-navy transition-all duration-300 overflow-hidden ${
             isScrolled ? "max-h-0 opacity-0" : "max-h-20 opacity-100"
           }`}
         >
@@ -373,7 +390,7 @@ export function Navigation() {
         </div>
 
         {isMobileMenuOpen && (
-          <div className="lg:hidden fixed inset-0 top-16 bg-deep-navy bg-opacity-95 z-40 overflow-y-auto">
+          <div className="lg:hidden fixed inset-x-0 top-16 bottom-0 bg-deep-navy bg-opacity-95 z-40 overflow-y-auto" data-mobile-menu data-dropdown-container>
             <div className="px-4 py-6 space-y-4">
               <Link
                 href="/booking"
@@ -402,7 +419,7 @@ export function Navigation() {
                       </Link>
                     ) : (
                       <button
-                        className={`flex-1 text-left font-montserrat font-bold text-lg py-3 px-4 rounded-lg transition-colors ${
+                        className={`flex-1 text-left font-montserrat font-bold text-lg py-3 px-4 rounded-lg transition-colors flex items-center justify-between ${
                           isParentActive(item)
                             ? "text-coral-orange bg-deep-navy bg-opacity-50"
                             : "text-white hover:text-coral-orange hover:bg-deep-navy hover:bg-opacity-30"
@@ -411,47 +428,42 @@ export function Navigation() {
                         aria-expanded={activeDropdown === item.label}
                         aria-current={isParentActive(item) ? "page" : undefined}
                       >
-                        {item.icon === "shopping-bag" && (
-                          <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l-1 12H6L5 9z"
-                            />
+                        <div className="flex items-center">
+                          {item.icon === "shopping-bag" && (
+                            <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l-1 12H6L5 9z"
+                              />
+                            </svg>
+                          )}
+                          {item.label}
+                        </div>
+                        {item.submenu && (
+                          <svg
+                            className={`h-5 w-5 transition-transform duration-200 ${
+                              activeDropdown === item.label ? "rotate-180" : ""
+                            }`}
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                           </svg>
                         )}
-                        {item.label}
-                      </button>
-                    )}
-
-                    {!item.isSimple && item.submenu && (
-                      <button
-                        className="p-3 text-white hover:text-coral-orange transition-colors"
-                        onClick={() => setActiveDropdown(activeDropdown === item.label ? null : item.label)}
-                        aria-expanded={activeDropdown === item.label}
-                        aria-label={`Toggle ${item.label} submenu`}
-                      >
-                        <svg
-                          className={`h-5 w-5 transition-transform duration-200 ${
-                            activeDropdown === item.label ? "rotate-180" : ""
-                          }`}
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
                       </button>
                     )}
                   </div>
 
                   {!item.isSimple && item.submenu && activeDropdown === item.label && (
-                    <div className="ml-4 space-y-1 animate-in fade-in slide-in-from-top-1 duration-200">
+                    <div className="ml-4 space-y-1 animate-in fade-in slide-in-from-top-1 duration-200 pointer-events-auto relative z-50" data-dropdown-container>
                       <Link
                         href={item.href}
-                        className="block font-open-sans text-sm py-2 px-4 rounded-lg font-bold text-coral-orange border-b border-white border-opacity-20 mb-2 transition-colors hover:bg-deep-navy hover:bg-opacity-30"
-                        onClick={() => {
+                        className="block font-open-sans text-sm py-2 px-4 rounded-lg font-bold text-coral-orange border-b border-white border-opacity-20 mb-2 transition-colors hover:bg-deep-navy hover:bg-opacity-30 cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation()
                           setIsMobileMenuOpen(false)
                           setActiveDropdown(null)
                         }}
@@ -459,23 +471,24 @@ export function Navigation() {
                         See All {item.label}
                       </Link>
                       {item.submenu.map((subItem) => (
-                        <Link
+                        <button
                           key={subItem.href}
-                          href={subItem.href}
-                          className={`block w-full text-left font-open-sans text-sm py-2 px-4 rounded-lg transition-colors ${
+                          className={`block w-full text-left font-open-sans text-sm py-2 px-4 rounded-lg transition-colors cursor-pointer ${
                             isActive(subItem.href)
                               ? "text-coral-orange bg-turquoise-blue bg-opacity-20"
                               : "text-gray-300 hover:text-white hover:bg-deep-navy hover:bg-opacity-30"
                           }`}
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation()
                             setIsMobileMenuOpen(false)
                             setActiveDropdown(null)
+                            router.push(subItem.href)
                           }}
                           aria-current={isActive(subItem.href) ? "page" : undefined}
                           role="menuitem"
                         >
                           {subItem.label}
-                        </Link>
+                        </button>
                       ))}
                     </div>
                   )}
