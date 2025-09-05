@@ -185,15 +185,19 @@ export function Navigation() {
   }, [])
 
   const handleMobileSubmenuClick = useCallback((href: string) => {
-    window.location.href = href
-  }, [])
+    router.push(href)
+    setIsMobileMenuOpen(false)
+    setActiveDropdown(null)
+  }, [router])
 
   const handleMobileSubmenuKeyDown = useCallback((event: React.KeyboardEvent, href: string) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault()
-      window.location.href = href
+      router.push(href)
+      setIsMobileMenuOpen(false)
+      setActiveDropdown(null)
     }
-  }, [])
+  }, [router])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -455,21 +459,23 @@ export function Navigation() {
                         See All {item.label}
                       </Link>
                       {item.submenu.map((subItem) => (
-                        <button
+                        <Link
                           key={subItem.href}
+                          href={subItem.href}
                           className={`block w-full text-left font-open-sans text-sm py-2 px-4 rounded-lg transition-colors ${
                             isActive(subItem.href)
                               ? "text-coral-orange bg-turquoise-blue bg-opacity-20"
                               : "text-gray-300 hover:text-white hover:bg-deep-navy hover:bg-opacity-30"
                           }`}
-                          onClick={() => handleMobileSubmenuClick(subItem.href)}
-                          onKeyDown={(e) => handleMobileSubmenuKeyDown(e, subItem.href)}
+                          onClick={() => {
+                            setIsMobileMenuOpen(false)
+                            setActiveDropdown(null)
+                          }}
                           aria-current={isActive(subItem.href) ? "page" : undefined}
                           role="menuitem"
-                          tabIndex={0}
                         >
                           {subItem.label}
-                        </button>
+                        </Link>
                       ))}
                     </div>
                   )}
