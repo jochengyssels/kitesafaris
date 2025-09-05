@@ -10,18 +10,18 @@ export function SardiniaPartnerSchools() {
     {
       name: "PROKITE SARDEGNA",
       website: "https://prokitesardegna.com/",
-      logo: "/placeholder-logo.png", // Replace with actual logo when available
+      logo: "/prokite-logo.png", // Replace with actual logo when available
       description: "Professional kitesurf school specializing in beginner instruction at Punta Trettu. Certified IKO instructors with years of experience teaching in the flat, shallow lagoon conditions perfect for learning.",
       features: ["IKO Certified Instructors", "Beginner-Friendly Equipment", "Small Group Lessons"],
-      discount: "15%",
+      discount: "5%",
     },
     {
       name: "KITEHOUSE SARDINIA",
       website: "https://kitehousesardinia.com/",
-      logo: "/placeholder-logo.png", // Replace with actual logo when available
+      logo: "/kitehouse-logo.png", // Replace with actual logo when available
       description: "Premier kitesurf academy offering comprehensive courses from beginner to advanced levels. Located directly at Punta Trettu with modern equipment and personalized instruction in ideal learning conditions.",
       features: ["Modern Equipment Fleet", "Personalized Instruction", "April-October Operations"],
-      discount: "20%",
+      discount: "ON REQUEST",
     },
   ]
 

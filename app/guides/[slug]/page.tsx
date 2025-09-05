@@ -141,6 +141,156 @@ const guides = [
       <p>When using drones, be aware of wind conditions and maintain visual contact at all times for safety.</p>
     `,
   },
+  {
+    slug: "antigua-kite-spots-guide",
+    title: "Antigua's Best Kiteboarding Spots: A Complete Guide",
+    coverImage: "/antigua-jolly-harbor-kiting.png",
+    skillLevel: "beginner" as const,
+    readTime: 10,
+    author: "Captain Tomaz Kodelja",
+    summary:
+      "Discover Antigua's premier kiteboarding locations, from beginner-friendly beaches to advanced wave spots, with detailed wind and access information.",
+    tripType: "Destination Guide",
+    destination: "antigua",
+    content: `
+      <h2>Antigua's Kiteboarding Paradise</h2>
+      <p>Antigua offers some of the Caribbean's most consistent wind conditions and diverse kiteboarding spots suitable for all skill levels.</p>
+      
+      <h3>Jolly Harbour</h3>
+      <p>Perfect for beginners with flat water conditions and consistent trade winds. The shallow lagoon provides ideal learning conditions.</p>
+      
+      <h3>Half Moon Bay</h3>
+      <p>Advanced riders will love the wave conditions and stronger winds. This spot offers challenging but rewarding sessions.</p>
+      
+      <h3>Wind Conditions</h3>
+      <p>Trade winds blow consistently from November to May, typically 15-25 knots, making Antigua a reliable destination for kiteboarding.</p>
+    `,
+  },
+  {
+    slug: "antigua-packing-essentials",
+    title: "Antigua Kite Safari Packing Essentials",
+    coverImage: "/kiteboarding-lesson-turquoise-water.png",
+    skillLevel: "beginner" as const,
+    readTime: 8,
+    author: "Chef Bernard Dubois",
+    summary:
+      "Complete packing checklist for your Antigua kite safari, including clothing, gear, and personal items for tropical conditions.",
+    tripType: "Travel Tips",
+    destination: "antigua",
+    content: `
+      <h2>Packing for Tropical Kiteboarding</h2>
+      <p>Proper packing ensures you're prepared for all conditions during your Antigua kite safari adventure.</p>
+      
+      <h3>Clothing Essentials</h3>
+      <p>Pack lightweight, quick-dry clothing, swimwear, and sun protection. Include a light jacket for evening breezes.</p>
+      
+      <h3>Personal Gear</h3>
+      <p>Bring reef-safe sunscreen, sunglasses, and any personal medications. Don't forget your camera for capturing memories.</p>
+      
+      <h3>Optional Equipment</h3>
+      <p>While we provide all kiteboarding equipment, you may bring personal items like your own harness or board shorts.</p>
+    `,
+  },
+  {
+    slug: "caribbean-trade-winds-guide",
+    title: "Understanding Caribbean Trade Winds for Kiteboarding",
+    coverImage: "/antigua-jolly-harbor-kiting.png",
+    skillLevel: "intermediate" as const,
+    readTime: 12,
+    author: "Captain Tomaz Kodelja",
+    summary:
+      "Learn about Caribbean trade wind patterns, seasonal variations, and how they affect kiteboarding conditions across the region.",
+    tripType: "Weather",
+    destination: "antigua",
+    content: `
+      <h2>Caribbean Trade Wind Patterns</h2>
+      <p>The Caribbean's trade winds create some of the world's most consistent kiteboarding conditions, but understanding their patterns is key to planning your trip.</p>
+      
+      <h3>Seasonal Variations</h3>
+      <p>Trade winds are strongest from December to March, providing reliable 20-30 knot conditions perfect for advanced riders.</p>
+      
+      <h3>Regional Differences</h3>
+      <p>Wind strength and consistency vary across the Caribbean, with the eastern islands typically experiencing stronger and more consistent winds.</p>
+      
+      <h3>Weather Systems</h3>
+      <p>Understanding how tropical storms and high-pressure systems affect wind patterns helps in trip planning and safety.</p>
+    `,
+  },
+  {
+    slug: "catamaran-kite-launching-guide",
+    title: "Kite Launching from Catamarans: Techniques and Safety",
+    coverImage: "/kiteboarding-lesson-turquoise-water.png",
+    skillLevel: "intermediate" as const,
+    readTime: 9,
+    author: "Maria Santos",
+    summary:
+      "Master the art of launching kites from catamarans with proper techniques, safety protocols, and crew coordination methods.",
+    tripType: "Safety",
+    destination: "antigua",
+    content: `
+      <h2>Catamaran Kite Launching</h2>
+      <p>Launching kites from catamarans requires specific techniques and coordination between riders and crew members.</p>
+      
+      <h3>Pre-Launch Checklist</h3>
+      <p>Always check your equipment, wind conditions, and surrounding area before attempting to launch from a moving vessel.</p>
+      
+      <h3>Crew Coordination</h3>
+      <p>Clear communication with the catamaran crew is essential for safe launches and landings in open water conditions.</p>
+      
+      <h3>Safety Protocols</h3>
+      <p>Follow established safety procedures and always have a rescue plan in place before launching in remote locations.</p>
+    `,
+  },
+  {
+    slug: "small-group-safety-protocols",
+    title: "Small Group Kiteboarding Safety Protocols",
+    coverImage: "/kiteboarding-lesson-turquoise-water.png",
+    skillLevel: "beginner" as const,
+    readTime: 7,
+    author: "Maria Santos",
+    summary:
+      "Essential safety protocols for small group kiteboarding sessions, including communication, rescue procedures, and emergency protocols.",
+    tripType: "Safety",
+    destination: "antigua",
+    content: `
+      <h2>Safety in Small Groups</h2>
+      <p>Small group kiteboarding requires specific safety considerations to ensure everyone's well-being in remote locations.</p>
+      
+      <h3>Communication Systems</h3>
+      <p>Establish clear communication protocols and emergency signals before starting any kiteboarding session.</p>
+      
+      <h3>Buddy System</h3>
+      <p>Always kite with a buddy and maintain visual contact. Never kite alone in remote locations without support.</p>
+      
+      <h3>Emergency Procedures</h3>
+      <p>Know the emergency procedures and have rescue equipment readily available for all participants.</p>
+    `,
+  },
+  {
+    slug: "upcoming-destinations-preview",
+    title: "Upcoming KiteSafaris Destinations Preview",
+    coverImage: "/kiteboarding-lesson-turquoise-water.png",
+    skillLevel: "beginner" as const,
+    readTime: 6,
+    author: "Captain Tomaz Kodelja",
+    summary:
+      "Get a sneak peek at KiteSafaris' upcoming destinations and new routes being added to our adventure portfolio.",
+    tripType: "Destinations",
+    destination: "antigua",
+    content: `
+      <h2>New Destinations Coming Soon</h2>
+      <p>KiteSafaris is constantly expanding our destination portfolio to bring you the world's best kiteboarding experiences.</p>
+      
+      <h3>Mediterranean Expansion</h3>
+      <p>New routes in the Greek islands and Turkish coast are being developed for 2026, offering diverse wind conditions and cultural experiences.</p>
+      
+      <h3>Caribbean Additions</h3>
+      <p>Additional Caribbean destinations are being scouted to provide more variety in our tropical kiteboarding adventures.</p>
+      
+      <h3>Stay Updated</h3>
+      <p>Subscribe to our newsletter to be the first to know about new destinations and early booking opportunities.</p>
+    `,
+  },
 ]
 
 interface PageProps {

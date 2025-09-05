@@ -127,25 +127,25 @@ const alternativeActivities = [
 
 const testimonials = [
   {
-    name: "Sarah Mitchell",
-    location: "UK",
-    text: "We had consistent 18-22 knot winds every single day in Antigua. The wind guarantee gave us complete confidence in booking.",
+    name: "Flavia",
+    location: "Switzerland",
+    text: "Waking up on a catamaran, kiting in crystal-clear lagoons, and laughing with strangers who became family — this trip was magic. I came for the wind, but I left with so much more.",
+    rating: 4.5,
+    trip: "Antigua Safari 2024",
+  },
+  {
+    name: "Michele Sabiu",
+    location: "Italy",
+    text: "Even though I've never been to the Caribbean, I felt the energy from day one. What started as an idea between four of us quickly turned into something real — a shared vision, a deep connection, and a feeling of belonging. That's the power of this journey.",
     rating: 5,
     trip: "Antigua Safari 2024",
   },
   {
-    name: "Marco Rossi",
-    location: "Italy",
-    text: "Even when winds dropped one afternoon, the crew had amazing backup activities planned. We went snorkeling and saw incredible marine life.",
+    name: "Soa Mira",
+    location: "Switzerland",
+    text: "From the coaching to the anchor spots, every day felt perfectly planned yet totally spontaneous. The crew was professional, the vibe was pure joy, and launching from the boat? Wild.",
     rating: 5,
-    trip: "Greek Islands 2023",
-  },
-  {
-    name: "Emma Thompson",
-    location: "Australia",
-    text: "The weather monitoring technology is impressive. Daily briefings kept us informed and we always launched in perfect conditions.",
-    rating: 5,
-    trip: "Sardinia Base 2024",
+    trip: "Antigua Safari 2024",
   },
 ]
 
