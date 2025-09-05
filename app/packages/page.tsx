@@ -1,10 +1,22 @@
 import { Navigation } from "@/components/navigation"
 import { PackageTabs } from "@/components/package-tabs"
+import type { Metadata } from "next"
 
 import { RouteMap } from "@/components/route-map"
 import { AntiguaTripCalendar } from "@/components/antigua-trip-calendar"
 import PricingTable from "@/components/pricing-table"
 import { Calendar, MapPin, Wind, Users, Star, ArrowRight, Clock, Tag } from "lucide-react"
+
+export const metadata: Metadata = {
+  title: "Kitesurf Packages | 7-Day Catamaran Trips | KiteSafaris",
+  description: "Browse kitesurf packages: 7-day Caribbean safaris, all-inclusive adventures with expert crew and small groups.",
+  keywords: "kitesurf packages, 7-day catamaran trips, Caribbean kitesurf safaris, all-inclusive kitesurfing, small group kitesurfing",
+  openGraph: {
+    title: "Kitesurf Packages | 7-Day Catamaran Trips | KiteSafaris",
+    description: "Browse kitesurf packages: 7-day Caribbean safaris, all-inclusive adventures with expert crew and small groups.",
+    type: "website",
+  },
+}
 
 export default function PackagesPage() {
   return (

@@ -1,6 +1,18 @@
 import { Navigation } from "@/components/navigation"
 import PricingTable from "@/components/pricing-table"
 import { CheckCircle, Star, Users, Anchor, MapPin, Calendar, Wind } from "lucide-react"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Pricing | Book Your Kite Safari from €1,900 | KiteSafaris",
+  description: "Transparent pricing for KiteSafaris. From €1,900 for 7 days. See what's included and optional extras.",
+  keywords: "kitesurf pricing, kite safari cost, €1,900 kitesurf trip, transparent pricing, all-inclusive kitesurfing",
+  openGraph: {
+    title: "Pricing | Book Your Kite Safari from €1,900 | KiteSafaris",
+    description: "Transparent pricing for KiteSafaris. From €1,900 for 7 days. See what's included and optional extras.",
+    type: "website",
+  },
+}
 
 export default function PricingPage() {
   return (

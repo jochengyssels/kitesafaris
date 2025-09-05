@@ -1,6 +1,18 @@
 import { Navigation } from "@/components/navigation"
 import Link from "next/link"
 import Image from "next/image"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Kitesurfing Destinations | Caribbean & Mediterranean",
+  description: "Explore KiteSafaris destinations: Antigua, Greece, Sardinia and more. Compare kite spots, lessons, and packages.",
+  keywords: "kitesurfing destinations, Caribbean kitesurfing, Mediterranean kitesurfing, Antigua, Greece, Sardinia, kite spots",
+  openGraph: {
+    title: "Kitesurfing Destinations | Caribbean & Mediterranean",
+    description: "Explore KiteSafaris destinations: Antigua, Greece, Sardinia and more. Compare kite spots, lessons, and packages.",
+    type: "website",
+  },
+}
 
 interface Destination {
   id: string
