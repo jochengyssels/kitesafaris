@@ -268,7 +268,7 @@ export function AuditLogViewer() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Last 24 Hours</p>
-                <p className="text-2xl font-bold text-navy-900">{statistics.last24Hours}</p>
+                <p className="text-2xl font-bold text-navy-900">{statistics.totalBookings}</p>
               </div>
               <Clock className="w-8 h-8 text-coral-orange-600" />
             </div>
