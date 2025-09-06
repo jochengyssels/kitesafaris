@@ -13,7 +13,15 @@ export async function POST(request: NextRequest) {
     // Get all page files
     const pageFiles = await glob("app/**/page.tsx", { cwd: process.cwd() })
     
-    const auditResults = {
+    const auditResults: {
+      totalPages: number;
+      analyzedPages: number;
+      optimizationOpportunities: any[];
+      newPagesNeeded: any[];
+      technicalIssues: any[];
+      keywordMappings: any;
+      recommendations: any[];
+    } = {
       totalPages: pageFiles.length,
       analyzedPages: 0,
       optimizationOpportunities: [],
