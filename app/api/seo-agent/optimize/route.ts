@@ -177,7 +177,7 @@ async function applySEOChange(filePath: string, change: any): Promise<boolean> {
 
 function updateMetaTitle(content: string, newTitle: string): string {
   // Update export const metadata title
-  const titleRegex = /(export\s+const\s+metadata[^}]*title:\s*["'])([^"']*)(["'][^}]*})/s
+  const titleRegex = /(export\s+const\s+metadata[\s\S]*?title:\s*["'])([^"']*)(["'][\s\S]*?})/
   if (titleRegex.test(content)) {
     return content.replace(titleRegex, `$1${newTitle}$3`)
   }
@@ -198,13 +198,13 @@ function updateMetaTitle(content: string, newTitle: string): string {
 
 function updateMetaDescription(content: string, newDescription: string): string {
   // Update export const metadata description
-  const descRegex = /(export\s+const\s+metadata[^}]*description:\s*["'])([^"']*)(["'][^}]*})/s
+  const descRegex = /(export\s+const\s+metadata[\s\S]*?description:\s*["'])([^"']*)(["'][\s\S]*?})/
   if (descRegex.test(content)) {
     return content.replace(descRegex, `$1${newDescription}$3`)
   }
   
   // Add description to existing metadata
-  const metadataRegex = /(export\s+const\s+metadata[^}]*)(})/s
+  const metadataRegex = /(export\s+const\s+metadata[\s\S]*?)(})/
   if (metadataRegex.test(content)) {
     return content.replace(metadataRegex, `$1  description: "${newDescription}",\n$2`)
   }
