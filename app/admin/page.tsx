@@ -14,6 +14,7 @@ import {
   GitBranch,
   LogOut,
   Camera,
+  CheckSquare,
 } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -93,6 +94,13 @@ export default function AdminDashboard() {
       icon: Camera,
       href: "/admin/kite-counter",
       color: "bg-purple-500",
+    },
+    {
+      title: "Tasks",
+      description: "Manage and track project tasks and assignments",
+      icon: CheckSquare,
+      href: "/admin/tasks",
+      color: "bg-indigo-500",
     },
     {
       title: "Settings",

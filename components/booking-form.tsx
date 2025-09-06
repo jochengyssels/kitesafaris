@@ -23,6 +23,7 @@ import {
 } from "lucide-react"
 import { tripDataService, calculateDiscountedPrice, calculateSavings, hasDiscount } from "@/lib/trip-data-service"
 import { BookingSummarySticky } from "@/components/booking-summary-sticky"
+import { calcCabinPricing, formatCurrency, getAvailabilityMessage } from "@/lib/booking/pricing"
 
 interface Destination {
   id: string
@@ -73,6 +74,11 @@ interface BookingData {
     perNight: number
     total: number
     breakdown: Array<{ item: string; amount: number }>
+    // Cabin-specific pricing fields
+    cabinsRequired?: number
+    cabinsAvailable?: number
+    valid?: boolean
+    errorMessage?: string
   }
 }
 
@@ -245,6 +251,12 @@ export function BookingForm() {
       breakdown: [],
     },
   })
+
+  const [isSubmittingInquiry, setIsSubmittingInquiry] = useState(false)
+  const [isCreatingCheckout, setIsCreatingCheckout] = useState(false)
+  const [showPaymentMethod, setShowPaymentMethod] = useState(false)
+  const [termsAccepted, setTermsAccepted] = useState(false)
+  const [cancellationPolicyAccepted, setCancellationPolicyAccepted] = useState(false)
 
   // Load destinations from API on component mount
   useEffect(() => {
@@ -419,7 +431,7 @@ export function BookingForm() {
     }
   }, [bookingData.selectedTripId, bookingData.groupSize, destinations, yachts])
 
-  // Calculate pricing based on current selections
+  // Calculate pricing based on current selections using per-cabin pricing
   const calculatePricing = () => {
     console.log("[v0] calculatePricing called with:", {
       destination: bookingData.destination,
@@ -430,65 +442,71 @@ export function BookingForm() {
       yachtsLength: yachts.length
     })
 
-    // If we have a selected trip, we can calculate pricing even without yacht selection
+    // If we have a selected trip, use per-cabin pricing
     if (bookingData.selectedTripId) {
       console.log("[v0] Looking for trip with ID:", bookingData.selectedTripId)
       const selectedTrip = tripDataService.getTripById(bookingData.selectedTripId)
       console.log("[v0] Found trip:", selectedTrip)
+      
       if (selectedTrip) {
-        console.log("[v0] Using trip-specific pricing:", selectedTrip)
+        console.log("[v0] Using per-cabin pricing for trip:", selectedTrip)
+        console.log("[v0] Trip discount percentage:", selectedTrip.discountPercentage)
         
-        // Trip price is the total price for the entire trip
-        const basePrice = selectedTrip.price
-        let tripDiscount = 0
-        let tripDiscountAmount = 0
+        // Use the new per-cabin pricing calculation
+        const pricingResult = calcCabinPricing({
+          pricePerCabinEur: selectedTrip.price, // Trip price is per cabin
+          numGuests: bookingData.groupSize,
+          spotsLeft: selectedTrip.availableSpots,
+          cabinsTotal: 3
+        })
         
-        if (selectedTrip.discountPercentage && selectedTrip.discountPercentage > 0) {
-          tripDiscount = selectedTrip.discountPercentage / 100
-          tripDiscountAmount = basePrice * tripDiscount
-        }
+        console.log("[v0] Cabin pricing result:", pricingResult)
         
         const startDate = new Date(selectedTrip.startDate)
         const endDate = new Date(selectedTrip.endDate)
         const nights = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
         
-        // Calculate pricing for the entire trip
-        const totalTripPrice = basePrice
-        const perPerson = totalTripPrice / bookingData.groupSize
-        const perNight = totalTripPrice / nights
-        let total = totalTripPrice
+        // Apply trip-specific discount if available
+    let tripDiscount = 0
+    let tripDiscountAmount = 0
+        let discountedPricePerCabin = selectedTrip.price
 
-        // Apply trip-specific discount first
-        if (tripDiscountAmount > 0) {
-          total = total - tripDiscountAmount
+        if (selectedTrip.discountPercentage && selectedTrip.discountPercentage > 0) {
+          tripDiscount = selectedTrip.discountPercentage / 100
+          tripDiscountAmount = pricingResult.total * tripDiscount
+          discountedPricePerCabin = selectedTrip.price * (1 - tripDiscount)
+          console.log("[v0] Discount applied:", {
+            discountPercentage: selectedTrip.discountPercentage,
+            tripDiscount,
+            tripDiscountAmount,
+            discountedPricePerCabin,
+            originalTotal: pricingResult.total
+          })
         }
-
-        // Group discounts (applied after trip discount)
-        let groupDiscount = 0
-        if (bookingData.groupSize >= 6) groupDiscount = 0.15
-        else if (bookingData.groupSize >= 4) groupDiscount = 0.1
-
-        const groupDiscountAmount = total * groupDiscount
-        const finalTotal = total - groupDiscountAmount
+        
+        let finalTotal = pricingResult.total - tripDiscountAmount
 
         const breakdown = [
-          { item: `${selectedTrip.destination} Trip (${nights} nights)`, amount: totalTripPrice },
+          { item: `${selectedTrip.destination} Trip (${nights} nights)`, amount: pricingResult.total },
+          { item: `${pricingResult.cabinsRequired} cabin${pricingResult.cabinsRequired > 1 ? 's' : ''} × €${selectedTrip.price.toLocaleString()}`, amount: pricingResult.total },
           ...(tripDiscountAmount > 0
             ? [{ item: `Trip discount (${Math.round(tripDiscount * 100)}%)`, amount: -tripDiscountAmount }]
-            : []),
-          ...(groupDiscount > 0
-            ? [{ item: `Group discount (${Math.round(groupDiscount * 100)}%)`, amount: -groupDiscountAmount }]
             : []),
         ]
 
         setBookingData((prev) => ({
           ...prev,
           pricing: {
-            basePrice,
-            perPerson,
-            perNight,
+            basePrice: selectedTrip.price,
+            perPerson: finalTotal / bookingData.groupSize, // Use final total including discounts
+            perNight: finalTotal / nights,
             total: finalTotal,
             breakdown,
+            // Add cabin-specific pricing info
+            cabinsRequired: pricingResult.cabinsRequired,
+            cabinsAvailable: pricingResult.cabinsAvailable,
+            valid: pricingResult.valid,
+            errorMessage: pricingResult.errorMessage,
           },
         }))
         return
@@ -509,39 +527,36 @@ export function BookingForm() {
       return
     }
 
-    // Use destination base pricing with yacht multiplier
+    // Use destination base pricing with yacht multiplier (per cabin)
     const basePrice = destination.basePrice * yacht.multiplier
     const nights = 7 // Default to 7 nights
 
-    // Calculate pricing for the entire trip (not per night)
-    const totalTripPrice = basePrice // This is the total price for the entire trip
-    const perPerson = totalTripPrice / bookingData.groupSize // Price per person for the entire trip
-    const perNight = totalTripPrice / nights // Average per night (for display purposes only)
-    let total = totalTripPrice
-
-    // Group discounts
-    let groupDiscount = 0
-    if (bookingData.groupSize >= 6) groupDiscount = 0.15
-    else if (bookingData.groupSize >= 4) groupDiscount = 0.1
-
-    const groupDiscountAmount = total * groupDiscount
-    const finalTotal = total - groupDiscountAmount
+    // Calculate per-cabin pricing for fallback
+    const pricingResult = calcCabinPricing({
+      pricePerCabinEur: basePrice,
+      numGuests: bookingData.groupSize,
+      spotsLeft: 6, // Default to full capacity for fallback
+      cabinsTotal: 3
+    })
 
     const breakdown = [
-      { item: `${destination.name} Trip (${nights} nights)`, amount: totalTripPrice },
-      ...(groupDiscount > 0
-        ? [{ item: `Group discount (${Math.round(groupDiscount * 100)}%)`, amount: -groupDiscountAmount }]
-        : []),
+      { item: `${destination.name} Trip (${nights} nights)`, amount: pricingResult.total },
+      { item: `${pricingResult.cabinsRequired} cabin${pricingResult.cabinsRequired > 1 ? 's' : ''} × €${basePrice.toLocaleString()}`, amount: pricingResult.total },
     ]
 
     setBookingData((prev) => ({
       ...prev,
       pricing: {
         basePrice,
-        perPerson,
-        perNight,
-        total: finalTotal,
+        perPerson: pricingResult.total / bookingData.groupSize, // Use final total
+        perNight: pricingResult.total / nights,
+        total: pricingResult.total,
         breakdown,
+        // Add cabin-specific pricing info
+        cabinsRequired: pricingResult.cabinsRequired,
+        cabinsAvailable: pricingResult.cabinsAvailable,
+        valid: pricingResult.valid,
+        errorMessage: pricingResult.errorMessage,
       },
     }))
   }
@@ -570,6 +585,9 @@ export function BookingForm() {
       if (!bookingData.selectedTripId) newErrors.trip = "Please select a trip"
       if (bookingData.pricing.total <= 0) newErrors.pricing = "Invalid pricing calculation"
       if (!paymentMethod) newErrors.payment = "Please select a payment method"
+      if (bookingData.pricing.valid === false) {
+        newErrors.cabinAvailability = bookingData.pricing.errorMessage || "Not enough cabins available"
+      }
     }
 
     setErrors(newErrors)
@@ -580,6 +598,10 @@ export function BookingForm() {
     if (validateStep(currentStep)) {
       if (currentStep === 1) calculatePricing()
       setCurrentStep((prev) => Math.min(prev + 1, 4))
+      // Reset payment method visibility when moving to step 3
+      if (currentStep === 2) {
+        setShowPaymentMethod(false)
+      }
       // Scroll to top of form
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
@@ -587,8 +609,155 @@ export function BookingForm() {
 
   const prevStep = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 1))
+    // Reset payment method visibility when going back
+    setShowPaymentMethod(false)
+    // Reset checkbox states
+    setTermsAccepted(false)
+    setCancellationPolicyAccepted(false)
     // Scroll to top of form
     window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleSubmitInquiry = async () => {
+    if (!validateStep(3)) return
+
+    // Check required checkboxes
+    if (!termsAccepted || !cancellationPolicyAccepted) {
+      setErrors({ 
+        terms: "Please accept the Terms of Service and Privacy Policy, and confirm you understand the cancellation policy to continue." 
+      })
+      return
+    }
+
+    setIsSubmittingInquiry(true)
+
+    try {
+      // Validate that a trip is selected
+      if (!bookingData.selectedTripId) {
+        setErrors({ booking: "Please select a trip before proceeding" })
+        setIsSubmittingInquiry(false)
+        return
+      }
+
+      const selectedTrip = tripDataService.getTripById(bookingData.selectedTripId)
+      if (!selectedTrip) {
+        setErrors({ booking: "Selected trip not found" })
+        setIsSubmittingInquiry(false)
+        return
+      }
+
+      // Prepare inquiry payload
+      const inquiryPayload = {
+        name: bookingData.guests[0]?.name || '',
+        email: bookingData.guests[0]?.email || '',
+        phone: bookingData.guests[0]?.phone || '',
+        message: `Inquiry for ${selectedTrip.destination} trip`,
+        tripId: bookingData.selectedTripId,
+        destination: selectedTrip.destination,
+        startDate: selectedTrip.startDate,
+        endDate: selectedTrip.endDate,
+        guests: bookingData.groupSize,
+        cabinsRequired: bookingData.pricing.cabinsRequired || 0,
+        totalEur: bookingData.pricing.total,
+        pricePerPerson: bookingData.pricing.total / bookingData.groupSize
+      }
+
+      const response = await fetch('/api/booking/inquiry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(inquiryPayload),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        // Show success message and redirect
+        alert(result.message)
+        // Reset form or redirect to success page
+        window.location.href = '/booking/success?type=inquiry'
+      } else {
+        setErrors({ booking: result.message })
+      }
+
+    } catch (error) {
+      console.error('Error submitting inquiry:', error)
+      setErrors({ booking: 'Failed to submit inquiry. Please try again.' })
+    } finally {
+      setIsSubmittingInquiry(false)
+    }
+  }
+
+  const handleCreateCheckout = async () => {
+    if (!validateStep(3)) return
+
+    // Check required checkboxes
+    if (!termsAccepted || !cancellationPolicyAccepted) {
+      setErrors({ 
+        terms: "Please accept the Terms of Service and Privacy Policy, and confirm you understand the cancellation policy to continue." 
+      })
+      return
+    }
+
+    setIsCreatingCheckout(true)
+
+    try {
+      // Validate that a trip is selected
+      if (!bookingData.selectedTripId) {
+        setErrors({ booking: "Please select a trip before proceeding" })
+        setIsCreatingCheckout(false)
+        return
+      }
+
+      const selectedTrip = tripDataService.getTripById(bookingData.selectedTripId)
+      if (!selectedTrip) {
+        setErrors({ booking: "Selected trip not found" })
+        setIsCreatingCheckout(false)
+        return
+      }
+
+      // Prepare checkout payload
+      const checkoutPayload = {
+        name: bookingData.guests[0]?.name || '',
+        email: bookingData.guests[0]?.email || '',
+        phone: bookingData.guests[0]?.phone || '',
+        tripId: bookingData.selectedTripId,
+        destination: selectedTrip.destination,
+        startDate: selectedTrip.startDate,
+        endDate: selectedTrip.endDate,
+        guests: bookingData.groupSize,
+        cabinsRequired: bookingData.pricing.cabinsRequired || 0,
+        totalEur: bookingData.pricing.total,
+        pricePerPerson: bookingData.pricing.total / bookingData.groupSize,
+        tripTitle: selectedTrip.destination,
+        pricePerCabinEur: selectedTrip.price,
+        spotsLeft: selectedTrip.availableSpots
+      }
+
+      const response = await fetch('/api/booking/create-checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(checkoutPayload),
+      })
+
+      const result = await response.json()
+
+      if (result.success && result.checkoutUrl) {
+        // Redirect to Stripe checkout
+        window.location.href = result.checkoutUrl
+      } else {
+        setErrors({ booking: result.message })
+      }
+
+    } catch (error) {
+      console.error('Error creating checkout:', error)
+      setErrors({ booking: 'Failed to create checkout session. Please try again.' })
+    } finally {
+      setIsCreatingCheckout(false)
+    }
   }
 
   const handleSubmit = async () => {
@@ -780,7 +949,7 @@ export function BookingForm() {
             </div>
             <div className="flex justify-between">
               <span>Total:</span>
-              <span className="font-bold text-coral-orange">€{bookingData.pricing.total.toLocaleString()}</span>
+              <span className="font-bold text-coral-orange">{formatCurrency(bookingData.pricing.total)}</span>
             </div>
           </div>
         </div>
@@ -866,68 +1035,87 @@ export function BookingForm() {
                 </div>
               ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {destinations.map((dest) => {
+                  {destinations
+                    .sort((a, b) => {
+                      // Define the desired order: Antigua & Barbuda first, then Greece, then Sardinia
+                      const order = ['Antigua & Barbuda', 'Greek Islands', 'Sardinia']
+                      const aIndex = order.indexOf(a.name)
+                      const bIndex = order.indexOf(b.name)
+                      
+                      // If both destinations are in the order array, sort by their position
+                      if (aIndex !== -1 && bIndex !== -1) {
+                        return aIndex - bIndex
+                      }
+                      
+                      // If only one is in the order array, prioritize it
+                      if (aIndex !== -1) return -1
+                      if (bIndex !== -1) return 1
+                      
+                      // If neither is in the order array, maintain original order
+                      return 0
+                    })
+                    .map((dest) => {
                     const isActive = dest.available === true
                     return (
-                      <div
-                        key={dest.id}
+                    <div
+                      key={dest.id}
                         className={`relative border-2 rounded-xl p-6 transition-all duration-300 ${
                           isActive 
                             ? "cursor-pointer hover:shadow-lg" 
                             : "opacity-60 cursor-not-allowed"
                         } ${
-                          bookingData.destination === dest.name
-                            ? "border-coral-orange bg-coral-orange/5 shadow-lg"
+                        bookingData.destination === dest.name
+                          ? "border-coral-orange bg-coral-orange/5 shadow-lg"
                             : isActive 
                               ? "border-gray-200 hover:border-coral-orange/50"
                               : "border-gray-300"
                         }`}
-                        onClick={() => {
+                      onClick={() => {
                           if (isActive) {
-                            setBookingData((prev) => ({ ...prev, destination: dest.name, selectedTripId: null }))
-                          }
-                        }}
-                      >
+                          setBookingData((prev) => ({ ...prev, destination: dest.name, selectedTripId: null }))
+                        }
+                      }}
+                    >
                         {!isActive && (
                           <div className="absolute top-3 right-3 bg-gray-500 text-white text-xs px-2 py-1 rounded-full font-medium">
-                            Coming Soon
-                          </div>
-                        )}
-                        
-                        <div className="h-32 bg-gray-200 rounded-lg mb-4 overflow-hidden">
-                          <img 
-                            src={dest.image} 
-                            alt={dest.name}
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              e.currentTarget.src = "/antigua-aerial-harbor-view.jpg"
-                            }}
-                          />
+                          Coming Soon
                         </div>
-                        
-                        <h3 className="font-semibold text-deep-navy text-lg mb-2">{dest.name}</h3>
-                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{dest.description}</p>
-                        
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center text-sm text-gray-600">
-                            <Wind className="w-4 h-4 mr-1" />
-                            {dest.windSpeed}
-                          </div>
-                          <div className="flex items-center text-sm text-gray-600">
-                            <Calendar className="w-4 h-4 mr-1" />
-                            {dest.season}
-                          </div>
+                      )}
+                      
+                                             <div className="h-32 bg-gray-200 rounded-lg mb-4 overflow-hidden">
+                         <img 
+                           src={dest.image} 
+                           alt={dest.name}
+                           className="w-full h-full object-cover"
+                           onError={(e) => {
+                             e.currentTarget.src = "/antigua-aerial-harbor-view.jpg"
+                           }}
+                         />
+                       </div>
+                      
+                      <h3 className="font-semibold text-deep-navy text-lg mb-2">{dest.name}</h3>
+                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">{dest.description}</p>
+                      
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center text-sm text-gray-600">
+                          <Wind className="w-4 h-4 mr-1" />
+                          {dest.windSpeed}
                         </div>
-                        
-                        <div className="flex items-center justify-between">
-                          <div className="text-coral-orange font-bold text-lg">
-                            {isActive ? `From €${dest.basePrice.toLocaleString()}` : "Coming Soon"}
-                          </div>
-                          {bookingData.destination === dest.name && isActive && (
-                            <Check className="w-5 h-5 text-coral-orange" />
-                          )}
+                        <div className="flex items-center text-sm text-gray-600">
+                          <Calendar className="w-4 h-4 mr-1" />
+                          {dest.season}
                         </div>
                       </div>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="text-coral-orange font-bold text-lg">
+                            {isActive ? `From €${dest.basePrice.toLocaleString()}` : "Coming Soon"}
+                        </div>
+                          {bookingData.destination === dest.name && isActive && (
+                          <Check className="w-5 h-5 text-coral-orange" />
+                        )}
+                      </div>
+                    </div>
                     )
                   })}
                 </div>
@@ -947,10 +1135,36 @@ export function BookingForm() {
                   </div>
                 ) : availableTrips[bookingData.destination]?.length > 0 ? (
               <div>
-                <label className="block text-sm font-semibold text-deep-navy mb-4">
-                  <Calendar className="w-4 h-4 inline mr-2" />
-                  Choose Your Trip Dates
-                </label>
+                <div className="flex items-center justify-between mb-4">
+                  <label className="block text-sm font-semibold text-deep-navy">
+                    <Calendar className="w-4 h-4 inline mr-2" />
+                    {bookingData.selectedTripId ? 'Selected Trip' : 'Choose Your Trip Dates'}
+                  </label>
+              {bookingData.selectedTripId && (
+                <button
+                  onClick={() => {
+                    setBookingData((prev) => ({ ...prev, selectedTripId: null }))
+                    setShowPaymentMethod(false)
+                    setTermsAccepted(false)
+                    setCancellationPolicyAccepted(false)
+                  }}
+                  className="text-sm text-coral-orange hover:text-coral-orange/80 font-semibold"
+                >
+                  Change Trip
+                </button>
+              )}
+                </div>
+                
+                {bookingData.selectedTripId && (
+                  <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="flex items-center">
+                      <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
+                      <span className="text-green-800 text-sm font-medium">
+                        Trip selected! Other options are hidden. Click "Change Trip" to see all available dates.
+                      </span>
+                    </div>
+                  </div>
+                )}
                 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {availableTrips[bookingData.destination]
@@ -960,6 +1174,13 @@ export function BookingForm() {
                       const today = new Date()
                       today.setHours(0, 0, 0, 0)
                       return startDate >= today && trip.availableSpots > 0
+                    })
+                    .filter((trip: any) => {
+                      // Hide other trips if one is already selected
+                      if (bookingData.selectedTripId) {
+                        return trip.id === bookingData.selectedTripId
+                      }
+                      return true
                     })
                     .map((trip: any) => {
                       const startDate = new Date(trip.startDate)
@@ -975,6 +1196,9 @@ export function BookingForm() {
                       const isEarlyBird = daysUntilDeparture > 90
                       const isLastChance = daysUntilDeparture <= 30 && daysUntilDeparture > 0
                       const isExceedingCapacity = bookingData.groupSize > trip.availableSpots
+                      const cabinsRequired = Math.ceil(bookingData.groupSize / 2)
+                      const cabinsAvailable = Math.ceil(trip.availableSpots / 2)
+                      const isExceedingCabinCapacity = cabinsRequired > cabinsAvailable
                       
                       return (
                         <div
@@ -983,9 +1207,9 @@ export function BookingForm() {
                             bookingData.selectedTripId === trip.id
                               ? "border-coral-orange bg-coral-orange/5 shadow-lg"
                               : "border-gray-200 hover:border-coral-orange/50"
-                          } ${isExceedingCapacity ? "opacity-60 cursor-not-allowed" : ""}`}
+                          } ${(isExceedingCapacity || isExceedingCabinCapacity) ? "opacity-60 cursor-not-allowed" : ""}`}
                           onClick={() => {
-                            if (!isExceedingCapacity) {
+                            if (!isExceedingCapacity && !isExceedingCabinCapacity) {
                               console.log("[v0] Trip selected:", trip.id, trip)
                               setBookingData((prev) => ({ ...prev, selectedTripId: trip.id }))
                               // Recalculate pricing when trip is selected
@@ -1087,6 +1311,11 @@ export function BookingForm() {
                                 ⚠️ Only {trip.availableSpots} spots available for {bookingData.groupSize} guests
                               </div>
                             )}
+                            {isExceedingCabinCapacity && !isExceedingCapacity && (
+                              <div className="text-xs text-red-600 font-semibold">
+                                ⚠️ Only {cabinsAvailable} cabins available for {cabinsRequired} required cabins
+                              </div>
+                            )}
                           </div>
                           
                           {/* Pricing */}
@@ -1099,7 +1328,10 @@ export function BookingForm() {
                               <div className="text-green-600 text-sm font-semibold">{trip.discountPercentage}% off</div>
                             )}
                             <div className="text-xs text-gray-500 mt-1">
-                              €{Math.round((trip.hasDiscount ? trip.discountedPrice : trip.price) / bookingData.groupSize).toLocaleString()} per person
+                              {formatCurrency(Math.round((trip.hasDiscount ? trip.discountedPrice : trip.price) / bookingData.groupSize))} per person
+                            </div>
+                            <div className="text-xs text-gray-500">
+                              {cabinsRequired} cabin{cabinsRequired > 1 ? 's' : ''} required
                             </div>
                           </div>
                         </div>
@@ -1134,6 +1366,89 @@ export function BookingForm() {
                   </div>
                 )}
               </>
+            )}
+
+            {/* Pricing Summary Card */}
+            {bookingData.selectedTripId && bookingData.pricing && (
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 className="font-semibold text-deep-navy mb-4">Booking Summary</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span>Price per cabin</span>
+                    <div className="text-right">
+                      {bookingData.selectedTripId && (() => {
+                        const trip = tripDataService.getTripById(bookingData.selectedTripId);
+                        if (trip && trip.discountPercentage && trip.discountPercentage > 0) {
+                          const discountedPrice = trip.price * (1 - trip.discountPercentage / 100);
+                          return (
+                            <>
+                              <div className="text-sm text-gray-500 line-through">{formatCurrency(trip.price)}</div>
+                              <strong className="text-green-600">{formatCurrency(discountedPrice)}</strong>
+                            </>
+                          );
+                        }
+                        return <strong>{formatCurrency(bookingData.pricing.basePrice)}</strong>;
+                      })()}
+                    </div>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Guests</span>
+                    <span>{bookingData.groupSize}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Cabins reserved</span>
+                    <span>{bookingData.pricing.cabinsRequired || 0}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Availability</span>
+                    <span>{getAvailabilityMessage(
+                      bookingData.selectedTripId ? (() => {
+                        const trip = tripDataService.getTripById(bookingData.selectedTripId);
+                        return trip ? trip.availableSpots : 0;
+                      })() : 0,
+                      bookingData.pricing.cabinsAvailable || 0
+                    )}</span>
+                  </div>
+                  <hr className="my-2" />
+                  <div className="flex justify-between text-base">
+                    <span>Total</span>
+                    <strong>{formatCurrency(bookingData.pricing.total)}</strong>
+                  </div>
+                  <div className="text-xs opacity-70">
+                    ≈ {formatCurrency(bookingData.pricing.total / bookingData.groupSize)} per person (info)
+                  </div>
+                  <div className="text-xs opacity-70 mt-1">
+                    Pricing is per cabin (max 2 guests per cabin, 3 cabins total).
+                  </div>
+                  
+                  {/* Show discount info if applicable */}
+                  {bookingData.selectedTripId && (() => {
+                    const trip = tripDataService.getTripById(bookingData.selectedTripId);
+                    if (trip && trip.discountPercentage && trip.discountPercentage > 0) {
+                      return (
+                        <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded-lg">
+                          <div className="flex items-center">
+                            <div className="text-green-600 text-sm font-semibold">
+                              🎉 {trip.discountPercentage}% Early Bird Discount Applied!
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
+                  
+                  {/* Show error message if pricing is invalid */}
+                  {bookingData.pricing.valid === false && bookingData.pricing.errorMessage && (
+                    <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                      <div className="flex items-center">
+                        <AlertTriangle className="w-4 h-4 text-red-600 mr-2" />
+                        <span className="text-red-600 text-sm font-medium">{bookingData.pricing.errorMessage}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
             )}
 
             {/* Group Size */}
@@ -1347,7 +1662,7 @@ export function BookingForm() {
                 }}
                 className="bg-coral-orange text-white px-6 py-3 rounded-lg font-semibold hover:bg-coral-orange/90 transition-colors"
               >
-                Continue to Payment
+                Proceed Booking
                 <ChevronRight className="w-4 h-4 inline ml-2" />
               </button>
             </div>
@@ -1416,33 +1731,33 @@ export function BookingForm() {
                       <div key={index} className="flex justify-between">
                         <span>{item.item}</span>
                         <span className={item.amount < 0 ? "text-green-600" : ""}>
-                          {item.amount < 0 ? "-" : ""}€{Math.abs(item.amount).toLocaleString()}
+                          {item.amount < 0 ? "-" : ""}{formatCurrency(Math.abs(item.amount))}
                         </span>
                       </div>
                     ))}
                     <div className="border-t pt-2 mt-4">
                       <div className="flex justify-between font-semibold text-lg">
                         <span>Total:</span>
-                        <span className="text-coral-orange">€{bookingData.pricing.total.toLocaleString()}</span>
+                        <span className="text-coral-orange">{formatCurrency(bookingData.pricing.total)}</span>
                       </div>
                       <div className="text-xs text-deep-navy/60 mt-1">
-                        €{Math.round(bookingData.pricing.total / bookingData.groupSize).toLocaleString()} per person
+                        {formatCurrency(bookingData.pricing.total / bookingData.groupSize)} per person
                       </div>
+                      {bookingData.pricing.cabinsRequired && (
+                        <div className="text-xs text-deep-navy/60">
+                          {bookingData.pricing.cabinsRequired} cabin{bookingData.pricing.cabinsRequired > 1 ? 's' : ''} reserved
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-turquoise/10 border border-turquoise/20 rounded-lg p-4">
-                  <h4 className="font-semibold text-turquoise mb-2">Flexible Payment Plan Available</h4>
-                  <p className="text-sm text-gray-600">
-                    Pay just 30% now to secure your booking, with the remaining balance due 60 days before departure.
-                  </p>
-                </div>
               </div>
 
               <div className="space-y-6">
-                {/* Payment Method */}
-                <div className="bg-white border border-gray-200 rounded-lg p-6">
+                {/* Payment Method - Only show when user clicks Pay Deposit */}
+                {showPaymentMethod && (
+                  <div className="bg-white border border-gray-200 rounded-lg p-6">
                   <h3 className="font-semibold text-deep-navy mb-4">
                     <CreditCard className="w-4 h-4 inline mr-2" />
                     Payment Method
@@ -1554,13 +1869,28 @@ export function BookingForm() {
                     )}
                   </div>
                 </div>
+                )}
 
                 {/* Terms & Conditions */}
                 <div className="bg-white border border-gray-200 rounded-lg p-6">
                   <h3 className="font-semibold text-deep-navy mb-4">Terms & Conditions</h3>
                   <div className="space-y-3 text-sm text-gray-600">
                     <label className="flex items-start">
-                      <input type="checkbox" className="mt-1 mr-3" />
+                      <input 
+                        type="checkbox" 
+                        className="mt-1 mr-3" 
+                        checked={termsAccepted}
+                        onChange={(e) => {
+                          setTermsAccepted(e.target.checked)
+                          // Clear terms error when user checks the box
+                          if (e.target.checked && errors.terms) {
+                            setErrors(prev => {
+                              const { terms, ...rest } = prev
+                              return rest
+                            })
+                          }
+                        }}
+                      />
                       <span>
                         I agree to the{" "}
                         <a href="#" className="text-coral-orange hover:underline">
@@ -1573,7 +1903,21 @@ export function BookingForm() {
                       </span>
                     </label>
                     <label className="flex items-start">
-                      <input type="checkbox" className="mt-1 mr-3" />
+                      <input 
+                        type="checkbox" 
+                        className="mt-1 mr-3" 
+                        checked={cancellationPolicyAccepted}
+                        onChange={(e) => {
+                          setCancellationPolicyAccepted(e.target.checked)
+                          // Clear terms error when user checks the box
+                          if (e.target.checked && errors.terms) {
+                            setErrors(prev => {
+                              const { terms, ...rest } = prev
+                              return rest
+                            })
+                          }
+                        }}
+                      />
                       <span>
                         I understand the{" "}
                         <a href="#" className="text-coral-orange hover:underline">
@@ -1599,27 +1943,83 @@ export function BookingForm() {
                   </div>
                 )}
 
+                {errors.cabinAvailability && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <div className="flex items-center">
+                      <AlertTriangle className="w-5 h-5 text-red-600 mr-2" />
+                      <span className="text-red-600 font-semibold">Cabin Availability Error</span>
+                    </div>
+                    <p className="text-red-600 text-sm mt-1">{errors.cabinAvailability}</p>
+                  </div>
+                )}
+
+                {errors.terms && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <div className="flex items-center">
+                      <AlertTriangle className="w-5 h-5 text-red-600 mr-2" />
+                      <span className="text-red-600 font-semibold">Terms Required</span>
+                    </div>
+                    <p className="text-red-600 text-sm mt-1">{errors.terms}</p>
+                  </div>
+                )}
+
+                {/* Dual Booking CTAs */}
+                <div className="space-y-4">
+                  {/* Primary CTA: Send Inquiry */}
                 <button
-                  onClick={handleSubmit}
-                  disabled={isSubmitting}
+                    onClick={handleSubmitInquiry}
+                    disabled={isSubmittingInquiry || !bookingData.pricing.valid}
                   className="w-full bg-coral-orange text-white py-4 rounded-lg font-semibold text-lg hover:bg-coral-orange/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? (
+                    {isSubmittingInquiry ? (
                     <div className="flex items-center justify-center">
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                      Processing Booking...
+                        Sending Inquiry...
                     </div>
                   ) : (
                     <>
                       <CheckCircle className="w-5 h-5 inline mr-2" />
-                      Proceed to Payment - €{bookingData.pricing.total.toLocaleString()}
+                        Send Inquiry (Recommended)
                     </>
                   )}
                 </button>
 
+                  {/* Secondary CTA: Pay Deposit */}
+                  <button
+                    onClick={() => {
+                      setShowPaymentMethod(true)
+                      handleCreateCheckout()
+                    }}
+                    disabled={isCreatingCheckout || !bookingData.pricing.valid}
+                    className="w-full bg-white border-2 border-coral-orange text-coral-orange py-4 rounded-lg font-semibold text-lg hover:bg-coral-orange/5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isCreatingCheckout ? (
+                      <div className="flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-coral-orange mr-2"></div>
+                        Creating Checkout...
+                      </div>
+                    ) : (
+                      <>
+                        <CreditCard className="w-5 h-5 inline mr-2" />
+                        Pay 25% Deposit Now - {formatCurrency(bookingData.pricing.total * 0.25)}
+                      </>
+                    )}
+                  </button>
+
+                  {/* Info Note */}
+                  <div className="text-center text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
+                    <p className="mb-1">
+                      <strong>Balance due 30 days before departure.</strong> Fully refundable within 24h or if we can't confirm availability.
+                    </p>
+                    <p className="text-xs">
+                      Pricing is per cabin (max 2 guests per cabin, 3 cabins total).
+                    </p>
+                  </div>
+
                 <div className="flex items-center justify-center text-sm text-gray-500">
                   <Shield className="w-4 h-4 mr-1" />
-                  Secure payment powered by {paymentMethod === 'paypal' ? 'PayPal' : 'Stripe'}
+                    Secure payment powered by Stripe
+                  </div>
                 </div>
               </div>
             </div>

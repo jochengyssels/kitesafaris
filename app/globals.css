@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "react-big-calendar/lib/css/react-big-calendar.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -277,3 +278,4 @@
     text-shadow: 0 0 30px rgba(64, 224, 208, 0.5), 0 0 40px rgba(64, 224, 208, 0.3);
   }
 }
+

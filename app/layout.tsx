@@ -21,6 +21,11 @@ export const metadata: Metadata = {
   keywords:
     "Caribbean kite safari, Antigua kiteboarding trip, catamaran safari Antigua, book kiteboarding holiday Caribbean, luxury kite safari, Antigua kite spots, Caribbean kitesurfing vacation",
   generator: "v0.app",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
   openGraph: {
     title: "Caribbean Kite Safari Antigua | Luxury Catamaran Kiteboarding Adventures",
     description:

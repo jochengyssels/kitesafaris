@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Calendar, MapPin, Users, Calendar as CalendarIcon, Filter, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { TripCalendarMonthly } from "@/components/trip-calendar-monthly"
 import Link from "next/link"
 
 interface Trip {
@@ -30,16 +31,31 @@ export function TripCalendarView() {
   const [trips, setTrips] = useState<Trip[]>([])
   const [destinations, setDestinations] = useState<Destination[]>([])
   const [selectedDestinations, setSelectedDestinations] = useState<string[]>([])
-  const [viewMode, setViewMode] = useState<"month" | "week" | "list">("month")
+  const [viewMode, setViewMode] = useState<"calendar" | "list">("calendar")
   const [loading, setLoading] = useState(true)
   const [currentMonth, setCurrentMonth] = useState(new Date())
+
+  // Debug state changes
+  useEffect(() => {
+    console.log("Trips updated:", trips.length)
+  }, [trips])
+
+  useEffect(() => {
+    console.log("Destinations updated:", destinations.length)
+  }, [destinations])
+
+  useEffect(() => {
+    console.log("Loading state:", loading)
+  }, [loading])
 
   // Default destination colors for fallback
   const getDestinationColor = (destinationId: string): string => {
     const colorMap: Record<string, string> = {
       "antigua": "from-cyan-500 to-teal-500",
+      "antigua & barbuda": "from-cyan-500 to-teal-500",
       "sardinia": "from-orange-500 to-red-500", 
       "greece": "from-blue-500 to-indigo-500",
+      "greek islands": "from-blue-500 to-indigo-500",
       "caribbean": "from-turquoise-500 to-cyan-500",
       "mediterranean": "from-purple-500 to-pink-500",
     }
@@ -50,8 +66,10 @@ export function TripCalendarView() {
   const getDestinationFlag = (destinationName: string): string => {
     const flagMap: Record<string, string> = {
       "antigua": "🏝️",
+      "antigua & barbuda": "🇦🇬",
       "sardinia": "🇮🇹",
-      "greece": "🇬🇷", 
+      "greece": "🇬🇷",
+      "greek islands": "🇬🇷", 
       "caribbean": "🌊",
       "mediterranean": "🌊",
     }
@@ -59,22 +77,42 @@ export function TripCalendarView() {
   }
 
   useEffect(() => {
-    loadTrips()
-    loadDestinations()
+    console.log("Component mounted, loading data...")
+    loadData()
   }, [])
+
+  const loadData = async () => {
+    setLoading(true)
+    try {
+      console.log("Starting data load...")
+      await loadTrips()
+      await loadDestinations()
+      console.log("Data loaded successfully")
+    } catch (error) {
+      console.error("Error loading data:", error)
+    } finally {
+      console.log("Setting loading to false")
+      setLoading(false)
+    }
+  }
 
   const loadTrips = async () => {
     try {
-      setLoading(true)
       const response = await fetch("/api/trips")
       if (response.ok) {
         const data = await response.json()
+        console.log("Loaded trips:", data.trips?.length || 0)
         setTrips(data.trips || [])
+        return data.trips || []
+      } else {
+        console.error("Failed to fetch trips:", response.status)
+        setTrips([])
+        return []
       }
     } catch (error) {
       console.error("Failed to load trips:", error)
-    } finally {
-      setLoading(false)
+      setTrips([])
+      return []
     }
   }
 
@@ -86,58 +124,66 @@ export function TripCalendarView() {
         const destinationsFromAPI = data.destinations || []
         
         console.log("Raw destinations from API:", destinationsFromAPI)
-        console.log("Sample destination fields:", destinationsFromAPI[0]?.fields)
         
         // Convert API destinations to our format
         const formattedDestinations: Destination[] = destinationsFromAPI
-          .filter((dest: any) => dest.available !== false && dest.available !== "FALSE") // Only show active destinations
+          .filter((dest: any) => dest.available === true) // Only show active destinations
           .map((dest: any) => {
-            // Use destination_id for filtering (not the Airtable record ID)
-            const destinationId = dest.destination_id || dest.name?.toLowerCase()
-            const destinationName = dest.destination_name || dest.name || "Unknown Destination"
+            // Use the destination name for both ID and display
+            const destinationId = dest.name?.toLowerCase() || "unknown"
+            const destinationName = dest.name || "Unknown Destination"
             
             console.log("Processing destination:", { 
               destinationId, 
               destinationName, 
               airtableId: dest.id,
-              dest 
+              available: dest.available
             })
             
             return {
-              id: destinationId, // Use destination_id for filtering
-              name: destinationName, // Use destination_name for display
-              flag: dest.flag_emoji || dest.icon || getDestinationFlag(destinationName),
+              id: destinationId,
+              name: destinationName,
+              flag: dest.icon || getDestinationFlag(destinationName),
               color: getDestinationColor(destinationId)
             }
           })
         
         setDestinations(formattedDestinations)
         console.log("Formatted destinations:", formattedDestinations)
+        return formattedDestinations
+      } else {
+        console.error("Failed to fetch destinations:", response.status)
+        setDestinations([])
+        return []
       }
     } catch (error) {
       console.error("Failed to load destinations:", error)
       // Fallback to empty array if API fails
       setDestinations([])
+      return []
     }
   }
 
+  // Filter trips based on available destinations and selected filters
   const filteredTrips = trips.filter(trip => {
-    if (selectedDestinations.length === 0) return true
-    
-    // Match by destination_id (case-insensitive) with flexible matching
-    return selectedDestinations.some(selectedDestId => {
+    // First, check if the trip's destination matches any available destination
+    const tripDestination = destinations.find(dest => {
       const tripDestId = trip.destination?.toLowerCase()
-      const selectedDestIdLower = selectedDestId.toLowerCase()
-      
-      // Exact match
-      if (tripDestId === selectedDestIdLower) return true
-      
+      const destName = dest.name?.toLowerCase()
+      const destId = dest.id?.toLowerCase()
+
+      // Exact match with destination name
+      if (tripDestId === destName) return true
+
+      // Exact match with destination ID
+      if (tripDestId === destId) return true
+
       // Partial match (e.g., "antigua" matches "antigua & barbuda")
-      if (tripDestId && selectedDestIdLower && 
-          (tripDestId.includes(selectedDestIdLower) || selectedDestIdLower.includes(tripDestId))) {
+      if (tripDestId && destName &&
+          (tripDestId.includes(destName) || destName.includes(tripDestId))) {
         return true
       }
-      
+
       // Special case mappings
       const specialMappings: Record<string, string[]> = {
         'antigua & barbuda': ['antigua', 'barbuda'],
@@ -145,12 +191,54 @@ export function TripCalendarView() {
         'greek islands': ['greece'],
         'greece': ['greek islands']
       }
-      
+
       const tripMappings = specialMappings[tripDestId] || []
-      const selectedMappings = specialMappings[selectedDestIdLower] || []
-      
-      return tripMappings.includes(selectedDestIdLower) || selectedMappings.includes(tripDestId)
+      const destMappings = specialMappings[destName] || []
+
+      if (tripMappings.includes(destName) || destMappings.includes(tripDestId)) {
+        return true
+      }
+
+      return false
     })
+
+    // Only include trips whose destination is available
+    if (!tripDestination) return false
+
+    // If a destination is selected, filter by it
+    if (selectedDestinations.length > 0) {
+      return selectedDestinations.some(selectedDestId => {
+        const tripDestId = trip.destination?.toLowerCase()
+        const selectedDestIdLower = selectedDestId.toLowerCase()
+
+        // Exact match
+        if (tripDestId === selectedDestIdLower) return true
+
+        // Partial match (e.g., "antigua" matches "antigua & barbuda")
+        if (tripDestId && selectedDestIdLower &&
+            (tripDestId.includes(selectedDestIdLower) || selectedDestIdLower.includes(tripDestId))) {
+          return true
+        }
+
+        // Special case mappings
+        const specialMappings: Record<string, string[]> = {
+          'antigua & barbuda': ['antigua', 'barbuda'],
+          'antigua': ['antigua & barbuda'],
+          'greek islands': ['greece'],
+          'greece': ['greek islands']
+        }
+
+        const tripMappings = specialMappings[tripDestId] || []
+        const selectedDestMappings = specialMappings[selectedDestIdLower] || []
+
+        if (tripMappings.includes(selectedDestIdLower) || selectedDestMappings.includes(tripDestId)) {
+          return true
+        }
+
+        return false
+      })
+    }
+    return true // If no specific destination is selected, show all available ones
   })
 
   const toggleDestination = (destinationId: string) => {
@@ -284,8 +372,7 @@ export function TripCalendarView() {
               <span className="text-sm font-medium text-gray-700">View:</span>
               <div className="flex bg-gray-100 rounded-lg p-1">
                 {[
-                  { key: "month", label: "Month" },
-                  { key: "week", label: "Week" },
+                  { key: "calendar", label: "Calendar" },
                   { key: "list", label: "List" }
                 ].map((mode) => (
                   <button
@@ -335,93 +422,103 @@ export function TripCalendarView() {
               )}
             </div>
           ) : (
-            <div className="grid gap-6">
-              {filteredTrips.map((trip) => {
-                const destination = destinations.find(d => 
-                  d.id === trip.destination || 
-                  d.id === trip.destination?.toLowerCase()
-                ) || {
-                  id: trip.destination,
-                  name: trip.destination || "Unknown Destination",
-                  flag: getDestinationFlag(trip.destination || ""),
-                  color: getDestinationColor(trip.destination || "")
-                }
-                const occupancyPercentage = getOccupancyPercentage(trip)
-                const statusBadge = getStatusBadge(trip)
-                const duration = getDuration(trip.startDate, trip.endDate)
+            <>
+              {/* Calendar View */}
+              {viewMode === "calendar" && (
+                <TripCalendarMonthly trips={filteredTrips} destinations={destinations} />
+              )}
 
-                return (
-                  <Card key={trip.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                    <CardContent className="p-6">
-                      <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-                        {/* Trip Info */}
-                        <div className="flex-1">
-                          <div className="flex items-start justify-between mb-3">
-                            <div>
-                              <h3 className="font-montserrat text-xl font-bold text-deep-navy mb-1">
-                                {trip.tripName || `${destination?.name} Adventure`}
-                              </h3>
-                              <div className="flex items-center gap-4 text-sm text-gray-600">
-                                <div className="flex items-center gap-1">
-                                  <MapPin className="w-4 h-4" />
-                                  <span>{destination?.flag} {destination?.name}</span>
+              {/* List View */}
+              {viewMode === "list" && (
+                <div className="grid gap-6">
+                  {filteredTrips.map((trip) => {
+                    const destination = destinations.find(d => 
+                      d.id === trip.destination || 
+                      d.id === trip.destination?.toLowerCase()
+                    ) || {
+                      id: trip.destination,
+                      name: trip.destination || "Unknown Destination",
+                      flag: getDestinationFlag(trip.destination || ""),
+                      color: getDestinationColor(trip.destination || "")
+                    }
+                    const occupancyPercentage = getOccupancyPercentage(trip)
+                    const statusBadge = getStatusBadge(trip)
+                    const duration = getDuration(trip.startDate, trip.endDate)
+
+                    return (
+                      <Card key={trip.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                        <CardContent className="p-6">
+                          <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+                            {/* Trip Info */}
+                            <div className="flex-1">
+                              <div className="flex items-start justify-between mb-3">
+                                <div>
+                                  <h3 className="font-montserrat text-xl font-bold text-deep-navy mb-1">
+                                    {trip.tripName || `${destination?.name} Adventure`}
+                                  </h3>
+                                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                                    <div className="flex items-center gap-1">
+                                      <MapPin className="w-4 h-4" />
+                                      <span>{destination?.flag} {destination?.name}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                      <Calendar className="w-4 h-4" />
+                                      <span>{formatDateRange(trip.startDate, trip.endDate)}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                      <Users className="w-4 h-4" />
+                                      <span>{duration} days</span>
+                                    </div>
+                                  </div>
                                 </div>
-                                <div className="flex items-center gap-1">
-                                  <Calendar className="w-4 h-4" />
-                                  <span>{formatDateRange(trip.startDate, trip.endDate)}</span>
+                                <div className="flex flex-col items-end gap-2">
+                                  <span className={`px-2 py-1 rounded-full text-xs font-semibold ${statusBadge.color}`}>
+                                    {statusBadge.text}
+                                  </span>
+                                  <div className="text-right">
+                                    <div className="text-2xl font-bold text-deep-navy">
+                                      €{trip.price.toLocaleString()}
+                                    </div>
+                                    <div className="text-sm text-gray-500">per person</div>
+                                  </div>
                                 </div>
-                                <div className="flex items-center gap-1">
-                                  <Users className="w-4 h-4" />
-                                  <span>{duration} days</span>
+                              </div>
+
+                              {/* Occupancy Bar */}
+                              <div className="mb-4">
+                                <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
+                                  <span>Availability</span>
+                                  <span>{trip.availableSpots} of {trip.totalSpots} spots left</span>
+                                </div>
+                                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                                  <div
+                                    className={`h-full bg-gradient-to-r ${getOccupancyColor(occupancyPercentage)} transition-all duration-500 ease-out`}
+                                    style={{ width: `${occupancyPercentage}%` }}
+                                    aria-label={`${occupancyPercentage.toFixed(0)}% booked`}
+                                  />
                                 </div>
                               </div>
                             </div>
-                            <div className="flex flex-col items-end gap-2">
-                              <span className={`px-2 py-1 rounded-full text-xs font-semibold ${statusBadge.color}`}>
-                                {statusBadge.text}
-                              </span>
-                              <div className="text-right">
-                                <div className="text-2xl font-bold text-deep-navy">
-                                  €{trip.price.toLocaleString()}
-                                </div>
-                                <div className="text-sm text-gray-500">per person</div>
-                              </div>
+
+                            {/* Action Button */}
+                            <div className="lg:flex-shrink-0">
+                              <Link href={`/booking?trip=${trip.id}`}>
+                                <Button 
+                                  className={`w-full lg:w-auto bg-gradient-to-r ${destination?.color} hover:opacity-90 text-white font-semibold`}
+                                  disabled={trip.availableSpots === 0}
+                                >
+                                  {trip.availableSpots === 0 ? "Fully Booked" : "Book Now"}
+                                </Button>
+                              </Link>
                             </div>
                           </div>
-
-                          {/* Occupancy Bar */}
-                          <div className="mb-4">
-                            <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
-                              <span>Availability</span>
-                              <span>{trip.availableSpots} of {trip.totalSpots} spots left</span>
-                            </div>
-                            <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                              <div
-                                className={`h-full bg-gradient-to-r ${getOccupancyColor(occupancyPercentage)} transition-all duration-500 ease-out`}
-                                style={{ width: `${occupancyPercentage}%` }}
-                                aria-label={`${occupancyPercentage.toFixed(0)}% booked`}
-                              />
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Action Button */}
-                        <div className="lg:flex-shrink-0">
-                          <Link href={`/booking?trip=${trip.id}`}>
-                            <Button 
-                              className={`w-full lg:w-auto bg-gradient-to-r ${destination?.color} hover:opacity-90 text-white font-semibold`}
-                              disabled={trip.availableSpots === 0}
-                            >
-                              {trip.availableSpots === 0 ? "Fully Booked" : "Book Now"}
-                            </Button>
-                          </Link>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )
-              })}
-            </div>
+                        </CardContent>
+                      </Card>
+                    )
+                  })}
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>

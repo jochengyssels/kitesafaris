@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { calcCabinPricing } from '@/lib/booking/pricing'
 
 interface BookingRequest {
   tripId: string
@@ -14,6 +15,11 @@ interface BookingRequest {
   pricing: {
     total: number
     breakdown: Array<{ item: string; amount: number }>
+    // Cabin-specific pricing fields
+    cabinsRequired?: number
+    cabinsAvailable?: number
+    valid?: boolean
+    errorMessage?: string
   }
   paymentMethod: 'card' | 'paypal'
 }
@@ -69,11 +75,33 @@ export async function POST(request: NextRequest): Promise<NextResponse<BookingRe
       }, { status: 404 })
     }
 
-    // Check availability
-    if (selectedTrip.availableSpots < body.groupSize) {
+    // Validate per-cabin pricing and availability
+    const pricingResult = calcCabinPricing({
+      pricePerCabinEur: selectedTrip.price,
+      numGuests: body.groupSize,
+      spotsLeft: selectedTrip.availableSpots,
+      cabinsTotal: 3
+    })
+
+    if (!pricingResult.valid) {
       return NextResponse.json({
         success: false,
-        message: `Only ${selectedTrip.availableSpots} spots available for ${body.groupSize} guests`
+        message: pricingResult.errorMessage || 'Not enough cabins available for this group size'
+      }, { status: 409 })
+    }
+
+    // Apply trip-specific discount if available
+    let finalTotal = pricingResult.total
+    if (selectedTrip.discountPercentage && selectedTrip.discountPercentage > 0) {
+      const discountAmount = pricingResult.total * (selectedTrip.discountPercentage / 100)
+      finalTotal = pricingResult.total - discountAmount
+    }
+
+    // Verify the pricing matches what was sent from the client (including discounts)
+    if (Math.abs(finalTotal - body.pricing.total) > 0.01) {
+      return NextResponse.json({
+        success: false,
+        message: 'Pricing mismatch detected. Please refresh and try again.'
       }, { status: 409 })
     }
 
@@ -82,17 +110,31 @@ export async function POST(request: NextRequest): Promise<NextResponse<BookingRe
 
     // TODO: In a real implementation, you would:
     // 1. Create booking record in database
-    // 2. Update trip availability in Airtable
+    // 2. Update trip availability in Airtable (atomic update: decrement spots_left by groupSize)
+    //    - Use compare-and-swap to prevent race conditions
+    //    - If update fails due to concurrent booking, return 409 to retry
     // 3. Send confirmation emails
     // 4. Process payment via Stripe/PayPal
     // 5. Log booking for admin review
+    // 6. Store cabin-specific booking data:
+    //    - pricing_model: 'per_cabin'
+    //    - cabins_reserved: pricingResult.cabinsRequired
+    //    - total_eur: pricingResult.total
+    //    - guests: body.groupSize
+    //    - price_per_person_hint_eur: pricingResult.pricePerPerson
 
     console.log('[v0] Booking would be created:', {
       bookingId,
       tripId: body.tripId,
       destination: body.destination,
       groupSize: body.groupSize,
-      total: body.pricing.total,
+      cabinsRequired: pricingResult.cabinsRequired,
+      cabinsAvailable: pricingResult.cabinsAvailable,
+      baseTotal: pricingResult.total,
+      discountPercentage: selectedTrip.discountPercentage || 0,
+      discountAmount: selectedTrip.discountPercentage ? pricingResult.total * (selectedTrip.discountPercentage / 100) : 0,
+      finalTotal: body.pricing.total,
+      pricePerPerson: finalTotal / body.groupSize,
       paymentMethod: body.paymentMethod,
       guests: body.guests.length
     })
