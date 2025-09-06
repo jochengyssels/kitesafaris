@@ -32,7 +32,7 @@ export function AddTripModal({ open, onClose, onAdd }: AddTripModalProps) {
     startDate: "",
     endDate: "",
     price: "",
-    currency: "EUR" as const,
+    currency: "EUR" as "EUR" | "USD",
     totalSpots: "",
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
