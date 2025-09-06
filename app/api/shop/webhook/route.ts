@@ -96,8 +96,15 @@ export async function POST(request: NextRequest) {
       try {
         const printfulResult = await printfulService.createOrder(orderData)
         console.log("Printful order created successfully:", printfulResult.result?.id)
+        console.log("Full Printful response:", JSON.stringify(printfulResult, null, 2))
       } catch (error) {
         console.error("Printful order creation failed:", error)
+        console.error("Order data that failed:", JSON.stringify(orderData, null, 2))
+        console.error("Error details:", {
+          message: error instanceof Error ? error.message : "Unknown error",
+          stack: error instanceof Error ? error.stack : undefined,
+          name: error instanceof Error ? error.name : undefined
+        })
         // You might want to implement retry logic or alerting here
         // For now, we'll still return success to Stripe to avoid webhook retries
         // but log the error for manual investigation
