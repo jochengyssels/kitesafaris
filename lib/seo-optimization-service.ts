@@ -27,6 +27,16 @@ export interface KeywordMapping {
   searchVolume: 'high' | 'medium' | 'low'
 }
 
+export interface OptimizationChange {
+  id: string
+  type: 'title' | 'description' | 'content' | 'schema'
+  page: string
+  currentValue: string
+  suggestedValue: string
+  priority: 'high' | 'medium' | 'low'
+  status: 'pending' | 'approved' | 'rejected'
+}
+
 export class SEOOptimizationService {
   private readonly keywordMappings: KeywordMapping[] = [
     // High Priority Keywords
