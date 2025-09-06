@@ -39,6 +39,7 @@ export interface OptimizationChange {
   description: string
   before: string
   after: string
+  element?: string
 }
 
 export class SEOOptimizationService {
