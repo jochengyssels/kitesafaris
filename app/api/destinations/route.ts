@@ -140,7 +140,7 @@ const convertFromAirtable = (airtableDestination: AirtableDestination): Destinat
     icon: airtableDestination.fields.flag_emoji || airtableDestination.fields.icon || "Anchor",
     available: (() => {
       const isActive = airtableDestination.fields.is_active
-      const result = isActive === true || isActive === 'TRUE' || isActive === 'true'
+      const result = isActive === true || (typeof isActive === 'string' && (isActive === 'TRUE' || isActive === 'true'))
       console.log("[v0] is_active conversion:", { 
         original: isActive, 
         type: typeof isActive, 
