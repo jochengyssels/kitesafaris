@@ -4,7 +4,7 @@ import { JsonLd, generateReviewSchema } from "@/components/seo/JsonLd"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "undefined",
+  title: "Small Groups Kite Safari | Maximum 8 Guests | KiteSafaris.com",
   description:
     "Experience intimate kite safari adventures with maximum 8 guests per trip. Personalized attention, better learning, and authentic connections on luxury catamarans.",
   keywords:
@@ -109,20 +109,6 @@ export default function SmallGroupsPageRoute() {
       <JsonLd data={reviewSchema} />
       <Navigation />
       <SmallGroupsPage />
-    
-  <script
-    type="application/ld+json"
-    dangerouslySetInnerHTML={{
-      __html: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "KiteSafaris",
-        "description": "Luxury Caribbean kite safari adventures",
-        "url": "https://kitesafaris.com",
-        "logo": "https://kitesafaris.com/logo.png"
-      })
-    }}
-  />
-</div>
+    </div>
   )
 }

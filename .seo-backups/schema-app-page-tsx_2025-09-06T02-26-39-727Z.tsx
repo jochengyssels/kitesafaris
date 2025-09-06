@@ -107,21 +107,7 @@ export default function HomePage() {
             </p>
           </div>
           <TestimonialCarousel />
-        
-  <script
-    type="application/ld+json"
-    dangerouslySetInnerHTML={{
-      __html: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "KiteSafaris",
-        "description": "Luxury Caribbean kite safari adventures",
-        "url": "https://kitesafaris.com",
-        "logo": "https://kitesafaris.com/logo.png"
-      })
-    }}
-  />
-</div>
+        </div>
       </section>
     </main>
   )

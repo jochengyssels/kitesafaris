@@ -3,7 +3,7 @@ import { WhyUsHero } from "@/components/why-us-hero"
 import { CrewBios } from "@/components/crew-bios"
 
 export const metadata = {
-  title: "undefined",
+  title: "Why Choose KiteSafaris.com - Expert Crew & Eco-Friendly Adventures",
   description:
     "Discover why KiteSafaris.com is the premier choice for luxury kiteboarding adventures. Safety certified, experienced crew, and eco-friendly practices.",
   alternates: {
@@ -17,20 +17,6 @@ export default function WhyUsPage() {
       <Navigation />
       <CrewBios />
       <WhyUsHero />
-    
-  <script
-    type="application/ld+json"
-    dangerouslySetInnerHTML={{
-      __html: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "KiteSafaris",
-        "description": "Luxury Caribbean kite safari adventures",
-        "url": "https://kitesafaris.com",
-        "logo": "https://kitesafaris.com/logo.png"
-      })
-    }}
-  />
-</div>
+    </div>
   )
 }

@@ -51,6 +51,8 @@ export function SEOAgentDashboard() {
   const [selectedChangeForPreview, setSelectedChangeForPreview] = useState<OptimizationChange | null>(null)
   const [showPreviewModal, setShowPreviewModal] = useState(false)
   const [showAutomationSettings, setShowAutomationSettings] = useState(false)
+  const [customKeywords, setCustomKeywords] = useState<string>("")
+  const [showKeywordInput, setShowKeywordInput] = useState(false)
 
   const [changes, setChanges] = useState<OptimizationChange[]>([
     {
@@ -92,50 +94,95 @@ export function SEOAgentDashboard() {
     { time: "14:32:20", message: "Analyzing Caribbean kite safari keywords...", type: "info" },
   ])
 
-  const handleStartOptimization = () => {
+  const handleStartOptimization = async () => {
     setStatus("running")
     setProgress(0)
     setCurrentTask("Initializing SEO analysis...")
 
-    // Simulate optimization process
-    const tasks = [
-      "Crawling site pages...",
-      "Analyzing keyword opportunities...",
-      "Optimizing meta tags...",
-      "Processing image alt text...",
-      "Adding structured data...",
-      "Checking internal links...",
-      "Generating recommendations...",
-    ]
+    try {
+      // Step 1: Analyze pages
+      setCurrentTask("Analyzing site pages...")
+      setProgress(20)
+      setLogs((prev) => [
+        ...prev,
+        {
+          time: new Date().toLocaleTimeString(),
+          message: "Starting SEO analysis...",
+          type: "info",
+        },
+      ])
 
-    let taskIndex = 0
-    const interval = setInterval(() => {
-      if (taskIndex < tasks.length) {
-        setCurrentTask(tasks[taskIndex])
-        setProgress(((taskIndex + 1) / tasks.length) * 100)
-        setLogs((prev) => [
-          ...prev,
-          {
-            time: new Date().toLocaleTimeString(),
-            message: tasks[taskIndex],
-            type: "info",
-          },
-        ])
-        taskIndex++
-      } else {
-        setStatus("completed")
-        setCurrentTask("Optimization complete!")
-        setLogs((prev) => [
-          ...prev,
-          {
-            time: new Date().toLocaleTimeString(),
-            message: "SEO optimization completed successfully",
-            type: "success",
-          },
-        ])
-        clearInterval(interval)
+      const analysisResponse = await fetch('/api/seo-agent/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pages: ['/contact', '/destinations', '/packages', '/booking'],
+          keywords: ['caribbean kite safari', 'antigua kiteboarding', 'catamaran kite safari'],
+          customKeywords: customKeywords ? customKeywords.split(',').map(k => k.trim()).filter(k => k.length > 0) : []
+        }),
+      })
+
+      if (!analysisResponse.ok) {
+        throw new Error('Analysis failed')
       }
-    }, 2000)
+
+      const analysisData = await analysisResponse.json()
+      
+      setProgress(40)
+      setCurrentTask("Processing optimization opportunities...")
+      setLogs((prev) => [
+        ...prev,
+        {
+          time: new Date().toLocaleTimeString(),
+          message: `Found ${analysisData.data.optimizationOpportunities.length} optimization opportunities`,
+          type: "success",
+        },
+      ])
+
+      // Update changes with real data
+      const realChanges = analysisData.data.optimizationOpportunities.map((opp: any) => ({
+        id: opp.id,
+        type: opp.type,
+        page: opp.page,
+        description: opp.description,
+        before: opp.currentValue,
+        after: opp.suggestedValue,
+        status: "pending" as ChangeStatus,
+        impact: opp.priority === "high" ? "high" as const : opp.priority === "medium" ? "medium" as const : "low" as const,
+      }))
+
+      setChanges(realChanges)
+      setProgress(60)
+      setCurrentTask("SEO analysis complete!")
+      
+      setLogs((prev) => [
+        ...prev,
+        {
+          time: new Date().toLocaleTimeString(),
+          message: `SEO analysis completed - Score: ${analysisData.data.score}/100`,
+          type: "success",
+        },
+      ])
+
+      setStatus("completed")
+      setProgress(100)
+      setCurrentTask("Ready to apply optimizations")
+
+    } catch (error) {
+      console.error('SEO optimization error:', error)
+      setStatus("error")
+      setCurrentTask("Analysis failed")
+      setLogs((prev) => [
+        ...prev,
+        {
+          time: new Date().toLocaleTimeString(),
+          message: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+          type: "error",
+        },
+      ])
+    }
   }
 
   const handleApproveChange = (changeId: string) => {
@@ -165,6 +212,83 @@ export function SEOAgentDashboard() {
     setChanges((prev) =>
       prev.map((change) => (changeIds.includes(change.id) ? { ...change, status: "rejected" } : change)),
     )
+  }
+
+  const handleApplyApprovedChanges = async () => {
+    const approvedChanges = changes.filter(change => change.status === "approved")
+    
+    if (approvedChanges.length === 0) {
+      alert("No approved changes to apply")
+      return
+    }
+
+    setStatus("running")
+    setCurrentTask("Applying approved changes...")
+    setProgress(0)
+
+    try {
+      setLogs((prev) => [
+        ...prev,
+        {
+          time: new Date().toLocaleTimeString(),
+          message: `Applying ${approvedChanges.length} approved changes...`,
+          type: "info",
+        },
+      ])
+
+      const optimizeResponse = await fetch('/api/seo-agent/optimize', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          changes: approvedChanges
+        }),
+      })
+
+      if (!optimizeResponse.ok) {
+        throw new Error('Optimization failed')
+      }
+
+      const optimizeData = await optimizeResponse.json()
+      
+      setProgress(100)
+      setStatus("completed")
+      setCurrentTask("Changes applied successfully!")
+      
+      setLogs((prev) => [
+        ...prev,
+        {
+          time: new Date().toLocaleTimeString(),
+          message: `Successfully applied ${optimizeData.data.appliedChanges} changes`,
+          type: "success",
+        },
+      ])
+
+      // Update change statuses
+      setChanges((prev) => 
+        prev.map((change) => {
+          const result = optimizeData.data.results.find((r: any) => r.id === change.id)
+          if (result && result.status === "completed") {
+            return { ...change, status: "completed" as ChangeStatus }
+          }
+          return change
+        })
+      )
+
+    } catch (error) {
+      console.error('Apply changes error:', error)
+      setStatus("error")
+      setCurrentTask("Failed to apply changes")
+      setLogs((prev) => [
+        ...prev,
+        {
+          time: new Date().toLocaleTimeString(),
+          message: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+          type: "error",
+        },
+      ])
+    }
   }
 
   const handleFilterChange = (filters: any) => {
@@ -289,9 +413,53 @@ export function SEOAgentDashboard() {
               <div className="bg-white rounded-lg shadow-sm border border-sand-beige-200 p-6">
                 <h2 className="font-montserrat font-semibold text-lg text-navy-900 mb-4">Optimization Control</h2>
 
+                {/* Keyword Input Section */}
+                <div className="mb-6 p-4 bg-sand-beige-50 rounded-lg border border-sand-beige-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-medium text-navy-900">SEO Keywords</h3>
+                    <button
+                      onClick={() => setShowKeywordInput(!showKeywordInput)}
+                      className="text-turquoise-600 hover:text-turquoise-700 text-sm font-medium"
+                    >
+                      {showKeywordInput ? 'Hide' : 'Customize Keywords'}
+                    </button>
+                  </div>
+                  
+                  {showKeywordInput ? (
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Custom Keywords (comma-separated)
+                        </label>
+                        <textarea
+                          value={customKeywords}
+                          onChange={(e) => setCustomKeywords(e.target.value)}
+                          placeholder="e.g., kite safari antigua, caribbean kiteboarding, luxury catamaran trip"
+                          className="w-full p-3 border border-sand-beige-300 rounded-lg text-sm focus:ring-2 focus:ring-turquoise-500 focus:border-turquoise-500"
+                          rows={3}
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Enter your target keywords separated by commas. Leave empty to use default Caribbean kite safari keywords.
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-sm text-gray-600">
+                      <p className="mb-1">
+                        <span className="font-medium">Current keywords:</span> {customKeywords || 'Default Caribbean kite safari keywords'}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Click "Customize Keywords" to set your own target keywords for SEO optimization.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
                 <div className="flex items-center justify-between mb-6">
                   <div>
-                    <p className="font-open-sans text-gray-600 mb-2">Target: Caribbean Kite Safari Antigua bookings</p>
+                    <p className="font-open-sans text-gray-600 mb-2">
+                      Target: {customKeywords ? 'Custom keywords' : 'Caribbean Kite Safari Antigua bookings'}
+                    </p>
                     <div className="flex items-center space-x-2">
                       <div
                         className={`w-3 h-3 rounded-full ${
@@ -316,23 +484,36 @@ export function SEOAgentDashboard() {
                     </div>
                   </div>
 
-                  <button
-                    onClick={handleStartOptimization}
-                    disabled={status === "running"}
-                    className="flex items-center space-x-2 bg-coral-orange-500 hover:bg-coral-orange-600 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg font-medium transition-colors"
-                  >
-                    {status === "running" ? (
-                      <>
-                        <Pause className="h-5 w-5" />
-                        <span>Running...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Play className="h-5 w-5" />
-                        <span>Activate SEO Optimization</span>
-                      </>
+                  <div className="flex items-center space-x-3">
+                    <button
+                      onClick={handleStartOptimization}
+                      disabled={status === "running"}
+                      className="bg-coral-orange text-white px-6 py-2 rounded-lg font-semibold hover:bg-coral-orange/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                    >
+                      {status === "running" ? (
+                        <>
+                          <Pause className="h-5 w-5" />
+                          <span>Running...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Play className="h-5 w-5" />
+                          <span>Activate SEO Optimization</span>
+                        </>
+                      )}
+                    </button>
+                    
+                    {changes.some(change => change.status === "approved") && (
+                      <button
+                        onClick={handleApplyApprovedChanges}
+                        disabled={status === "running"}
+                        className="bg-green-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-500/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                      >
+                        <CheckCircle className="h-5 w-5" />
+                        <span>Apply Approved Changes</span>
+                      </button>
                     )}
-                  </button>
+                  </div>
                 </div>
 
                 {status === "running" && (

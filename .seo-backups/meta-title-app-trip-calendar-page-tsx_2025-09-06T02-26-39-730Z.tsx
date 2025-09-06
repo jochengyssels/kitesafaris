@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     "Browse all upcoming kiteboarding safaris in our interactive calendar. Filter by destination, see real-time availability, and book your next adventure.",
   keywords: "trip calendar, kiteboarding safaris, availability, booking, destinations, antigua, sardinia, greece",
   openGraph: {
-    title: "undefined",
+    title: "Trip Calendar - Upcoming KiteSafaris Adventures",
     description: "Browse all upcoming kiteboarding safaris in our interactive calendar. Filter by destination and see real-time availability.",
     images: ["/trip-calendar-hero.jpg"],
   },

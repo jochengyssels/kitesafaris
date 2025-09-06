@@ -7,7 +7,7 @@ import { SardinianAwakeningCTA } from "@/components/sardinian-awakening-cta"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "undefined",
+  title: "Caribbean Kite Safari | Luxury Catamaran Kiteboarding Adventures | KiteSafaris",
   description:
     "Experience the ultimate Caribbean kite safari on luxury catamarans. Expert kiteboarding coaching, small groups, guaranteed wind. Book your kitesurf adventure today!",
   keywords: "caribbean catamaran, kitesurf caribbean, kitesurfing caribbean, kiteboarding caribbean, kitesurf packages, catamaran cruises caribbean, kitesurfing trips, kiteboarding vacations",
@@ -107,21 +107,7 @@ export default function HomePage() {
             </p>
           </div>
           <TestimonialCarousel />
-        
-  <script
-    type="application/ld+json"
-    dangerouslySetInnerHTML={{
-      __html: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "KiteSafaris",
-        "description": "Luxury Caribbean kite safari adventures",
-        "url": "https://kitesafaris.com",
-        "logo": "https://kitesafaris.com/logo.png"
-      })
-    }}
-  />
-</div>
+        </div>
       </section>
     </main>
   )

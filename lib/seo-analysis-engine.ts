@@ -90,7 +90,7 @@ export interface PerformanceMetrics {
 }
 
 export class SEOAnalysisEngine {
-  private readonly caribbeanKeywords = [
+  private readonly defaultCaribbeanKeywords = [
     "caribbean kite safari",
     "antigua kiteboarding",
     "catamaran kite safari",
@@ -103,7 +103,7 @@ export class SEOAnalysisEngine {
     "luxury kiteboarding caribbean",
   ]
 
-  private readonly secondaryKeywords = [
+  private readonly defaultSecondaryKeywords = [
     "kite safari",
     "kiteboarding trip",
     "catamaran sailing",
@@ -116,9 +116,25 @@ export class SEOAnalysisEngine {
     "kite coaching",
   ]
 
+  private customKeywords: string[] = []
+  private customSecondaryKeywords: string[] = []
+
+  setCustomKeywords(primary: string[], secondary: string[] = []) {
+    this.customKeywords = primary
+    this.customSecondaryKeywords = secondary
+  }
+
+  private get caribbeanKeywords() {
+    return this.customKeywords.length > 0 ? this.customKeywords : this.defaultCaribbeanKeywords
+  }
+
+  private get secondaryKeywords() {
+    return this.customSecondaryKeywords.length > 0 ? this.customSecondaryKeywords : this.defaultSecondaryKeywords
+  }
+
   async analyzePage(url: string, html: string): Promise<SEOAnalysisResult> {
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(html, "text/html")
+    // Simple HTML parsing using regex for server-side compatibility
+    const doc = this.parseHTML(html)
 
     const currentMeta = this.extractMetaData(doc)
     const recommendedMeta = this.generateOptimizedMeta(url, doc)
@@ -597,6 +613,95 @@ export class SEOAnalysisEngine {
     }
 
     return results
+  }
+
+  private parseHTML(html: string): any {
+    // Simple HTML parser using regex for server-side compatibility
+    return {
+      title: this.extractTitle(html),
+      querySelector: (selector: string) => this.querySelector(html, selector),
+      querySelectorAll: (selector: string) => this.querySelectorAll(html, selector),
+      body: { textContent: this.extractTextContent(html) }
+    }
+  }
+
+  private extractTitle(html: string): string {
+    const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i)
+    return titleMatch ? titleMatch[1] : ''
+  }
+
+  private extractTextContent(html: string): string {
+    return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+  }
+
+  private querySelector(html: string, selector: string): any {
+    if (selector === 'title') {
+      return { textContent: this.extractTitle(html) }
+    }
+    if (selector.startsWith('meta[name="')) {
+      const name = selector.match(/meta\[name="([^"]+)"/)?.[1]
+      const match = html.match(new RegExp(`<meta[^>]*name=["']${name}["'][^>]*content=["']([^"']+)["']`, 'i'))
+      return match ? { getAttribute: (attr: string) => attr === 'content' ? match[1] : null } : null
+    }
+    if (selector.startsWith('meta[property="')) {
+      const property = selector.match(/meta\[property="([^"]+)"/)?.[1]
+      const match = html.match(new RegExp(`<meta[^>]*property=["']${property}["'][^>]*content=["']([^"']+)["']`, 'i'))
+      return match ? { getAttribute: (attr: string) => attr === 'content' ? match[1] : null } : null
+    }
+    if (selector === 'link[rel="canonical"]') {
+      const match = html.match(/<link[^>]*rel=["']canonical["'][^>]*href=["']([^"']+)["']/i)
+      return match ? { getAttribute: (attr: string) => attr === 'href' ? match[1] : null } : null
+    }
+    if (selector.startsWith('h1')) {
+      const match = html.match(/<h1[^>]*>([^<]+)<\/h1>/i)
+      return match ? { textContent: match[1] } : null
+    }
+    if (selector.startsWith('img')) {
+      const matches = html.match(/<img[^>]*>/gi) || []
+      return matches.map((img: string) => ({
+        getAttribute: (attr: string) => {
+          const match = img.match(new RegExp(`${attr}=["']([^"']+)["']`, 'i'))
+          return match ? match[1] : null
+        }
+      }))
+    }
+    return null
+  }
+
+  private querySelectorAll(html: string, selector: string): any[] {
+    if (selector.startsWith('h1, h2, h3')) {
+      const matches = html.match(/<h[1-3][^>]*>([^<]+)<\/h[1-3]>/gi) || []
+      return matches.map((heading: string) => ({
+        textContent: heading.replace(/<[^>]*>/g, '')
+      }))
+    }
+    if (selector.startsWith('img')) {
+      const matches = html.match(/<img[^>]*>/gi) || []
+      return matches.map((img: string) => ({
+        getAttribute: (attr: string) => {
+          const match = img.match(new RegExp(`${attr}=["']([^"']+)["']`, 'i'))
+          return match ? match[1] : null
+        }
+      }))
+    }
+    if (selector.startsWith('a[href^="/"], a[href^="https://kitesafaris.com"]')) {
+      const matches = html.match(/<a[^>]*href=["']([^"']+)["'][^>]*>([^<]+)<\/a>/gi) || []
+      return matches.map((link: string) => {
+        const hrefMatch = link.match(/href=["']([^"']+)["']/i)
+        const textMatch = link.match(/>([^<]+)</i)
+        return {
+          getAttribute: (attr: string) => attr === 'href' ? hrefMatch?.[1] : null,
+          textContent: textMatch?.[1]?.trim() || ''
+        }
+      })
+    }
+    if (selector === 'script[type="application/ld+json"]') {
+      const matches = html.match(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([^<]+)<\/script>/gi) || []
+      return matches.map((script: string) => ({
+        textContent: script.replace(/<[^>]*>/g, '')
+      }))
+    }
+    return []
   }
 }
 
