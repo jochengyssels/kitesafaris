@@ -268,7 +268,7 @@ export async function GET() {
 
     console.log("[v0] Converted trips:", trips.length)
     console.log("[v0] All converted trips:")
-    trips.forEach((trip, index) => {
+    trips.forEach((trip: any, index: number) => {
       console.log(`[v0] Trip ${index + 1}:`, {
         id: trip.id,
         destination: trip.destination,
