@@ -73,7 +73,7 @@ export function AntiguaTripCalendar() {
             currency: trip.currency || "EUR",
             status: trip.status || "available"
           }))
-          .filter(trip => trip.status === "available") // Only show available trips
+          .filter((trip: any) => trip.status === "available") // Only show available trips
           .sort((a, b) => a.startDate.getTime() - b.startDate.getTime()) // Sort by start date
 
         console.log("Fetched Antigua trips:", antiguaTrips)
