@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate items
-    const invalidItems = orderData.items.filter(item => !item.sync_variant_id || !item.quantity || !item.retail_price)
+    const invalidItems = orderData.items.filter((item: any) => !item.sync_variant_id || !item.quantity || !item.retail_price)
     if (invalidItems.length > 0) {
       console.error("[Shop API] Invalid items:", invalidItems)
       return NextResponse.json({ 
