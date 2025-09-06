@@ -50,7 +50,7 @@ export function SocialSharing({ title, description, url, className = "" }: Socia
       <span className="font-open-sans text-sm text-gray-600 font-medium">Share:</span>
 
       {/* Native Share (Mobile) */}
-      {typeof navigator !== "undefined" && navigator.share && (
+      {typeof navigator !== "undefined" && typeof navigator.share === "function" && (
         <button
           onClick={handleNativeShare}
           className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg transition-colors duration-200 text-sm font-medium"

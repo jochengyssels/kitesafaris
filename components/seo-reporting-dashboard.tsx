@@ -52,6 +52,7 @@ export function SEOReportingDashboard() {
       value: "8.2",
       change: "-2.1",
       trend: "up",
+      icon: TrendingUp,
     },
     {
       name: "Click-through Rate",

@@ -77,19 +77,14 @@ export function PaymentStep({ bookingData, onPaymentSuccess, onPaymentError, onB
         throw new Error('Failed to create payment intent')
       }
 
-      const { clientSecret } = await response.json()
+      const { checkoutUrl } = await response.json()
+
+      if (!checkoutUrl) {
+        throw new Error('No checkout URL received')
+      }
 
       // Redirect to Stripe Checkout
-      const { error } = await stripe.redirectToCheckout({
-        mode: 'payment',
-        clientSecret,
-        success_url: `${window.location.origin}/booking/confirmation?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${window.location.origin}/booking/payment`,
-      })
-
-      if (error) {
-        throw new Error(error.message)
-      }
+      window.location.href = checkoutUrl
     } catch (error) {
       console.error('Stripe payment error:', error)
       setPaymentStatus('error')

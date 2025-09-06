@@ -176,7 +176,7 @@ export function SearchableFAQ() {
     }
   }
 
-  const renderLink = (link: FAQItem["links"][0]) => {
+  const renderLink = (link: NonNullable<FAQItem["links"]>[0]) => {
     const iconMap = {
       internal: <ExternalLink className="w-4 h-4" />,
       external: <ExternalLink className="w-4 h-4" />,

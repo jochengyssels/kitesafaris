@@ -49,7 +49,7 @@ export function EditTripModal({ trip, open, onClose, onSave }: EditTripModalProp
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
   const [showUnsavedWarning, setShowUnsavedWarning] = useState(false)
   const [autoSaveEnabled, setAutoSaveEnabled] = useState(false)
-  const autoSaveTimeoutRef = useRef<NodeJS.Timeout>()
+  const autoSaveTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
 
   useEffect(() => {
     if (trip) {
@@ -280,7 +280,7 @@ export function EditTripModal({ trip, open, onClose, onSave }: EditTripModalProp
               </Label>
               <Select
                 value={formData.destination}
-                onValueChange={(value) => setFormData({ ...formData, destination: value })}
+                onValueChange={(value) => setFormData({ ...formData, destination: value as "caribbean" | "greece" | "sardinia" })}
               >
                 <SelectTrigger className="border-sand-beige-300">
                   <SelectValue placeholder="Select destination" />

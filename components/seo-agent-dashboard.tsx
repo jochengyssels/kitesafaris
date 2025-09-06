@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import type { OptimizationChange } from "@/lib/seo-optimization-service"
 import {
   ArrowLeft,
   Play,
@@ -29,16 +30,6 @@ type OptimizationStatus = "idle" | "running" | "completed" | "error"
 type ChangeStatus = "pending" | "approved" | "rejected"
 type DashboardTab = "optimization" | "reporting" | "rollback"
 
-interface OptimizationChange {
-  id: string
-  type: "meta" | "image" | "schema" | "link"
-  page: string
-  description: string
-  before: string
-  after: string
-  status: ChangeStatus
-  impact: "high" | "medium" | "low"
-}
 
 export function SEOAgentDashboard() {
   const [activeTab, setActiveTab] = useState<DashboardTab>("optimization")
@@ -59,31 +50,40 @@ export function SEOAgentDashboard() {
       id: "1",
       type: "meta",
       page: "/destinations/antigua",
+      currentValue: "Antigua Destination - KiteSafaris",
+      suggestedValue: "Caribbean Kite Safari Antigua | 7-Day Luxury Catamaran Trip | KiteSafaris",
+      priority: "high",
+      status: "pending",
+      impact: "high",
       description: 'Updated meta title to target "Caribbean Kite Safari Antigua"',
       before: "Antigua Destination - KiteSafaris",
       after: "Caribbean Kite Safari Antigua | 7-Day Luxury Catamaran Trip | KiteSafaris",
-      status: "pending",
-      impact: "high",
     },
     {
       id: "2",
       type: "image",
       page: "/packages",
+      currentValue: "Catamaran sailing",
+      suggestedValue: "Luxury catamaran Caribbean kite safari Antigua kiteboarding adventure",
+      priority: "medium",
+      status: "pending",
+      impact: "medium",
       description: "Optimized alt text for hero image with target keywords",
       before: "Catamaran sailing",
       after: "Luxury catamaran Caribbean kite safari Antigua kiteboarding adventure",
-      status: "pending",
-      impact: "medium",
     },
     {
       id: "3",
       type: "schema",
       page: "/booking",
+      currentValue: "No structured data",
+      suggestedValue: "JSON-LD schema for TravelEvent and BookingAction",
+      priority: "high",
+      status: "pending",
+      impact: "high",
       description: "Added structured data for booking actions and travel events",
       before: "No structured data",
       after: "JSON-LD schema for TravelEvent and BookingAction",
-      status: "pending",
-      impact: "high",
     },
   ])
 

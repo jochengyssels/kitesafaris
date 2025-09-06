@@ -15,7 +15,7 @@ export const paymentConfig = {
     clientSecret: process.env.PAYPAL_CLIENT_SECRET!,
     mode: process.env.PAYPAL_MODE || 'sandbox', // 'sandbox' or 'live'
     currency: 'EUR',
-    intent: 'capture', // 'capture' for immediate payment
+    intent: 'CAPTURE' as const, // 'CAPTURE' for immediate payment
   },
   
   // Payment options
@@ -86,8 +86,8 @@ export const createPayPalOrderConfig = (amount: number, metadata: any) => ({
     return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/booking/confirmation`,
     cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/booking/payment`,
     brand_name: 'KiteSafaris',
-    landing_page: 'BILLING',
-    user_action: 'PAY_NOW',
-    shipping_preference: 'NO_SHIPPING',
+    landing_page: 'BILLING' as const,
+    user_action: 'PAY_NOW' as const,
+    shipping_preference: 'NO_SHIPPING' as const,
   },
 })
