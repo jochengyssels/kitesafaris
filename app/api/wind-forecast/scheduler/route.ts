@@ -105,8 +105,22 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Wind Scheduler] Inserting ${newRecords.length} new records`)
 
-    // Insert new records into Airtable
-    const insertResult = await airtable.createRecords('wind_forecasts', newRecords)
+    // Insert new records into Airtable in batches of 10 (Airtable limit)
+    const batchSize = 10
+    let insertedCount = 0
+    
+    for (let i = 0; i < newRecords.length; i += batchSize) {
+      const batch = newRecords.slice(i, i + batchSize)
+      console.log(`[Wind Scheduler] Inserting batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(newRecords.length / batchSize)} (${batch.length} records)`)
+      
+      try {
+        await airtable.createRecords('wind_forecasts', batch)
+        insertedCount += batch.length
+      } catch (error) {
+        console.error(`[Wind Scheduler] Failed to insert batch ${Math.floor(i / batchSize) + 1}:`, error)
+        // Continue with next batch even if one fails
+      }
+    }
 
     // Clean up old records (keep only last 7 days)
     const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
@@ -126,7 +140,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: 'Wind forecast data updated successfully',
-      insertedRecords: newRecords.length,
+      insertedRecords: insertedCount,
       existingRecords: existingRecords.records?.length || 0,
       deletedRecords: deletedCount,
       totalForecastPoints: forecastData.length,

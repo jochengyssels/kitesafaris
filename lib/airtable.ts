@@ -67,6 +67,28 @@ export class AirtableService {
     return response.json()
   }
 
+  async createRecords(tableName: string, records: Array<Record<string, any>>) {
+    const url = `${this.baseUrl}/${tableName}`
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        records: records.map(fields => ({ fields }))
+      })
+    })
+
+    if (!response.ok) {
+      const error = await response.text()
+      throw new Error(`Airtable API error: ${response.status} ${response.statusText} - ${error}`)
+    }
+
+    return response.json()
+  }
+
   async updateRecord(tableName: string, recordId: string, fields: Record<string, any>) {
     const url = `${this.baseUrl}/${tableName}/${recordId}`
     
@@ -106,5 +128,20 @@ export class AirtableService {
     }
 
     return response.json()
+  }
+
+  async deleteRecords(tableName: string, recordIds: string[]) {
+    // Airtable doesn't support bulk delete, so we'll delete them one by one
+    const results = []
+    for (const recordId of recordIds) {
+      try {
+        const result = await this.deleteRecord(tableName, recordId)
+        results.push(result)
+      } catch (error) {
+        console.error(`Failed to delete record ${recordId}:`, error)
+        // Continue with other records even if one fails
+      }
+    }
+    return results
   }
 }
