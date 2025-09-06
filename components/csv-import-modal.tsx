@@ -312,7 +312,7 @@ export function CSVImportModal({ open, onClose, onImport }: CSVImportModalProps)
       const newTrips: Trip[] = []
 
       for (const tripData of validTrips) {
-        const newTrip = tripDataService.addTrip({
+        const newTrip = await tripDataService.addTrip({
           destination: tripData.destination as "caribbean" | "greece" | "sardinia",
           startDate: tripData.startDate,
           endDate: tripData.endDate,
