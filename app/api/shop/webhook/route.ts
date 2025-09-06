@@ -32,6 +32,37 @@ async function getActualVariantId(syncVariantId: number): Promise<number> {
   }
 }
 
+// Helper function to get print files for a variant
+async function getPrintFilesForVariant(variantId: number): Promise<any[]> {
+  try {
+    // Get all products to find the one containing this variant
+    const products = await printfulService.getProducts()
+    
+    for (const product of products) {
+      const variants = await printfulService.getProductVariants(product.id)
+      const variant = variants.find(v => v.variant_id === variantId)
+      if (variant && variant.files) {
+        // Return print files (exclude preview files)
+        const printFiles = variant.files
+          .filter((file: any) => file.type !== 'preview' && file.type !== 'back' && file.status === 'ok')
+          .map((file: any) => ({
+            id: file.id,
+            type: file.type,
+          }))
+        
+        console.log(`Found ${printFiles.length} print files for variant ${variantId}`)
+        return printFiles
+      }
+    }
+    
+    console.warn(`Could not find print files for variant ID ${variantId}`)
+    return [] // Return empty array if no files found
+  } catch (error) {
+    console.error(`Error getting print files for variant ID ${variantId}:`, error)
+    return [] // Return empty array on error
+  }
+}
+
 export async function POST(request: NextRequest) {
   const body = await request.text()
   const signature = headers().get('stripe-signature')!
@@ -96,10 +127,16 @@ export async function POST(request: NextRequest) {
           phone: customerPhone || "",
           email: customerEmail,
         },
-        items: await Promise.all(items.map(async (item: any) => ({
-          variant_id: await getActualVariantId(item.variantId || item.productId),
-          quantity: item.quantity,
-        }))),
+        items: await Promise.all(items.map(async (item: any) => {
+          const actualVariantId = await getActualVariantId(item.variantId || item.productId)
+          const printFiles = await getPrintFilesForVariant(actualVariantId)
+          
+          return {
+            variant_id: actualVariantId,
+            quantity: item.quantity,
+            files: printFiles,
+          }
+        })),
       }
 
       console.log("Creating Printful order:", orderData)
