@@ -272,6 +272,7 @@ export class PrintfulService {
       currency: mainVariant?.currency || "EUR",
       variants: variants.map((variant) => ({
         id: variant.id,
+        variant_id: variant.variant_id, // Add the actual Printful variant_id
         name: variant.name,
         price: variant.retail_price,
         sku: variant.sku,

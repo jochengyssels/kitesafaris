@@ -15,6 +15,7 @@ interface Product {
   category: string
   variants: Array<{
     id: number
+    variant_id: number
     name: string
     price: string
     image: string
@@ -108,7 +109,7 @@ export function ShopPage() {
     addItem({
       id: `${product.id}-${variant?.id || "default"}`,
       productId: product.id,
-      variantId: variant?.id,
+      variantId: variant?.variant_id, // Use the actual Printful variant_id
       name: product.name,
       price: Number.parseFloat(variant?.price || product.price),
       currency: product.currency,
