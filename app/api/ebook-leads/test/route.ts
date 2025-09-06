@@ -13,7 +13,15 @@ export async function GET(request: NextRequest) {
     }
 
     // Test both table endpoints
-    const testResults = {
+    const testResults: {
+      ebookLeads: any;
+      leads: any;
+      config: {
+        hasApiKey: boolean;
+        hasBaseId: boolean;
+        baseId: string;
+      }
+    } = {
       ebookLeads: null,
       leads: null,
       config: {
