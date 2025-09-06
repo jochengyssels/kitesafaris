@@ -68,26 +68,15 @@ export async function POST(request: NextRequest) {
           address2: shippingAddress.address2 || "",
           city: shippingAddress.city,
           state_code: shippingAddress.state,
-          state_name: shippingAddress.state,
           country_code: shippingAddress.country,
-          country_name: shippingAddress.country,
           zip: shippingAddress.zip,
           phone: customerPhone || "",
           email: customerEmail,
         },
         items: items.map((item: any) => ({
-          sync_variant_id: item.variantId || item.productId,
+          variant_id: item.variantId || item.productId,
           quantity: item.quantity,
-          retail_price: item.price.toFixed(2),
         })),
-        retail_costs: {
-          currency: orderSummary.currency,
-          subtotal: orderSummary.subtotal.toFixed(2),
-          discount: "0.00",
-          shipping: orderSummary.shipping.toFixed(2),
-          tax: orderSummary.tax.toFixed(2),
-          total: orderSummary.total.toFixed(2),
-        },
       }
 
       console.log("Creating Printful order:", orderData)
