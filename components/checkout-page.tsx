@@ -78,53 +78,59 @@ export function CheckoutPage() {
         throw new Error("Some items in cart are invalid")
       }
 
-      // Create order with Printful
-      const orderData = {
-        external_id: `KS-${Date.now()}`,
-        shipping: "STANDARD",
-        recipient: {
-          name: `${shippingInfo.firstName} ${shippingInfo.lastName}`,
-          address1: shippingInfo.address1,
-          address2: shippingInfo.address2 || "",
-          city: shippingInfo.city,
-          state_code: shippingInfo.state,
-          state_name: shippingInfo.state,
-          country_code: shippingInfo.country,
-          country_name: shippingInfo.country,
-          zip: shippingInfo.zip,
-          phone: shippingInfo.phone || "",
-          email: shippingInfo.email,
-        },
+      // Validate shipping information
+      if (!shippingInfo.firstName || !shippingInfo.lastName || !shippingInfo.email || 
+          !shippingInfo.address1 || !shippingInfo.city || !shippingInfo.state || 
+          !shippingInfo.zip || !shippingInfo.country) {
+        throw new Error("Please fill in all required shipping information")
+      }
+
+      // Create Stripe checkout session
+      const checkoutData = {
         items: items.map((item) => ({
-          sync_variant_id: item.variantId || item.productId,
+          productId: item.productId,
+          variantId: item.variantId,
+          name: item.name,
           quantity: item.quantity,
-          retail_price: item.price.toFixed(2),
+          price: item.price,
+          currency: item.currency || "EUR",
         })),
-        retail_costs: {
+        shippingInfo: {
+          firstName: shippingInfo.firstName,
+          lastName: shippingInfo.lastName,
+          email: shippingInfo.email,
+          phone: shippingInfo.phone,
+          address1: shippingInfo.address1,
+          address2: shippingInfo.address2,
+          city: shippingInfo.city,
+          state: shippingInfo.state,
+          zip: shippingInfo.zip,
+          country: shippingInfo.country,
+        },
+        orderSummary: {
+          subtotal: subtotal,
+          shipping: shipping,
+          tax: tax,
+          total: total,
           currency: "EUR",
-          subtotal: subtotal.toFixed(2),
-          discount: "0.00",
-          shipping: shipping.toFixed(2),
-          tax: tax.toFixed(2),
-          total: total.toFixed(2),
         },
       }
 
-      console.log("Submitting order:", orderData)
+      console.log("Creating Stripe checkout session:", checkoutData)
 
-      const response = await fetch("/api/shop/orders", {
+      const response = await fetch("/api/shop/create-checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderData),
+        body: JSON.stringify(checkoutData),
       })
 
       const result = await response.json()
 
-      if (response.ok && result.success) {
-        clearCart()
-        setOrderComplete(true)
+      if (response.ok && result.success && result.checkoutUrl) {
+        // Redirect to Stripe Checkout
+        window.location.href = result.checkoutUrl
       } else {
-        throw new Error(result.error || "Order failed")
+        throw new Error(result.message || "Failed to create checkout session")
       }
     } catch (error) {
       console.error("Checkout error:", error)
@@ -356,7 +362,7 @@ export function CheckoutPage() {
                 ) : items.length === 0 ? (
                   "Cart is Empty"
                 ) : (
-                  `Complete Order - €${total.toFixed(2)}`
+                  `Pay with Stripe - €${total.toFixed(2)}`
                 )}
               </button>
             </form>
