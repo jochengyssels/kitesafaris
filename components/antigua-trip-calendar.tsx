@@ -74,7 +74,7 @@ export function AntiguaTripCalendar() {
             status: trip.status || "available"
           }))
           .filter((trip: any) => trip.status === "available") // Only show available trips
-          .sort((a, b) => a.startDate.getTime() - b.startDate.getTime()) // Sort by start date
+          .sort((a: any, b: any) => a.startDate.getTime() - b.startDate.getTime()) // Sort by start date
 
         console.log("Fetched Antigua trips:", antiguaTrips)
         setTrips(antiguaTrips)
