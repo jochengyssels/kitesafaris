@@ -13,6 +13,19 @@ export const metadata: Metadata = {
 function SuccessContent() {
   return (
     <div className="min-h-screen bg-sand-beige-50">
+      {/* Google Analytics Conversion Tracking */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            gtag('event', 'conversion', {
+                'send_to': 'AW-17339640596/ieJkCL3Zye4aEJTWl8xA',
+                'value': 0.0,
+                'currency': 'EUR',
+                'transaction_id': ''
+            });
+          `,
+        }}
+      />
       <Navigation />
       <div className="container mx-auto px-4 py-16 pt-24">
         <div className="max-w-2xl mx-auto">
