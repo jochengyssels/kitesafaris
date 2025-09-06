@@ -256,7 +256,7 @@ export function AuditLogViewer() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Events</p>
-                <p className="text-2xl font-bold text-navy-900">{statistics.totalLogs}</p>
+                <p className="text-2xl font-bold text-navy-900">{statistics.totalTrips}</p>
               </div>
               <Activity className="w-8 h-8 text-turquoise-600" />
             </div>
