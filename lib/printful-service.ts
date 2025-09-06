@@ -85,9 +85,11 @@ interface PrintfulOrder {
 export class PrintfulService {
   private readonly baseUrl = "https://api.printful.com"
   private readonly apiKey: string
+  private readonly storeId: string
 
   constructor() {
     this.apiKey = process.env.PRINTFUL_API_KEY || ""
+    this.storeId = process.env.PRINTFUL_STORE_ID || "16713432" // Default to Kite Safaris Shop
     if (!this.apiKey) {
       console.warn("[PrintfulService] API key not configured")
     }
@@ -98,7 +100,9 @@ export class PrintfulService {
       throw new Error("Printful API key not configured")
     }
 
-    const url = `${this.baseUrl}${endpoint}`
+    // Add store_id parameter to all endpoints
+    const separator = endpoint.includes('?') ? '&' : '?'
+    const url = `${this.baseUrl}${endpoint}${separator}store_id=${this.storeId}`
     const headers = {
       Authorization: `Bearer ${this.apiKey}`,
       "Content-Type": "application/json",
