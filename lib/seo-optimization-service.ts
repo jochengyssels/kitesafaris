@@ -29,7 +29,7 @@ export interface KeywordMapping {
 
 export interface OptimizationChange {
   id: string
-  type: 'title' | 'description' | 'content' | 'schema' | 'meta'
+  type: 'title' | 'description' | 'content' | 'schema' | 'meta' | 'image'
   page: string
   currentValue: string
   suggestedValue: string
