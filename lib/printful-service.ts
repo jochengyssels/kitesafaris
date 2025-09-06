@@ -116,6 +116,24 @@ export class PrintfulService {
       if (!response.ok) {
         const errorText = await response.text()
         console.error(`[PrintfulService] API error ${response.status}:`, errorText)
+        
+        // Parse error response for more details
+        try {
+          const errorData = JSON.parse(errorText)
+          console.error(`[PrintfulService] Error details:`, errorData)
+          
+          // Check for specific authentication errors
+          if (response.status === 401) {
+            throw new Error(`Authentication failed: ${errorData.error?.message || 'Invalid API token or insufficient permissions'}`)
+          } else if (response.status === 403) {
+            throw new Error(`Access forbidden: ${errorData.error?.message || 'Token lacks required scopes'}`)
+          } else if (response.status === 400) {
+            throw new Error(`Bad request: ${errorData.error?.message || 'Invalid request data'}`)
+          }
+        } catch (parseError) {
+          // If we can't parse the error, use the raw text
+        }
+        
         throw new Error(`Printful API error: ${response.status} ${response.statusText}`)
       }
 
