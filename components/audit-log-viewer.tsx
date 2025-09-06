@@ -280,7 +280,7 @@ export function AuditLogViewer() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Last 7 Days</p>
-                <p className="text-2xl font-bold text-navy-900">{statistics.last7Days}</p>
+                <p className="text-2xl font-bold text-navy-900">{statistics.totalRevenue}</p>
               </div>
               <Calendar className="w-8 h-8 text-blue-600" />
             </div>
