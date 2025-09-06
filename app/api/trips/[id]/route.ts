@@ -66,15 +66,16 @@ const convertToAirtable = (trip: Partial<Trip>) => ({
 })
 
 // PUT /api/trips/[id] - Update trip
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     if (!AIRTABLE_API_KEY || !AIRTABLE_BASE_ID) {
       return NextResponse.json({ error: "Airtable configuration missing" }, { status: 500 })
     }
 
+    const { id } = await params
     const updates = await request.json()
 
-    const response = await fetch(`${AIRTABLE_API_URL}/Trips/${params.id}`, {
+    const response = await fetch(`${AIRTABLE_API_URL}/Trips/${id}`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${AIRTABLE_API_KEY}`,
@@ -103,13 +104,14 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // DELETE /api/trips/[id] - Delete trip
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     if (!AIRTABLE_API_KEY || !AIRTABLE_BASE_ID) {
       return NextResponse.json({ error: "Airtable configuration missing" }, { status: 500 })
     }
 
-    const response = await fetch(`${AIRTABLE_API_URL}/Trips/${params.id}`, {
+    const { id } = await params
+    const response = await fetch(`${AIRTABLE_API_URL}/Trips/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${AIRTABLE_API_KEY}`,
