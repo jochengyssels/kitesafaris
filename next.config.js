@@ -39,6 +39,12 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'files.cdn.printful.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   async redirects() {
