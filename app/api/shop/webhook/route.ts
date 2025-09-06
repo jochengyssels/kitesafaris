@@ -9,6 +9,29 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
+// Helper function to get the actual Printful variant_id from sync variant ID
+async function getActualVariantId(syncVariantId: number): Promise<number> {
+  try {
+    // Get all products to find the one containing this sync variant ID
+    const products = await printfulService.getProducts()
+    
+    for (const product of products) {
+      const variants = await printfulService.getProductVariants(product.id)
+      const variant = variants.find(v => v.id === syncVariantId)
+      if (variant) {
+        console.log(`Mapped sync variant ID ${syncVariantId} to actual variant ID ${variant.variant_id}`)
+        return variant.variant_id
+      }
+    }
+    
+    console.warn(`Could not find actual variant ID for sync variant ID ${syncVariantId}`)
+    return syncVariantId // Fallback to original ID
+  } catch (error) {
+    console.error(`Error mapping variant ID ${syncVariantId}:`, error)
+    return syncVariantId // Fallback to original ID
+  }
+}
+
 export async function POST(request: NextRequest) {
   const body = await request.text()
   const signature = headers().get('stripe-signature')!
@@ -73,10 +96,10 @@ export async function POST(request: NextRequest) {
           phone: customerPhone || "",
           email: customerEmail,
         },
-        items: items.map((item: any) => ({
-          variant_id: item.variantId || item.productId,
+        items: await Promise.all(items.map(async (item: any) => ({
+          variant_id: await getActualVariantId(item.variantId || item.productId),
           quantity: item.quantity,
-        })),
+        }))),
       }
 
       console.log("Creating Printful order:", orderData)
