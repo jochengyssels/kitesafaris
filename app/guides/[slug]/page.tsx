@@ -56,7 +56,7 @@ const guides = [
   {
     slug: "caribbean-mediterranean-wind-patterns",
     title: "Wind Patterns in the Caribbean vs Mediterranean",
-    coverImage: "/antigua-jolly-harbor-kiting.png", // replaced missing wind conditions image with existing Antigua image
+    coverImage: "/antigua-aerial-harbor-view.jpg",
     skillLevel: "intermediate" as const,
     readTime: 10,
     author: "Captain Tomaz Kodelja",
@@ -78,7 +78,7 @@ const guides = [
   {
     slug: "catamaran-kite-safety-protocols",
     title: "Catamaran Kite Safety: Remote Location Protocols",
-    coverImage: "/antigua-jolly-harbor-kiting.png",
+    coverImage: "/antigua-aerial-harbor-view.jpg",
     skillLevel: "beginner" as const,
     readTime: 6,
     author: "Maria Santos",
@@ -144,7 +144,7 @@ const guides = [
   {
     slug: "antigua-kite-spots-guide",
     title: "Antigua's Best Kiteboarding Spots: A Complete Guide",
-    coverImage: "/antigua-jolly-harbor-kiting.png",
+    coverImage: "/antigua-aerial-harbor-view.jpg",
     skillLevel: "beginner" as const,
     readTime: 10,
     author: "Captain Tomaz Kodelja",
@@ -194,7 +194,7 @@ const guides = [
   {
     slug: "caribbean-trade-winds-guide",
     title: "Understanding Caribbean Trade Winds for Kiteboarding",
-    coverImage: "/antigua-jolly-harbor-kiting.png",
+    coverImage: "/antigua-aerial-harbor-view.jpg",
     skillLevel: "intermediate" as const,
     readTime: 12,
     author: "Captain Tomaz Kodelja",
@@ -294,11 +294,12 @@ const guides = [
 ]
 
 interface PageProps {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
-export default function GuideDetailPage({ params }: PageProps) {
-  const guide = guides.find((g) => g.slug === params.slug)
+export default async function GuideDetailPage({ params }: PageProps) {
+  const { slug } = await params
+  const guide = guides.find((g) => g.slug === slug)
 
   if (!guide) {
     notFound()
@@ -327,6 +328,7 @@ export default function GuideDetailPage({ params }: PageProps) {
             src={guide.coverImage || "/placeholder.svg"}
             alt={`${guide.title} - kiteboarding guide cover image`}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -451,7 +453,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PageProps) {
-  const guide = guides.find((g) => g.slug === params.slug)
+  const { slug } = await params
+  const guide = guides.find((g) => g.slug === slug)
 
   if (!guide) {
     return {

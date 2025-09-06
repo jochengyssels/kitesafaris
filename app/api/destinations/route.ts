@@ -121,11 +121,11 @@ const convertFromAirtable = (airtableDestination: AirtableDestination): Destinat
     if (normalizedName.includes('antigua')) {
       return "/antigua-aerial-harbor-view.jpg"
     } else if (normalizedName.includes('greece')) {
-      return "/greek-aegean-islands-kiteboarding-destination.png"
+      return "https://daggzx92agk0rfom.public.blob.vercel-storage.com/greece:img-catamaran-shore-heli.jpg"
     } else if (normalizedName.includes('sardinia')) {
       return "/sardinia-punta-trettu-kiteboarding-mediterranean-c.png"
     } else if (normalizedName.includes('caribbean')) {
-      return "/antigua-caribbean-sunset-kiteboarding.png"
+      return "https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-heli-kiters.jpg"
     }
     return "/antigua-aerial-harbor-view.jpg" // Default fallback
   }

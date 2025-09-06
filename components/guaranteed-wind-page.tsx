@@ -76,7 +76,7 @@ const destinations = [
     windType: "Trade Winds",
     avgWind: "15-25 knots",
     reliability: "90%",
-    image: "/antigua-caribbean-sunset-kiteboarding.png",
+    image: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-catamaran-sunset.jpg",
   },
   {
     id: "greece",
@@ -85,7 +85,7 @@ const destinations = [
     windType: "Meltemi Winds",
     avgWind: "18-28 knots",
     reliability: "92%",
-    image: "/greek-aegean-islands-kiteboarding-meltemi-winds.png",
+    image: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/greece:img-catamaran-side.jpg",
   },
   {
     id: "sardinia",
@@ -103,25 +103,25 @@ const alternativeActivities = [
     title: "Stand-Up Paddleboarding",
     description: "Explore calm bays and hidden coves on SUP boards",
     icon: Waves,
-    image: "/placeholder.png",
+    image: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/img-fruit-salad.jpg",
   },
   {
     title: "Snorkeling Adventures",
     description: "Discover vibrant coral reefs and marine life",
     icon: Camera,
-    image: "/antigua-coral-reef-underwater-snorkeling.png",
+    image: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-catamaran-islands.jpg",
   },
   {
     title: "Island Exploration",
     description: "Visit secluded beaches and local villages",
     icon: MapPin,
-    image: "/antigua-tropical-landscape-palm-trees-beach.png",
+    image: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-catamaran-shore.jpg",
   },
   {
     title: "Sailing & Boat Trips",
     description: "Enjoy scenic cruises and sunset sails",
     icon: Anchor,
-    image: "/luxury-catamaran-yacht-on-turquoise-water.png",
+    image: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/catamaran:img-sailing-wind.jpg",
   },
 ]
 

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     siteName: "KiteSafaris.com",
     images: [
       {
-        url: "https://kitesafaris.com/antigua-caribbean-sunset-kiteboarding.png",
+        url: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-catamaran-sunset.jpg",
         width: 1200,
         height: 630,
         alt: "Stunning kiteboarding photography from KiteSafaris destinations",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     title: "Destinations Gallery - See Where Your Adventure Takes You | KiteSafaris.com",
     description:
       "Explore breathtaking moments from our kite safaris across the Caribbean and Mediterranean.",
-    images: ["https://kitesafaris.com/antigua-caribbean-sunset-kiteboarding.png"],
+    images: ["https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-catamaran-sunset.jpg"],
   },
   robots: {
     index: true,

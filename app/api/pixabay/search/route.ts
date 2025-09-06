@@ -1,11 +1,22 @@
 import { type NextRequest, NextResponse } from "next/server"
 
-export async function GET(request: NextRequest) {
+async function handlePixabayRequest(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const query = searchParams.get("query")
-    const destination = searchParams.get("destination")
-    const perPage = Number.parseInt(searchParams.get("per_page") || "12")
+    let query: string | null = null
+    let destination: string | null = null
+    let perPage = 12
+
+    if (request.method === "GET") {
+      const { searchParams } = new URL(request.url)
+      query = searchParams.get("query")
+      destination = searchParams.get("destination")
+      perPage = Number.parseInt(searchParams.get("per_page") || "12")
+    } else if (request.method === "POST") {
+      const body = await request.json()
+      query = body.query || null
+      destination = body.destination || null
+      perPage = body.per_page || 12
+    }
 
     console.log("[v0] Pixabay API request:", { query, destination, perPage })
 
@@ -90,4 +101,12 @@ export async function GET(request: NextRequest) {
       images: [],
     })
   }
+}
+
+export async function GET(request: NextRequest) {
+  return handlePixabayRequest(request)
+}
+
+export async function POST(request: NextRequest) {
+  return handlePixabayRequest(request)
 }

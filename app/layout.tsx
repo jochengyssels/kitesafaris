@@ -15,6 +15,7 @@ const montserrat = Montserrat({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://kitesafaris.com"),
   title: "Caribbean Kite Safari Antigua | Luxury Catamaran Kiteboarding Trips | KiteSafaris.com",
   description:
     "Book your Caribbean kite safari in Antigua! 7-day luxury catamaran kiteboarding adventures from €1,900. Saturday departures Dec 2025-Apr 2026. Max 6 guests per trip.",
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
     siteName: "KiteSafaris.com",
     images: [
       {
-        url: "/antigua-jolly-harbor-kiting.png",
+        url: "/antigua-aerial-harbor-view.jpg",
         width: 1200,
         height: 630,
         alt: "Caribbean catamaran kite safari Antigua luxury kiteboarding adventure",
@@ -47,7 +48,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Caribbean Kite Safari Antigua | Luxury Catamaran Adventures",
     description: "Book your Caribbean kite safari in Antigua! 7-day luxury catamaran kiteboarding trips from €1,900.",
-    images: ["/antigua-jolly-harbor-kiting.png"],
+    images: ["/antigua-aerial-harbor-view.jpg"],
   },
   robots: {
     index: true,

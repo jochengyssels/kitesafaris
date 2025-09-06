@@ -279,36 +279,36 @@ export function SmallGroupsPage() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
             {[
               {
-                src: "/small-group-kiteboarding-lesson-on-luxury-catamara.png",
-                alt: "Small group kiteboarding lesson with personalized instruction",
+                src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/img-diner.jpg",
+                alt: "Small group enjoying gourmet dining on luxury catamaran",
               },
               {
                 src: "/professional-kiteboarding-instructor-teaching-on-t.png",
                 alt: "One-on-one kiteboarding coaching session",
               },
               {
-                src: "/premium-kiteboarding-equipment-on-luxury-yacht-dec.png",
-                alt: "Premium equipment setup for small group",
+                src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/img-champagne.jpg",
+                alt: "Premium champagne celebration for small group",
               },
               {
                 src: "/perfect-wind-conditions-for-kiteboarding-in-tropic.png",
                 alt: "Small group enjoying perfect wind conditions",
               },
               {
-                src: "/antigua-aerial-harbor-view.jpg",
-                alt: "Intimate group gathering on catamaran deck",
+                src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/img-drinks.jpg",
+                alt: "Intimate group enjoying drinks on catamaran deck",
               },
               {
-                src: "/jericoacoara-lagoon-kiteboarding.png",
-                alt: "Small group exploring remote lagoon",
+                src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/interior:img-bedroom.jpg",
+                alt: "Luxury accommodation for small groups",
               },
               {
-                src: "/mauritius-kiteboarding-lagoon-coral-reef-luxury.png",
-                alt: "Exclusive access to pristine kiteboarding spots",
+                src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/interior:img-bathroom.jpg",
+                alt: "Premium bathroom facilities for small groups",
               },
               {
-                src: "/zanzibar-paje-beach-kiteboarding-white-sand.png",
-                alt: "Small group beach session with personalized attention",
+                src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/interior:img-dining-sofa.jpg",
+                alt: "Comfortable common areas for small groups",
               },
             ].map((image, index) => (
               <div key={index} className="relative aspect-square rounded-xl overflow-hidden group cursor-pointer">

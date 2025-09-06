@@ -77,7 +77,7 @@ export default function AntiguaFebruary2026Page() {
         <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-deep-navy/80 to-deep-navy/40 z-10"></div>
           <Image
-            src="/antigua-february-romantic-sunset.png"
+            src="https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-catamaran-sunset.jpg"
             alt="Antigua kite safari February 2026 Valentine's romantic Caribbean catamaran kiteboarding sunset"
             fill
             className="object-cover"

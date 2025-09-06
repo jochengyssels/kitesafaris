@@ -21,7 +21,7 @@ interface GalleryImage {
 const sampleGalleryData: GalleryImage[] = [
   {
     id: "1",
-    src: "/antigua-caribbean-sunset-kiteboarding.png",
+    src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-catamaran-sailing.jpg",
     alt: "Sunset kiteboarding in Antigua Caribbean waters",
     destination: "Antigua",
     category: "Kiteboarding",
@@ -32,7 +32,7 @@ const sampleGalleryData: GalleryImage[] = [
   },
   {
     id: "2",
-    src: "/greek-aegean-islands-kiteboarding-meltemi-winds.png",
+    src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/greece:img-catamaran-back.jpg",
     alt: "Kiteboarding in Greek Aegean Islands with Meltemi winds",
     destination: "Greece",
     category: "Kiteboarding",
@@ -54,7 +54,7 @@ const sampleGalleryData: GalleryImage[] = [
   },
   {
     id: "4",
-    src: "/luxury-catamaran-yacht-on-turquoise-water.png",
+    src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/catamaran:img-helishot.jpg",
     alt: "Luxury catamaran yacht on turquoise Caribbean waters",
     destination: "Caribbean",
     category: "Yacht",
@@ -65,7 +65,7 @@ const sampleGalleryData: GalleryImage[] = [
   },
   {
     id: "5",
-    src: "/antigua-tropical-landscape-palm-trees-beach.png",
+    src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-catamaran-shore.jpg",
     alt: "Tropical landscape with palm trees and beach in Antigua",
     destination: "Antigua",
     category: "Landscape",
@@ -76,7 +76,7 @@ const sampleGalleryData: GalleryImage[] = [
   },
   {
     id: "6",
-    src: "/antigua-coral-reef-underwater-snorkeling.png",
+    src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-catamaran-islands.jpg",
     alt: "Underwater coral reef snorkeling in Antigua",
     destination: "Antigua",
     category: "Underwater",
@@ -85,10 +85,131 @@ const sampleGalleryData: GalleryImage[] = [
     width: 1200,
     height: 800,
   },
+  {
+    id: "7",
+    src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/img-diner.jpg",
+    alt: "Gourmet dining experience on luxury catamaran",
+    destination: "Antigua",
+    category: "Dining",
+    date: "2024-12-22",
+    likes: 145,
+    width: 1200,
+    height: 800,
+  },
+  {
+    id: "8",
+    src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/img-champagne.jpg",
+    alt: "Champagne celebration on catamaran deck",
+    destination: "Antigua",
+    category: "Dining",
+    date: "2024-12-23",
+    likes: 198,
+    width: 1200,
+    height: 900,
+  },
+  {
+    id: "9",
+    src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/img-drinks.jpg",
+    alt: "Refreshing drinks after kiteboarding session",
+    destination: "Antigua",
+    category: "Dining",
+    date: "2024-12-24",
+    likes: 112,
+    width: 1200,
+    height: 800,
+  },
+  {
+    id: "10",
+    src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/img-aperol.jpg",
+    alt: "Aperol spritz at sunset on catamaran",
+    destination: "Antigua",
+    category: "Dining",
+    date: "2024-12-25",
+    likes: 156,
+    width: 1200,
+    height: 900,
+  },
+  {
+    id: "11",
+    src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/img-fruit-salad.jpg",
+    alt: "Fresh tropical fruit salad for breakfast",
+    destination: "Antigua",
+    category: "Dining",
+    date: "2024-12-26",
+    likes: 134,
+    width: 1200,
+    height: 800,
+  },
+  {
+    id: "12",
+    src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/interior:img-bedroom.jpg",
+    alt: "Luxury master bedroom on catamaran",
+    destination: "Antigua",
+    category: "Accommodation",
+    date: "2024-12-27",
+    likes: 178,
+    width: 1200,
+    height: 900,
+  },
+  {
+    id: "13",
+    src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/interior:img-bathroom.jpg",
+    alt: "Modern en-suite bathroom with ocean views",
+    destination: "Antigua",
+    category: "Accommodation",
+    date: "2024-12-28",
+    likes: 145,
+    width: 1200,
+    height: 900,
+  },
+  {
+    id: "14",
+    src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/interior:img-dining-sofa.jpg",
+    alt: "Spacious dining and lounge area",
+    destination: "Antigua",
+    category: "Accommodation",
+    date: "2024-12-29",
+    likes: 167,
+    width: 1200,
+    height: 800,
+  },
+  {
+    id: "15",
+    src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/interior:img-cockpit.jpg",
+    alt: "Professional cockpit area for navigation",
+    destination: "Antigua",
+    category: "Accommodation",
+    date: "2024-12-30",
+    likes: 134,
+    width: 1200,
+    height: 800,
+  },
+  {
+    id: "16",
+    src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/interior:img-bedroom2.jpg",
+    alt: "Comfortable guest cabin with storage",
+    destination: "Antigua",
+    category: "Accommodation",
+    date: "2024-12-31",
+    likes: 156,
+    width: 1200,
+    height: 900,
+  },
+  {
+    id: "17",
+    src: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/interior:img-hallway.jpg",
+    alt: "Elegant interior hallway with premium finishes",
+    destination: "Antigua",
+    category: "Accommodation",
+    date: "2025-01-01",
+    likes: 142,
+    width: 1200,
+    height: 900,
+  },
 ]
 
 const destinations = ["All", "Antigua", "Greece", "Sardinia", "Caribbean"]
-const categories = ["All", "Kiteboarding", "Yacht", "Landscape", "Underwater", "Adventure"]
+const categories = ["All", "Kiteboarding", "Yacht", "Landscape", "Underwater", "Adventure", "Dining", "Accommodation"]
 
 export function DestinationsGallery() {
   const [selectedDestination, setSelectedDestination] = useState("All")
@@ -306,79 +427,6 @@ export function DestinationsGallery() {
         </div>
       </section>
 
-      {/* Google Photos Integration Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl font-bold text-deep-navy mb-6 font-montserrat">
-              Connect to Your Google Photos
-            </h2>
-            <p className="text-lg text-deep-navy/80 font-open-sans mb-8 max-w-2xl mx-auto">
-              Want to see your own photos featured here? Connect your Google Photos album to showcase your KiteSafaris adventures.
-            </p>
-            
-            <div className="grid md:grid-cols-2 gap-8">
-              {/* Option A: Public Album Embed */}
-              <div className="bg-sand-beige rounded-2xl p-6">
-                <h3 className="text-xl font-bold text-deep-navy mb-4 font-montserrat">
-                  Public Album Embed
-                </h3>
-                <p className="text-deep-navy/80 font-open-sans mb-4">
-                  Share your Google Photos album publicly and embed it directly on this page.
-                </p>
-                <div className="space-y-3 text-sm text-deep-navy/70">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-turquoise rounded-full" />
-                    <span>Easiest to implement</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-turquoise rounded-full" />
-                    <span>No API setup required</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-turquoise rounded-full" />
-                    <span>Real-time updates</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Option B: API Integration */}
-              <div className="bg-deep-navy rounded-2xl p-6 text-white">
-                <h3 className="text-xl font-bold mb-4 font-montserrat">
-                  API Integration
-                </h3>
-                <p className="text-white/80 mb-4">
-                  Advanced integration with Google Photos API for custom layouts and features.
-                </p>
-                <div className="space-y-3 text-sm text-white/70">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-turquoise rounded-full" />
-                    <span>Custom layouts and filtering</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-turquoise rounded-full" />
-                    <span>Advanced search and organization</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-turquoise rounded-full" />
-                    <span>Professional presentation</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8">
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 bg-coral-orange text-white px-8 py-4 rounded-lg font-semibold hover:bg-coral-orange/90 transition-colors"
-              >
-                <Camera className="w-5 h-5" />
-                Connect Your Photos
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Call to Action */}
       <section className="py-16 bg-gradient-to-br from-turquoise to-deep-navy text-white">

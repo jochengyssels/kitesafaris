@@ -35,7 +35,7 @@ export default function PremiumCatamaranPage() {
             </div>
             <div className="relative h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl">
               <Image
-                src="/modern-catamaran-sailing-yacht-with-kite-equipment.png"
+                src="https://daggzx92agk0rfom.public.blob.vercel-storage.com/catamaran:img-sailing-wind.jpg"
                 alt="Premium Catamaran - Luxury catamaran for premium kiteboarding safaris"
                 fill
                 className="object-cover"

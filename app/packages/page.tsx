@@ -9,14 +9,14 @@ import { Calendar, MapPin, Wind, Users, Star, ArrowRight, Clock, Tag } from "luc
 
 export const metadata: Metadata = {
   title: "Kitesurf Packages | 7-Day Catamaran Trips | KiteSafaris",
-  description: "Browse kitesurf packages: 7-day Caribbean safaris, all-inclusive adventures with expert crew and small groups.",
-  keywords: "kitesurf packages, 7-day catamaran trips, Caribbean kitesurf safaris, all-inclusive kitesurfing, small group kitesurfing",
+  description: "Browse kitesurf packages: 7-day Caribbean safaris, all-inclusive adventures with expert crew and small groups. Book your kiteboarding vacation today!",
+  keywords: "kitesurf packages, 7-day catamaran trips, Caribbean kitesurf safaris, all-inclusive kitesurfing, small group kitesurfing, kiteboarding vacations, kitesurfing trips, kite catamaran, kitesurfing catamaran, kite cruise italy, wing foil holiday, kite and sail italy, kitesurfing catamaran, kite cruise spain, women's only kiteboarding trip, kite adventures, kitesurfing trips, kiteboarding vacations",
   alternates: {
     canonical: "https://www.kitesafaris.com/packages"
   },
   openGraph: {
     title: "Kitesurf Packages | 7-Day Catamaran Trips | KiteSafaris",
-    description: "Browse kitesurf packages: 7-day Caribbean safaris, all-inclusive adventures with expert crew and small groups.",
+    description: "Browse kitesurf packages: 7-day Caribbean safaris, all-inclusive adventures with expert crew and small groups. Book your kiteboarding vacation today!",
     type: "website",
   },
 }
@@ -24,6 +24,76 @@ export const metadata: Metadata = {
 export default function PackagesPage() {
   return (
     <div className="min-h-screen bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Kitesurf Packages | 7-Day Catamaran Trips | KiteSafaris",
+            "description": "Browse kitesurf packages: 7-day Caribbean safaris, all-inclusive adventures with expert crew and small groups. Book your kiteboarding vacation today!",
+            "url": "https://kitesafaris.com/packages",
+            "mainEntity": {
+              "@type": "Product",
+              "name": "Caribbean Kite Safari Package",
+              "description": "7-day luxury catamaran kitesafari in Antigua & Barbuda with expert crew and small groups",
+              "brand": {
+                "@type": "Brand",
+                "name": "KiteSafaris"
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": "1900",
+                "priceCurrency": "EUR",
+                "availability": "https://schema.org/InStock",
+                "validFrom": "2025-12-06",
+                "validThrough": "2026-04-26",
+                "url": "https://kitesafaris.com/booking"
+              },
+              "category": "Travel Package",
+              "additionalProperty": [
+                {
+                  "@type": "PropertyValue",
+                  "name": "Duration",
+                  "value": "7 days"
+                },
+                {
+                  "@type": "PropertyValue",
+                  "name": "Group Size",
+                  "value": "Maximum 6 guests"
+                },
+                {
+                  "@type": "PropertyValue",
+                  "name": "Wind Conditions",
+                  "value": "15-25 knots"
+                },
+                {
+                  "@type": "PropertyValue",
+                  "name": "Season",
+                  "value": "December to April"
+                }
+              ]
+            },
+            "breadcrumb": {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://kitesafaris.com"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Packages",
+                  "item": "https://kitesafaris.com/packages"
+                }
+              ]
+            }
+          }),
+        }}
+      />
       <Navigation />
 
       {/* Enhanced Hero Section */}

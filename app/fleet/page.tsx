@@ -30,7 +30,7 @@ export default function FleetPage() {
             <div className="bg-sand-beige rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
               <div className="relative h-64">
                 <Image
-                  src="/antigua-jolly-harbor-kiting.png"
+                  src="https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-catamaran-islands-view.jpg"
                   alt="Caribbean Catamaran - Luxury catamaran for Caribbean kiteboarding safaris with professional crew and kite equipment"
                   fill
                   className="object-cover"
@@ -103,7 +103,7 @@ export default function FleetPage() {
             <div className="bg-sand-beige rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
               <div className="relative h-64">
                 <Image
-                  src="/luxury-catamaran-yacht-on-turquoise-water.png"
+                  src="https://daggzx92agk0rfom.public.blob.vercel-storage.com/catamaran:img-sailing-nature.jpg"
                   alt="Mediterranean Catamaran - Luxury catamaran for Greek Islands kiteboarding safaris with professional crew and kite equipment"
                   fill
                   className="object-cover"
@@ -176,7 +176,7 @@ export default function FleetPage() {
             <div className="bg-sand-beige rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
               <div className="relative h-64">
                 <Image
-                  src="/modern-catamaran-sailing-yacht-with-kite-equipment.png"
+                  src="https://daggzx92agk0rfom.public.blob.vercel-storage.com/catamaran:img-mountain-shore.jpg"
                   alt="Premium Catamaran - Luxury catamaran for premium kiteboarding safaris with professional crew and kite equipment"
                   fill
                   className="object-cover"

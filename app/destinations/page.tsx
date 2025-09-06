@@ -46,7 +46,7 @@ const destinations: Destination[] = [
     location: "Aegean Islands",
     headline: "Meltemi Wind Magic",
     description: "Sail through ancient waters with powerful Meltemi winds, explore hidden coves, and discover the perfect blend of history and kiteboarding.",
-    image: "/greek-aegean-islands-kiteboarding-destination.png",
+    image: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/greece:img-catamaran.jpg",
     icon: "MapPin",
     available: true,
   },

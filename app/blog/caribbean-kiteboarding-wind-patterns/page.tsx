@@ -25,7 +25,7 @@ export default function CaribbeanWindPatternsPage() {
           {/* Hero Section */}
           <div className="relative h-96 overflow-hidden">
             <Image
-              src="/antigua-caribbean-sunset-kiteboarding.png"
+              src="https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-catamaran-sunset.jpg"
               alt="Caribbean kiteboarding with sunset"
               fill
               className="object-cover"

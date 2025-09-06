@@ -35,7 +35,7 @@ export default function MediterraneanCatamaranPage() {
             </div>
             <div className="relative h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl">
               <Image
-                src="/luxury-catamaran-yacht-on-turquoise-water.png"
+                src="https://daggzx92agk0rfom.public.blob.vercel-storage.com/catamaran:img-mountain-clouds.jpg"
                 alt="Mediterranean Catamaran - Luxury catamaran for Greek Islands kiteboarding safaris"
                 fill
                 className="object-cover"

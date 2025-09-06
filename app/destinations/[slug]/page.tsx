@@ -21,7 +21,7 @@ const destinations = [
     season: "Dec - Apr",
     windSpeed: "15-25 knots",
     culture: "Caribbean island culture",
-    intro: "7-day luxury catamaran kitesafari in Antigua & Barbuda. Ride the Caribbean trade winds, explore wild lagoons, and enjoy life on board. Limited to 6 spots. All meals, coaching, and fun included.",
+    intro: "Experience the ultimate kiteboarding in Antigua with KiteSafaris. Kitesurf Antigua's world-class spots including Hansons Bay, Nonsuch Bay, and Barbuda on our 7-day luxury catamaran adventures. Ride the Caribbean trade winds, explore wild lagoons, and enjoy life on board. Limited to 6 spots. All meals, coaching, and fun included.",
     highlights: [
       "Hansons Bay - flat-water playground ideal for beginners and freestyle",
       "Nonsuch Bay and Green Island - protected by reef with butter-flat water",
@@ -67,9 +67,9 @@ const destinations = [
       },
     ],
     gallery: [
-      "/antigua-caribbean-sunset-kiteboarding.png",
-      "/antigua-coral-reef-underwater-snorkeling.png",
-      "/antigua-tropical-landscape-palm-trees-beach.png",
+      "https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-catamaran-sunset.jpg",
+      "https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-catamaran-islands2.jpg",
+      "https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-catamaran-shore.jpg",
       "/antigua-aerial-harbor-view-new.jpg",
       "/banner-kitesafari-antigua-branded.png",
       "/antigua-sunset-harbor-romantic.jpeg",
@@ -81,7 +81,7 @@ const destinations = [
     name: "Aegean Islands",
     region: "Greece",
     coordinates: { lat: 37.4449, lng: 25.3662 },
-    bannerImage: "/greek-aegean-islands-kiteboarding-meltemi-winds.png",
+    bannerImage: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/greece:img-catamaran-shore-heli.jpg",
     windRating: 5,
     difficulty: "Intermediate",
     tideRating: 4,
@@ -169,8 +169,8 @@ export default async function DestinationDetailPage({ params }: PageProps) {
     notFound()
   }
 
-  // Generate JSON-LD for Sardinia
-  const sardiniaJsonLd = destination.id === "sardinia" ? {
+  // Generate JSON-LD for destinations
+  const destinationJsonLd = destination.id === "sardinia" ? {
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "Kitesurf Sardinia | Punta Trettu - Best Kitesurfing Destination Italy",
@@ -232,14 +232,81 @@ export default async function DestinationDetailPage({ params }: PageProps) {
         }
       ]
     }
+  } : destination.id === "antigua" ? {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Kiteboarding Antigua | Kitesurf Antigua | Caribbean Kite Safari Adventures",
+    "description": "Discover the best kiteboarding in Antigua with KiteSafaris. Kitesurf Antigua's premier spots including Hansons Bay, Nonsuch Bay, and Barbuda. 7-day luxury catamaran adventures.",
+    "url": "https://kitesafaris.com/destinations/antigua",
+    "mainEntity": {
+      "@type": "Place",
+      "name": "Antigua & Barbuda",
+      "description": "Caribbean's premier kiteboarding destination with world-class spots and consistent trade winds",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Antigua",
+        "addressRegion": "Antigua & Barbuda",
+        "addressCountry": "AG"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 17.0608,
+        "longitude": -61.7964
+      },
+      "amenityFeature": [
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Kiteboarding",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification", 
+          "name": "Kitesurfing",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "All Levels",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Trade Winds",
+          "value": true
+        }
+      ]
+    },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://kitesafaris.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Destinations",
+          "item": "https://kitesafaris.com/destinations"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Antigua",
+          "item": "https://kitesafaris.com/destinations/antigua"
+        }
+      ]
+    }
   } : null
 
   return (
     <div className="min-h-screen bg-white">
-      {sardiniaJsonLd && (
+      {destinationJsonLd && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(sardiniaJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(destinationJsonLd) }}
         />
       )}
       <Navigation />
@@ -315,9 +382,11 @@ export async function generateMetadata({ params }: PageProps) {
         }
       case "antigua":
         return {
-          title: `Caribbean Kite Safari Antigua | Luxury Catamaran Kiteboarding Adventures - KiteSafaris`,
-          description: `Experience the ultimate Caribbean kite safari in Antigua aboard luxury catamarans. 7-day trips with expert guides, premium equipment, and unforgettable adventures.`,
+          title: `Kiteboarding Antigua | Kitesurf Antigua | Caribbean Kite Safari Adventures - KiteSafaris`,
+          description: `Discover the best kiteboarding in Antigua with KiteSafaris. Kitesurf Antigua's premier spots including Hansons Bay, Nonsuch Bay, and Barbuda. 7-day luxury catamaran adventures from €1,900.`,
           keywords: [
+            "kiteboarding antigua",
+            "kitesurf antigua",
             "Caribbean kite safari",
             "Antigua kiteboarding trip",
             "catamaran safari Antigua",
@@ -325,23 +394,27 @@ export async function generateMetadata({ params }: PageProps) {
             "luxury kitesafari",
             "Antigua kite spots",
             "Caribbean kitesurfing vacation",
+            "kitesurfing antigua",
+            "antigua kiteboarding",
+            "kiteboarding caribbean",
+            "kitesurf caribbean",
           ].join(", "),
           openGraph: {
-            title: `Caribbean Kite Safari Antigua | Luxury Catamaran Kiteboarding Adventures`,
-            description: `Experience the ultimate Caribbean kite safari in Antigua aboard luxury catamarans. 7-day trips with expert guides, premium equipment, and unforgettable adventures.`,
+            title: `Kiteboarding Antigua | Kitesurf Antigua | Caribbean Kite Safari Adventures`,
+            description: `Discover the best kiteboarding in Antigua with KiteSafaris. Kitesurf Antigua's premier spots including Hansons Bay, Nonsuch Bay, and Barbuda. 7-day luxury catamaran adventures.`,
             images: [
               {
-                url: "http://localhost:3000/antigua-jolly-harbor-kiting.png",
+                url: "https://kitesafaris.com/antigua-aerial-harbor-view.jpg",
                 width: 1200,
                 height: 630,
-                alt: "Caribbean catamaran kite safari Antigua luxury kiteboarding adventure",
+                alt: "Kiteboarding Antigua kitesurf Antigua Caribbean kite safari adventure",
               },
             ],
           },
           twitter: {
-            title: `Caribbean Kite Safari Antigua | Luxury Catamaran Adventures`,
-            description: `Book your Caribbean kite safari in Antigua! 7-day luxury catamaran kiteboarding trips from €1,900.`,
-            images: ["http://localhost:3000/antigua-jolly-harbor-kiting.png"],
+            title: `Kiteboarding Antigua | Kitesurf Antigua | Caribbean Adventures`,
+            description: `Discover the best kiteboarding in Antigua with KiteSafaris. Kitesurf Antigua's premier spots with luxury catamaran adventures from €1,900.`,
+            images: ["https://kitesafaris.com/antigua-aerial-harbor-view.jpg"],
           },
         }
       case "greece":
@@ -359,7 +432,7 @@ export async function generateMetadata({ params }: PageProps) {
             description: dest.intro,
             images: [
               {
-                url: "http://localhost:3000/greek-aegean-islands-kiteboarding-meltemi-winds.png",
+                url: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/greece:img-catamaran-shore-heli.jpg",
                 width: 1200,
                 height: 630,
                 alt: `${dest.name} kitesurfing destination`,
@@ -369,7 +442,7 @@ export async function generateMetadata({ params }: PageProps) {
           twitter: {
             title: `${dest.name} - KiteSafaris.com`,
             description: dest.intro,
-            images: ["http://localhost:3000/greek-aegean-islands-kiteboarding-meltemi-winds.png"],
+            images: ["https://daggzx92agk0rfom.public.blob.vercel-storage.com/greece:img-catamaran-shore-heli.jpg"],
           },
         }
       default:

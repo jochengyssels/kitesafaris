@@ -6,21 +6,21 @@ import Image from "next/image"
 const instagramPosts = [
   {
     id: 1,
-    image: "/antigua-jolly-harbor-kiting.png",
+    image: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-catamaran-open-sea.jpg",
     alt: "Caribbean kiteboarding adventure launching directly from luxury catamaran in Antigua's crystal turquoise waters with perfect trade winds",
     likes: 1247,
     caption: "Boat launches in Antigua paradise! 🪁",
   },
   {
     id: 2,
-    image: "/antigua-caribbean-sunset-kiteboarding.png",
+    image: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-catamaran-sunset.jpg",
     alt: "Golden sunset kiteboarding session in Caribbean Antigua with luxury catamaran silhouette and perfect wind conditions",
     likes: 892,
     caption: "Caribbean sunset magic ✨",
   },
   {
     id: 3,
-    image: "/antigua-group-session.png",
+    image: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-participants.jpg",
     alt: "Small group of 6 kiteboarders enjoying Caribbean kitesafari session in Antigua with professional instruction and rescue boat support",
     likes: 1156,
     caption: "Squad goals - max 6 people! 🏝️",

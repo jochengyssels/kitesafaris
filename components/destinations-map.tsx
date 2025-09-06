@@ -37,7 +37,7 @@ const destinations: Destination[] = [
     position: { lat: 37.4419, lng: 25.3667 }, // Updated to real coordinates for Cyclades
     windRating: 5,
     season: "Jun - Sep",
-    image: "/greek-aegean-islands-kiteboarding-destination.png", // Using existing Greek islands image instead of removed Red Sea image
+    image: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/greece:img-dobber-sunset.jpg", // Using uploaded Greece catamaran image
     description: "Meltemi winds and pristine island hopping adventure",
     price: "Coming Soon",
   },

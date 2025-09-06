@@ -33,7 +33,7 @@ const blogPosts = [
     title: "Understanding Caribbean Wind Patterns for Kiteboarding",
     excerpt:
       "Learn about the trade winds, seasonal variations, and best times to kiteboard in the Caribbean. Expert insights for optimal wind conditions.",
-    coverImage: "/antigua-caribbean-sunset-kiteboarding.png",
+    coverImage: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-catamaran-sunset.jpg",
     readTime: 6,
     author: "KiteSafaris Team",
     publishDate: "November 2024",
@@ -45,7 +45,7 @@ const blogPosts = [
     title: "Ultimate Packing Checklist for Your Kite Safari Adventure",
     excerpt:
       "Don't forget anything! Complete packing guide for kiteboarding equipment, travel essentials, and luxury catamaran living.",
-    coverImage: "/premium-kiteboarding-equipment-on-luxury-yacht-dec.png",
+    coverImage: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/catamaran:img-mountain-shore.jpg",
     readTime: 5,
     author: "KiteSafaris Team",
     publishDate: "November 2024",
@@ -57,7 +57,7 @@ const blogPosts = [
     title: "Mediterranean vs Caribbean: Which Kiteboarding Destination is Right for You?",
     excerpt:
       "Compare wind conditions, water temperatures, and cultural experiences between Mediterranean and Caribbean kiteboarding destinations.",
-    coverImage: "/greece-sardinia-destinations-map-guide.png",
+    coverImage: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/greece:img-catamaran-back.jpg",
     readTime: 7,
     author: "KiteSafaris Team",
     publishDate: "October 2024",

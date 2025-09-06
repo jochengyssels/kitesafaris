@@ -198,7 +198,7 @@ export default function BestFlightsEuropeAntiguaBlogPost() {
         {/* Hero Section */}
         <div className="relative h-96 overflow-hidden">
           <Image
-            src="/airplane-flying-over-turquoise-caribbean-waters-wi.png"
+            src="https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-heli-kiters.jpg"
             alt="Best flights from Europe to Antigua for kite safaris December to April"
             fill
             className="object-cover"

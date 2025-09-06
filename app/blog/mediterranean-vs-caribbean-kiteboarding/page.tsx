@@ -25,7 +25,7 @@ export default function MediterraneanVsCaribbeanPage() {
           {/* Hero Section */}
           <div className="relative h-96 overflow-hidden">
             <Image
-              src="/greece-sardinia-destinations-map-guide.png"
+              src="https://daggzx92agk0rfom.public.blob.vercel-storage.com/greece:img-catamaran-farback.jpg"
               alt="Greece and Sardinia destinations map"
               fill
               className="object-cover"

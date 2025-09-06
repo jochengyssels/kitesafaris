@@ -35,7 +35,7 @@ export default function CaribbeanCatamaranPage() {
             </div>
             <div className="relative h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl">
               <Image
-                src="/antigua-jolly-harbor-kiting.png"
+                src="https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-catamaran-open-sea.jpg"
                 alt="Caribbean Catamaran - Luxury catamaran for Caribbean kiteboarding safaris"
                 fill
                 className="object-cover"
