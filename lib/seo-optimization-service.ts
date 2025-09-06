@@ -35,6 +35,8 @@ export interface OptimizationChange {
   suggestedValue: string
   priority: 'high' | 'medium' | 'low'
   status: 'pending' | 'approved' | 'rejected'
+  impact: 'high' | 'medium' | 'low'
+  description: string
 }
 
 export class SEOOptimizationService {
