@@ -223,7 +223,7 @@ export function AuditLogViewer() {
   }
 
   const activeFilterCount = getActiveFilterCount()
-  const statistics = tripDataService.getAuditStatistics()
+  const statistics = tripDataService.getStatistics()
 
   return (
     <div className="space-y-6">
