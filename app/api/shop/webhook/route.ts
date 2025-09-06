@@ -42,9 +42,14 @@ async function getPrintFilesForVariant(variantId: number): Promise<any[]> {
       const variants = await printfulService.getProductVariants(product.id)
       const variant = variants.find(v => v.variant_id === variantId)
       if (variant && variant.files) {
-        // Return print files (exclude preview files)
+        // Return print files (exclude preview files and temporary files)
         const printFiles = variant.files
-          .filter((file: any) => file.type !== 'preview' && file.type !== 'back' && file.status === 'ok')
+          .filter((file: any) => 
+            file.type !== 'preview' && 
+            file.type !== 'back' && 
+            file.status === 'ok' && 
+            !file.is_temporary
+          )
           .map((file: any) => ({
             id: file.id,
             type: file.type,
