@@ -46,7 +46,7 @@ export default function WindForecastCard({
         setLoading(true)
         setError(null)
         
-        const response = await fetch(`/api/weather/stormglass?hours=${hours}`)
+        const response = await fetch(`/api/wind-forecast/airtable?hours=${hours}`)
         const data: WindForecastResponse = await response.json()
 
         if (!response.ok) {

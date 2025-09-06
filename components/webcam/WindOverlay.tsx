@@ -38,7 +38,7 @@ export default function WindOverlay() {
         setLoading(true)
         setError(null)
         
-        const response = await fetch('/api/weather/stormglass?hours=1')
+        const response = await fetch('/api/wind-forecast/airtable?hours=1')
         const data: WindOverlayResponse = await response.json()
 
         if (!response.ok) {
