@@ -41,7 +41,7 @@ export default function HeroSection() {
             Experience the ultimate Catamaran kitesurfing adventure.
           </p>
 
-          <Link href="/booking">
+          <Link href="/destinations">
             <Button
               size="lg"
               className="bg-coral-orange hover:bg-coral-orange/90 text-white font-montserrat font-bold text-lg px-8 py-6 rounded-full transition-all duration-300 hover:scale-105 shadow-2xl mx-auto animate-in fade-in slide-in-from-bottom-2 duration-1000 delay-700"
