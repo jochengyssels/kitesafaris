@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
 
       // Create order with Printful
       const orderData = {
-        external_id: `KS-${Date.now()}-${session.id}`,
+        external_id: `KS-${Date.now()}-${session.id.replace(/_/g, '-')}`,
         shipping: "STANDARD",
         recipient: {
           name: customerName,
