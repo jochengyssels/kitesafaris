@@ -34,7 +34,6 @@ export function Navigation() {
         { href: "/destinations/caribbean", label: "🏝️ Caribbean" },
         { href: "/destinations/greece", label: "🇬🇷 Greece" },
         { href: "/destinations/sardinia", label: "🇮🇹 Sardinia" },
-        { href: "/destinations/interactive-map", label: "🗺️ Interactive Map" },
         { href: "/packages", label: "📋 Packages" },
         { href: "/destinations/gallery", label: "📸 Gallery" },
         { href: "/flights-europe-antigua", label: "✈️ Flight Options" },
