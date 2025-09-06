@@ -37,6 +37,8 @@ export interface OptimizationChange {
   status: 'pending' | 'approved' | 'rejected'
   impact: 'high' | 'medium' | 'low'
   description: string
+  before: string
+  after: string
 }
 
 export class SEOOptimizationService {
