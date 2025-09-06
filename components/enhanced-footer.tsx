@@ -3,8 +3,8 @@ import { Facebook, Instagram, Youtube, Twitter, Phone, Mail, MapPin } from "luci
 
 const socialLinks = [
   { icon: Facebook, href: "https://facebook.com/kitesafaris", label: "Facebook" },
-  { icon: Instagram, href: "https://instagram.com/kitesafaris", label: "Instagram" },
-  { icon: Youtube, href: "https://youtube.com/kitesafaris", label: "YouTube" },
+  { icon: Instagram, href: "https://instagram.com/kitesafaris_com", label: "Instagram" },
+  { icon: Youtube, href: "https://www.youtube.com/@KiteSafaris", label: "YouTube" },
   { icon: Twitter, href: "https://twitter.com/kitesafaris", label: "Twitter" },
 ]
 
