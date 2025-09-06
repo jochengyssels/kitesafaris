@@ -228,13 +228,13 @@ export function AntiguaTripCalendar() {
               >
                 {/* Discount Badge */}
                 {trip.discountPercentage > 0 && (
-                  <div className="absolute top-4 right-4 bg-coral-orange text-white px-3 py-1 rounded-full text-sm font-bold">
+                  <div className="absolute top-2 right-2 bg-coral-orange text-white px-2 py-1 rounded-full text-xs font-bold z-10">
                     {trip.discountPercentage}% OFF
                   </div>
                 )}
 
                 {/* Header */}
-                <div className="flex items-start justify-between mb-4">
+                <div className="flex items-start justify-between mb-4 pr-16">
                   <div className="flex items-center space-x-3">
                     <div className="w-12 h-12 bg-gradient-to-br from-turquoise to-turquoise/80 rounded-full flex items-center justify-center">
                       <Calendar className="w-6 h-6 text-white" />
@@ -277,7 +277,7 @@ export function AntiguaTripCalendar() {
                   <div className="text-2xl font-bold text-coral-orange font-montserrat">
                     {trip.currency === "EUR" ? "€" : trip.currency}{trip.price.toLocaleString()}
                   </div>
-                  <div className="text-xs text-gray-500">per person</div>
+                  <div className="text-xs text-gray-500">per cabin (2 persons)</div>
                 </div>
 
                 {/* Quick Actions */}
