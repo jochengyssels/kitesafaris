@@ -134,7 +134,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-deep-navy font-montserrat mb-6 text-balance">
-              Discover Our Kite Safari Destinations
+              Interactive Map
             </h2>
             <p className="text-lg md:text-xl text-gray-600 font-open-sans max-w-3xl mx-auto leading-relaxed">
               Three extraordinary destinations. One unforgettable adventure. Experience world-class kiteboarding aboard
