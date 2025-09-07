@@ -17,6 +17,18 @@ export const metadata: Metadata = {
 
 const blogPosts = [
   {
+    slug: "kitesafaris-kitehouse-sardinia-partnership",
+    title: "KiteSafaris Forms Strategic Partnership with Kitehouse Sardinia",
+    excerpt:
+      "Strategic partnership expands kite-centric accommodations and course offerings in Punta Trettu, Sardinia's top kite destination. IKO certified instruction with luxury accommodations.",
+    coverImage: "/partners/partnership-kitehouse-kitesafaris.jpg",
+    readTime: 8,
+    author: "KiteSafaris Team",
+    publishDate: "September 2025",
+    category: "Partnership",
+    featured: true,
+  },
+  {
     slug: "kitesafaris-aba-kiting-partnership",
     title: "KiteSafaris Partners with ABA Kiting for Luxury Catamaran Operations",
     excerpt:
@@ -26,7 +38,7 @@ const blogPosts = [
     author: "KiteSafaris Team",
     publishDate: "September 2025",
     category: "Partnership",
-    featured: true,
+    featured: false,
   },
   {
     slug: "kitesafaris-prokite-sardegna-partnership",

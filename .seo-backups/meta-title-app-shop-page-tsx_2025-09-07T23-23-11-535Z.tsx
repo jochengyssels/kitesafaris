@@ -3,7 +3,7 @@ import { ShopPage } from "@/components/shop-page"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Kite Safari Shop | Caribbean Kiteboarding | KiteSafaris",
+  title: "KiteSafaris Gear - Wear Your Adventure | Premium Kiteboarding Merchandise",
   description:
     "Shop premium KiteSafaris branded merchandise including apparel, accessories, and lifestyle products. High-quality gear for kiteboarding enthusiasts and ocean lovers.",
   keywords: "kiteboarding merchandise, KiteSafaris gear, sailing apparel, ocean lifestyle, branded clothing",
@@ -23,22 +23,7 @@ export default function Shop() {
       <Navigation />
       <main>
         <ShopPage />
-      
-  <script
-    type="application/ld+json"
-    dangerouslySetInnerHTML={{
-      __html: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "KiteSafaris",
-        "description": "Luxury Caribbean kite safari adventures",
-        "url": "https://kitesafaris.com",
-        "logo": "https://kitesafaris.com/logo.png"
-      })
-    }}
-  />
-
-</main>
+      </main>
     </>
   )
 }

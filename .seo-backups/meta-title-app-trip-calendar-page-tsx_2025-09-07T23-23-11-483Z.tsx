@@ -3,7 +3,7 @@ import { Navigation } from "@/components/navigation"
 import { TripCalendarView } from "@/components/trip-calendar-view"
 
 export const metadata: Metadata = {
-  title: "Kite Safari Trip Calendar | Caribbean Kiteboarding | KiteSafaris",
+  title: "Trip Calendar - Upcoming KiteSafaris Adventures | KiteSafaris.com",
   description:
     "Browse all upcoming kiteboarding safaris in our interactive calendar. Filter by destination, see real-time availability, and book your next adventure.",
   keywords: "trip calendar, kiteboarding safaris, availability, booking, destinations, antigua, sardinia, greece",
@@ -20,22 +20,7 @@ export default function TripCalendarPage() {
       <Navigation />
       <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
         <TripCalendarView />
-      
-  <script
-    type="application/ld+json"
-    dangerouslySetInnerHTML={{
-      __html: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "KiteSafaris",
-        "description": "Luxury Caribbean kite safari adventures",
-        "url": "https://kitesafaris.com",
-        "logo": "https://kitesafaris.com/logo.png"
-      })
-    }}
-  />
-
-</main>
+      </main>
     </>
   )
 }

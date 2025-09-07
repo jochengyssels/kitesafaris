@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 import { Navigation } from "@/components/navigation"
 import { SardiniaPartnerSchools } from "@/components/sardinia-partner-schools"
-import WindConditionsCard from "@/components/wind/WindConditionsCard"
+import WindForecastCard from "@/components/weather/WindForecastCard"
 import Link from "next/link"
 import { Wind, Calendar, Thermometer, Cloud, Sun, AlertCircle, CheckCircle } from "lucide-react"
 
@@ -247,7 +247,7 @@ export default function WindConditionsPage() {
             <div className="lg:col-span-2">
               {/* Live Wind Conditions */}
               <section className="mb-8">
-                <WindConditionsCard />
+                <WindForecastCard hours={6} showCurrent={true} />
               </section>
 
               {/* Introduction */}

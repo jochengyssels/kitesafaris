@@ -24,7 +24,7 @@ import { PixabayGallery } from "./pixabay-gallery"
 import { SardinianAwakeningCTA } from "./sardinian-awakening-cta"
 import { DestinationFocusedMap } from "./destination-focused-map"
 import PuntaTrettuWebcam from "./webcam/PuntaTrettuWebcam"
-import WindConditionsCard from "./wind/WindConditionsCard"
+import WindForecastCard from "./weather/WindForecastCard"
 
 interface Destination {
   id: string
@@ -219,7 +219,7 @@ export function DestinationDetail({ destination }: DestinationDetailProps) {
           {/* Live Wind Conditions - Sardinia only */}
           {destination.id === "sardinia" && (
             <section>
-              <WindConditionsCard />
+              <WindForecastCard hours={6} showCurrent={true} />
             </section>
           )}
 
