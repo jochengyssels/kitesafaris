@@ -76,6 +76,18 @@ export default function RootLayout({
       <head>
         <JsonLd data={organizationSchema} />
         <JsonLd data={websiteSchema} />
+        {/* Google tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-RSB3CYE6JM"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-RSB3CYE6JM');
+            `,
+          }}
+        />
       </head>
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} ${montserrat.variable}`}>
         {children}
