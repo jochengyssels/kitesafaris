@@ -33,7 +33,7 @@ const blogPosts = [
     title: "KiteSafaris Partners with ProKite Sardegna for Premium Kitesurfing Education",
     excerpt:
       "Strategic partnership brings world-class IKO certified instruction to luxury catamaran safari clients in Sardinia. Learn from the best with integrated safari and lesson packages.",
-    coverImage: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/sardinia:img-kitesurfing-lessons.jpg",
+    coverImage: "/partners/partnership-kitesafaris-prokite.jpg",
     readTime: 6,
     author: "KiteSafaris Team",
     publishDate: "September 2025",
