@@ -1,8 +1,0 @@
-{
-  "crons": [
-    {
-      "path": "/api/wind-forecast/scheduler",
-      "schedule": "0 */3 * * *"
-    }
-  ]
-}

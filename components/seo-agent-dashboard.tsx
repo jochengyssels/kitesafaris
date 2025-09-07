@@ -19,6 +19,16 @@ import {
   Bell,
   RotateCcw,
   TrendingUp,
+  Plus,
+  X,
+  Filter,
+  Globe,
+  BookOpen,
+  ShoppingBag,
+  Users,
+  MapPin,
+  Calendar,
+  Star,
 } from "lucide-react"
 import { ChangePreviewModal } from "./change-preview-modal"
 import { BulkApprovalPanel } from "./bulk-approval-panel"
@@ -29,6 +39,22 @@ import { RollbackManager } from "./rollback-manager"
 type OptimizationStatus = "idle" | "running" | "completed" | "error"
 type ChangeStatus = "pending" | "approved" | "rejected"
 type DashboardTab = "optimization" | "reporting" | "rollback"
+
+interface SEOPage {
+  path: string
+  title: string
+  category: string
+  priority: "high" | "medium" | "low"
+  lastOptimized?: string
+  seoScore?: number
+  icon: any
+}
+
+interface KeywordPreset {
+  name: string
+  keywords: string[]
+  description: string
+}
 
 
 export function SEOAgentDashboard() {
@@ -44,6 +70,10 @@ export function SEOAgentDashboard() {
   const [showAutomationSettings, setShowAutomationSettings] = useState(false)
   const [customKeywords, setCustomKeywords] = useState<string>("")
   const [showKeywordInput, setShowKeywordInput] = useState(false)
+  const [selectedPages, setSelectedPages] = useState<string[]>([])
+  const [showPageSelector, setShowPageSelector] = useState(false)
+  const [selectedKeywordPreset, setSelectedKeywordPreset] = useState<string>("")
+  const [showKeywordPresets, setShowKeywordPresets] = useState(false)
 
   const [changes, setChanges] = useState<OptimizationChange[]>([
     {
@@ -87,12 +117,160 @@ export function SEOAgentDashboard() {
     },
   ])
 
+  // Available pages for SEO optimization
+  const availablePages: SEOPage[] = [
+    // Main pages
+    { path: "/", title: "Home", category: "Main", priority: "high", seoScore: 85, icon: Globe },
+    { path: "/destinations", title: "Destinations", category: "Main", priority: "high", seoScore: 78, icon: MapPin },
+    { path: "/packages", title: "Packages", category: "Main", priority: "high", seoScore: 82, icon: Calendar },
+    { path: "/booking", title: "Booking", category: "Main", priority: "high", seoScore: 75, icon: CheckCircle },
+    { path: "/contact", title: "Contact", category: "Main", priority: "medium", seoScore: 88, icon: Users },
+    
+    // Destination pages
+    { path: "/destinations/antigua", title: "Antigua", category: "Destinations", priority: "high", seoScore: 72, icon: MapPin },
+    { path: "/destinations/barbados", title: "Barbados", category: "Destinations", priority: "high", seoScore: 68, icon: MapPin },
+    { path: "/destinations/sardinia", title: "Sardinia", category: "Destinations", priority: "high", seoScore: 74, icon: MapPin },
+    { path: "/destinations/croatia", title: "Croatia", category: "Destinations", priority: "medium", seoScore: 71, icon: MapPin },
+    { path: "/destinations/greece", title: "Greece", category: "Destinations", priority: "medium", seoScore: 69, icon: MapPin },
+    { path: "/destinations/dominican-republic", title: "Dominican Republic", category: "Destinations", priority: "medium", seoScore: 66, icon: MapPin },
+    { path: "/destinations/tobago", title: "Tobago", category: "Destinations", priority: "medium", seoScore: 64, icon: MapPin },
+    { path: "/destinations/turks-and-caicos", title: "Turks and Caicos", category: "Destinations", priority: "medium", seoScore: 67, icon: MapPin },
+    
+    // Blog pages
+    { path: "/blog", title: "Blog", category: "Content", priority: "medium", seoScore: 80, icon: BookOpen },
+    { path: "/blog/mediterranean-vs-caribbean-kiteboarding", title: "Mediterranean vs Caribbean", category: "Content", priority: "high", seoScore: 76, icon: BookOpen },
+    { path: "/blog/caribbean-kiteboarding-wind-patterns", title: "Wind Patterns", category: "Content", priority: "high", seoScore: 73, icon: BookOpen },
+    { path: "/blog/packing-checklist-kite-safari", title: "Packing Checklist", category: "Content", priority: "medium", seoScore: 79, icon: BookOpen },
+    { path: "/blog/kiteboarding-safety-tips-tropical-destinations", title: "Safety Tips", category: "Content", priority: "medium", seoScore: 77, icon: BookOpen },
+    
+    // Service pages
+    { path: "/fleet", title: "Fleet", category: "Services", priority: "medium", seoScore: 81, icon: ShoppingBag },
+    { path: "/guides", title: "Guides", category: "Services", priority: "medium", seoScore: 83, icon: Users },
+    { path: "/premium-equipment", title: "Premium Equipment", category: "Services", priority: "medium", seoScore: 85, icon: Star },
+    { path: "/guaranteed-wind", title: "Guaranteed Wind", category: "Services", priority: "high", seoScore: 78, icon: TrendingUp },
+    { path: "/small-groups", title: "Small Groups", category: "Services", priority: "medium", seoScore: 80, icon: Users },
+    
+    // Trip pages
+    { path: "/antigua-kite-safari-december-6-2025", title: "Antigua Dec 2025", category: "Trips", priority: "high", seoScore: 70, icon: Calendar },
+    { path: "/antigua-kite-safari-january-2026", title: "Antigua Jan 2026", category: "Trips", priority: "high", seoScore: 68, icon: Calendar },
+    { path: "/antigua-kite-safari-february-2026", title: "Antigua Feb 2026", category: "Trips", priority: "high", seoScore: 69, icon: Calendar },
+    
+    // Other pages
+    { path: "/shop", title: "Shop", category: "E-commerce", priority: "medium", seoScore: 84, icon: ShoppingBag },
+    { path: "/reviews", title: "Reviews", category: "Social Proof", priority: "medium", seoScore: 86, icon: Star },
+    { path: "/faq", title: "FAQ", category: "Support", priority: "medium", seoScore: 89, icon: FileText },
+    { path: "/why-us", title: "Why Us", category: "About", priority: "medium", seoScore: 87, icon: Star },
+  ]
+
+  // Keyword presets for different optimization strategies
+  const keywordPresets: KeywordPreset[] = [
+    {
+      name: "Caribbean Focus",
+      keywords: ["caribbean kite safari", "antigua kiteboarding", "catamaran kite safari", "caribbean kite cruise", "luxury kite safari"],
+      description: "Optimize for Caribbean kite safari bookings"
+    },
+    {
+      name: "Mediterranean Focus", 
+      keywords: ["sardinia kiteboarding", "mediterranean kite safari", "italy kite cruise", "sardinia kite spots", "mediterranean wind"],
+      description: "Target Mediterranean kite destinations"
+    },
+    {
+      name: "Beginner Friendly",
+      keywords: ["beginner kite safari", "learn kiteboarding", "kite lessons caribbean", "safe kite spots", "kiteboarding for beginners"],
+      description: "Attract beginner kiteboarders"
+    },
+    {
+      name: "Luxury Travel",
+      keywords: ["luxury kite safari", "premium catamaran", "exclusive kite trip", "high-end kiteboarding", "luxury water sports"],
+      description: "Target luxury travel market"
+    },
+    {
+      name: "Group Travel",
+      keywords: ["group kite safari", "corporate kite trip", "team building kiteboarding", "group water sports", "kite safari friends"],
+      description: "Focus on group bookings"
+    },
+    {
+      name: "Custom",
+      keywords: [],
+      description: "Define your own keywords"
+    }
+  ]
+
   const [logs, setLogs] = useState([
     { time: "14:32:15", message: "SEO Agent initialized", type: "info" },
     { time: "14:32:16", message: "Starting site crawl...", type: "info" },
     { time: "14:32:18", message: "Found 23 pages to analyze", type: "success" },
     { time: "14:32:20", message: "Analyzing Caribbean kite safari keywords...", type: "info" },
   ])
+
+  // Helper functions for page selection
+  const handlePageToggle = (pagePath: string) => {
+    setSelectedPages(prev => 
+      prev.includes(pagePath) 
+        ? prev.filter(p => p !== pagePath)
+        : [...prev, pagePath]
+    )
+  }
+
+  const handleSelectAllPages = () => {
+    setSelectedPages(availablePages.map(page => page.path))
+  }
+
+  const handleDeselectAllPages = () => {
+    setSelectedPages([])
+  }
+
+  const handleSelectByCategory = (category: string) => {
+    const categoryPages = availablePages
+      .filter(page => page.category === category)
+      .map(page => page.path)
+    setSelectedPages(prev => [...new Set([...prev, ...categoryPages])])
+  }
+
+  const handleSelectByPriority = (priority: "high" | "medium" | "low") => {
+    const priorityPages = availablePages
+      .filter(page => page.priority === priority)
+      .map(page => page.path)
+    setSelectedPages(prev => [...new Set([...prev, ...priorityPages])])
+  }
+
+  // Helper functions for keyword management
+  const handleKeywordPresetSelect = (presetName: string) => {
+    setSelectedKeywordPreset(presetName)
+    const preset = keywordPresets.find(p => p.name === presetName)
+    if (preset && preset.keywords.length > 0) {
+      setCustomKeywords(preset.keywords.join(", "))
+    } else if (presetName === "Custom") {
+      setCustomKeywords("")
+    }
+  }
+
+  const getCurrentKeywords = () => {
+    if (selectedKeywordPreset && selectedKeywordPreset !== "Custom") {
+      const preset = keywordPresets.find(p => p.name === selectedKeywordPreset)
+      return preset ? preset.keywords : []
+    }
+    return customKeywords ? customKeywords.split(',').map(k => k.trim()).filter(k => k.length > 0) : []
+  }
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case "high":
+        return "text-red-600 bg-red-50"
+      case "medium":
+        return "text-yellow-600 bg-yellow-50"
+      case "low":
+        return "text-green-600 bg-green-50"
+      default:
+        return "text-gray-600 bg-gray-50"
+    }
+  }
+
+  const getSEOScoreColor = (score: number) => {
+    if (score >= 80) return "text-green-600"
+    if (score >= 60) return "text-yellow-600"
+    return "text-red-600"
+  }
 
   const handleStartOptimization = async () => {
     setStatus("running")
@@ -118,9 +296,9 @@ export function SEOAgentDashboard() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          pages: ['/contact', '/destinations', '/packages', '/booking'],
-          keywords: ['caribbean kite safari', 'antigua kiteboarding', 'catamaran kite safari'],
-          customKeywords: customKeywords ? customKeywords.split(',').map(k => k.trim()).filter(k => k.length > 0) : []
+          pages: selectedPages.length > 0 ? selectedPages : ['/contact', '/destinations', '/packages', '/booking'],
+          keywords: getCurrentKeywords(),
+          customKeywords: getCurrentKeywords()
         }),
       })
 
@@ -411,21 +589,172 @@ export function SEOAgentDashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
               <div className="bg-white rounded-lg shadow-sm border border-sand-beige-200 p-6">
-                <h2 className="font-montserrat font-semibold text-lg text-navy-900 mb-4">Optimization Control</h2>
+                <h2 className="font-montserrat font-semibold text-lg text-navy-900 mb-4">SEO Optimization Setup</h2>
 
-                {/* Keyword Input Section */}
+                {/* Page Selection Section */}
+                <div className="mb-6 p-4 bg-sand-beige-50 rounded-lg border border-sand-beige-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-medium text-navy-900">Select Pages to Optimize</h3>
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => setShowPageSelector(!showPageSelector)}
+                        className="text-turquoise-600 hover:text-turquoise-700 text-sm font-medium"
+                      >
+                        {showPageSelector ? 'Hide' : 'Select Pages'}
+                      </button>
+                      {selectedPages.length > 0 && (
+                        <span className="text-xs bg-turquoise-100 text-turquoise-700 px-2 py-1 rounded">
+                          {selectedPages.length} selected
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {showPageSelector ? (
+                    <div className="space-y-4">
+                      {/* Quick Selection Buttons */}
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          onClick={handleSelectAllPages}
+                          className="px-3 py-1 bg-turquoise-100 text-turquoise-700 rounded text-sm hover:bg-turquoise-200"
+                        >
+                          Select All
+                        </button>
+                        <button
+                          onClick={handleDeselectAllPages}
+                          className="px-3 py-1 bg-gray-100 text-gray-700 rounded text-sm hover:bg-gray-200"
+                        >
+                          Deselect All
+                        </button>
+                        <button
+                          onClick={() => handleSelectByPriority("high")}
+                          className="px-3 py-1 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200"
+                        >
+                          High Priority
+                        </button>
+                        <button
+                          onClick={() => handleSelectByPriority("medium")}
+                          className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded text-sm hover:bg-yellow-200"
+                        >
+                          Medium Priority
+                        </button>
+                      </div>
+
+                      {/* Category Selection */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Select by Category:</label>
+                        <div className="flex flex-wrap gap-2">
+                          {Array.from(new Set(availablePages.map(p => p.category))).map(category => (
+                            <button
+                              key={category}
+                              onClick={() => handleSelectByCategory(category)}
+                              className="px-3 py-1 bg-blue-100 text-blue-700 rounded text-sm hover:bg-blue-200"
+                            >
+                              {category}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Page List */}
+                      <div className="max-h-64 overflow-y-auto border border-sand-beige-300 rounded-lg">
+                        {availablePages.map((page) => {
+                          const IconComponent = page.icon
+                          const isSelected = selectedPages.includes(page.path)
+                          return (
+                            <div
+                              key={page.path}
+                              className={`flex items-center justify-between p-3 border-b border-sand-beige-200 last:border-b-0 hover:bg-sand-beige-50 ${
+                                isSelected ? 'bg-turquoise-50' : ''
+                              }`}
+                            >
+                              <div className="flex items-center space-x-3 flex-1">
+                                <input
+                                  type="checkbox"
+                                  checked={isSelected}
+                                  onChange={() => handlePageToggle(page.path)}
+                                  className="h-4 w-4 text-turquoise-600 focus:ring-turquoise-500 border-gray-300 rounded"
+                                />
+                                <IconComponent className="h-4 w-4 text-gray-600" />
+                                <div className="flex-1">
+                                  <div className="flex items-center space-x-2">
+                                    <span className="font-medium text-navy-900">{page.title}</span>
+                                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(page.priority)}`}>
+                                      {page.priority}
+                                    </span>
+                                    <span className={`text-xs font-medium ${getSEOScoreColor(page.seoScore || 0)}`}>
+                                      SEO: {page.seoScore}/100
+                                    </span>
+                                  </div>
+                                  <p className="text-xs text-gray-500">{page.path}</p>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-sm text-gray-600">
+                      <p className="mb-1">
+                        <span className="font-medium">Selected pages:</span> {selectedPages.length > 0 ? `${selectedPages.length} pages selected` : 'No pages selected (will use default pages)'}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Click "Select Pages" to choose specific pages for SEO optimization.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Keyword Management Section */}
                 <div className="mb-6 p-4 bg-sand-beige-50 rounded-lg border border-sand-beige-200">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="font-medium text-navy-900">SEO Keywords</h3>
-                    <button
-                      onClick={() => setShowKeywordInput(!showKeywordInput)}
-                      className="text-turquoise-600 hover:text-turquoise-700 text-sm font-medium"
-                    >
-                      {showKeywordInput ? 'Hide' : 'Customize Keywords'}
-                    </button>
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => setShowKeywordPresets(!showKeywordPresets)}
+                        className="text-turquoise-600 hover:text-turquoise-700 text-sm font-medium"
+                      >
+                        {showKeywordPresets ? 'Hide Presets' : 'Keyword Presets'}
+                      </button>
+                      <button
+                        onClick={() => setShowKeywordInput(!showKeywordInput)}
+                        className="text-turquoise-600 hover:text-turquoise-700 text-sm font-medium"
+                      >
+                        {showKeywordInput ? 'Hide Custom' : 'Custom Keywords'}
+                      </button>
+                    </div>
                   </div>
                   
-                  {showKeywordInput ? (
+                  {showKeywordPresets && (
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Choose Keyword Strategy:</label>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        {keywordPresets.map((preset) => (
+                          <button
+                            key={preset.name}
+                            onClick={() => handleKeywordPresetSelect(preset.name)}
+                            className={`p-3 text-left rounded-lg border transition-colors ${
+                              selectedKeywordPreset === preset.name
+                                ? 'border-turquoise-500 bg-turquoise-50'
+                                : 'border-sand-beige-300 hover:border-turquoise-300'
+                            }`}
+                          >
+                            <div className="font-medium text-navy-900">{preset.name}</div>
+                            <div className="text-xs text-gray-600 mt-1">{preset.description}</div>
+                            {preset.keywords.length > 0 && (
+                              <div className="text-xs text-turquoise-600 mt-1">
+                                {preset.keywords.slice(0, 2).join(", ")}
+                                {preset.keywords.length > 2 && ` +${preset.keywords.length - 2} more`}
+                              </div>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {showKeywordInput && (
                     <div className="space-y-3">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -439,17 +768,22 @@ export function SEOAgentDashboard() {
                           rows={3}
                         />
                         <p className="text-xs text-gray-500 mt-1">
-                          Enter your target keywords separated by commas. Leave empty to use default Caribbean kite safari keywords.
+                          Enter your target keywords separated by commas. These will be used for SEO optimization.
                         </p>
                       </div>
                     </div>
-                  ) : (
+                  )}
+
+                  {!showKeywordInput && !showKeywordPresets && (
                     <div className="text-sm text-gray-600">
                       <p className="mb-1">
-                        <span className="font-medium">Current keywords:</span> {customKeywords || 'Default Caribbean kite safari keywords'}
+                        <span className="font-medium">Current strategy:</span> {selectedKeywordPreset || 'No preset selected'}
+                      </p>
+                      <p className="mb-1">
+                        <span className="font-medium">Keywords:</span> {getCurrentKeywords().length > 0 ? getCurrentKeywords().join(", ") : 'No keywords set'}
                       </p>
                       <p className="text-xs text-gray-500">
-                        Click "Customize Keywords" to set your own target keywords for SEO optimization.
+                        Use "Keyword Presets" for predefined strategies or "Custom Keywords" to define your own.
                       </p>
                     </div>
                   )}
@@ -458,7 +792,7 @@ export function SEOAgentDashboard() {
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <p className="font-open-sans text-gray-600 mb-2">
-                      Target: {customKeywords ? 'Custom keywords' : 'Caribbean Kite Safari Antigua bookings'}
+                      Target: {selectedPages.length > 0 ? `${selectedPages.length} selected pages` : 'Default pages'} • {getCurrentKeywords().length > 0 ? `${getCurrentKeywords().length} keywords` : 'Default keywords'}
                     </p>
                     <div className="flex items-center space-x-2">
                       <div

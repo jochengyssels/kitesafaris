@@ -118,6 +118,11 @@ function generateMockHtmlFromFile(fileContent: string, pageUrl: string): string 
 function convertAnalysisToOpportunities(analysis: any, filePath: string) {
   const opportunities = []
   
+  // Generate page-specific optimized titles and descriptions
+  const pageUrl = analysis.url
+  const optimizedTitle = generateOptimizedTitle(pageUrl)
+  const optimizedDescription = generateOptimizedDescription(pageUrl)
+  
   // Meta title opportunities
   if (analysis.issues.some((issue: any) => issue.category === 'meta' && issue.title.includes('Title'))) {
     opportunities.push({
@@ -127,7 +132,7 @@ function convertAnalysisToOpportunities(analysis: any, filePath: string) {
       priority: "high",
       description: "Meta title optimization for Caribbean kite safari keywords",
       currentValue: analysis.currentMeta.title || "No title",
-      suggestedValue: analysis.recommendedMeta.title || "Optimized title",
+      suggestedValue: optimizedTitle,
       estimatedImpact: "15-25% CTR improvement",
     })
   }
@@ -141,7 +146,7 @@ function convertAnalysisToOpportunities(analysis: any, filePath: string) {
       priority: "high",
       description: "Meta description optimization for better click-through rates",
       currentValue: analysis.currentMeta.description || "No description",
-      suggestedValue: analysis.recommendedMeta.description || "Optimized description",
+      suggestedValue: optimizedDescription,
       estimatedImpact: "10-20% CTR improvement",
     })
   }
@@ -161,4 +166,40 @@ function convertAnalysisToOpportunities(analysis: any, filePath: string) {
   }
   
   return opportunities
+}
+
+function generateOptimizedTitle(pageUrl: string): string {
+  const titleTemplates = {
+    '/': "Caribbean Kite Safari | Luxury Catamaran Kiteboarding Adventures | KiteSafaris",
+    '/destinations': "Kite Safari Destinations | Caribbean, Greece & Sardinia | KiteSafaris",
+    '/destinations/antigua': "Antigua Kite Safari | Caribbean Kiteboarding Catamaran Trip | KiteSafaris",
+    '/destinations/sardinia': "Sardinia Kite Safari | Mediterranean Kiteboarding Adventure | KiteSafaris",
+    '/packages': "Kite Safari Packages | Luxury Catamaran Kiteboarding Trips | KiteSafaris",
+    '/booking': "Book Your Kite Safari | Caribbean Kiteboarding Adventure | KiteSafaris",
+    '/contact': "Contact KiteSafaris | Caribbean Kite Safari Experts | KiteSafaris",
+    '/blog': "Kite Safari Blog | Caribbean Kiteboarding Tips & Guides | KiteSafaris",
+    '/fleet': "Luxury Catamaran Fleet | Kite Safari Vessels | KiteSafaris",
+    '/guides': "Expert Kite Safari Guides | Caribbean Kiteboarding Coaches | KiteSafaris",
+  }
+  
+  return titleTemplates[pageUrl as keyof typeof titleTemplates] || 
+    `Kite Safari ${pageUrl.replace(/^\//, '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} | Caribbean Kiteboarding | KiteSafaris`
+}
+
+function generateOptimizedDescription(pageUrl: string): string {
+  const descriptionTemplates = {
+    '/': "Experience the ultimate Caribbean kite safari on luxury catamarans. Expert kiteboarding coaching, small groups, guaranteed wind. Book your kitesurf adventure today!",
+    '/destinations': "Discover world-class kite safari destinations in the Caribbean, Greece, and Sardinia. Luxury catamaran kiteboarding adventures with expert guides.",
+    '/destinations/antigua': "Antigua kite safari with consistent trade winds and luxury catamaran living. Expert kiteboarding coaching in the heart of the Caribbean.",
+    '/destinations/sardinia': "Sardinia kite safari featuring legendary Mistral winds and pristine Mediterranean coastlines. Luxury catamaran kiteboarding adventures.",
+    '/packages': "Choose from our luxury kite safari packages. Caribbean catamaran kiteboarding trips with expert coaching and guaranteed wind conditions.",
+    '/booking': "Book your Caribbean kite safari adventure today. Luxury catamaran kiteboarding trips with expert guides and guaranteed wind.",
+    '/contact': "Contact KiteSafaris for your Caribbean kite safari adventure. Expert kiteboarding guides and luxury catamaran experiences.",
+    '/blog': "Read our kite safari blog for Caribbean kiteboarding tips, destination guides, and adventure stories from our luxury catamaran trips.",
+    '/fleet': "Explore our luxury catamaran fleet designed for kite safari adventures. Premium vessels for Caribbean kiteboarding experiences.",
+    '/guides': "Meet our expert kite safari guides. Professional kiteboarding coaches with years of Caribbean catamaran experience.",
+  }
+  
+  return descriptionTemplates[pageUrl as keyof typeof descriptionTemplates] || 
+    `Discover ${pageUrl.replace(/^\//, '').replace(/-/g, ' ')} kite safari adventures. Luxury Caribbean kiteboarding experiences with expert guides.`
 }

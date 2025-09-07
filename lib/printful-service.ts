@@ -89,9 +89,12 @@ export class PrintfulService {
 
   constructor() {
     this.apiKey = process.env.PRINTFUL_API_KEY || ""
-    this.storeId = process.env.PRINTFUL_STORE_ID || "16713432" // Default to Kite Safaris Shop
+    this.storeId = process.env.PRINTFUL_STORE_ID || ""
     if (!this.apiKey) {
       console.warn("[PrintfulService] API key not configured")
+    }
+    if (!this.storeId) {
+      console.warn("[PrintfulService] Store ID not configured - this may cause issues with multi-store accounts")
     }
   }
 
@@ -100,16 +103,28 @@ export class PrintfulService {
       throw new Error("Printful API key not configured")
     }
 
-    // Add store_id parameter to all endpoints
-    const separator = endpoint.includes('?') ? '&' : '?'
-    const url = `${this.baseUrl}${endpoint}${separator}store_id=${this.storeId}`
-    const headers = {
+    // Construct the full URL
+    const url = `${this.baseUrl}${endpoint}`
+    const headers: Record<string, string> = {
       Authorization: `Bearer ${this.apiKey}`,
       "Content-Type": "application/json",
-      ...options.headers,
+      "User-Agent": "KiteSafaris-Website/1.0",
     }
 
-    console.log(`[PrintfulService] Making request to: ${endpoint}`)
+    // Add any additional headers from options
+    if (options.headers) {
+      Object.assign(headers, options.headers)
+    }
+
+    // Add store ID header if configured (required for multi-store accounts)
+    if (this.storeId) {
+      headers["X-PF-Store-ID"] = this.storeId
+    }
+
+    console.log(`[PrintfulService] Making request to: ${endpoint}`, {
+      storeId: this.storeId ? `${this.storeId.substring(0, 4)}...` : 'not configured',
+      hasStoreHeader: !!headers["X-PF-Store-ID"]
+    })
 
     try {
       const response = await fetch(url, {
@@ -133,6 +148,8 @@ export class PrintfulService {
             throw new Error(`Access forbidden: ${errorData.error?.message || 'Token lacks required scopes'}`)
           } else if (response.status === 400) {
             throw new Error(`Bad request: ${errorData.error?.message || 'Invalid request data'}`)
+          } else if (response.status === 429) {
+            throw new Error(`Rate limit exceeded: ${errorData.error?.message || 'Too many requests'}`)
           }
         } catch (parseError) {
           // If we can't parse the error, use the raw text
@@ -217,7 +234,7 @@ export class PrintfulService {
         recipient: orderData.recipient?.name
       })
 
-      const response = await this.makeRequest("/orders", {
+      const response = await this.makeRequest<{ code: number; result: any }>("/orders", {
         method: "POST",
         body: JSON.stringify(orderData),
       })
@@ -246,7 +263,7 @@ export class PrintfulService {
 
   async getShippingRates(recipient: any, items: any[]): Promise<any> {
     try {
-      const response = await this.makeRequest("/shipping/rates", {
+      const response = await this.makeRequest<{ code: number; result: any }>("/shipping/rates", {
         method: "POST",
         body: JSON.stringify({
           recipient,
@@ -258,6 +275,83 @@ export class PrintfulService {
       console.error("[PrintfulService] Failed to get shipping rates:", error)
       throw error
     }
+  }
+
+  // Add method to confirm draft orders (required by Printful API)
+  async confirmOrder(orderId: number): Promise<any> {
+    try {
+      console.log(`[PrintfulService] Confirming order ${orderId}`)
+      
+      const response = await this.makeRequest<{ code: number; result: any }>(`/orders/${orderId}/confirm`, {
+        method: "POST",
+      })
+
+      console.log("[PrintfulService] Order confirmed successfully")
+      return response
+    } catch (error) {
+      console.error(`[PrintfulService] Failed to confirm order ${orderId}:`, error)
+      throw error
+    }
+  }
+
+  // Add method to estimate order costs
+  async estimateOrderCosts(orderData: PrintfulOrder): Promise<any> {
+    try {
+      console.log("[PrintfulService] Estimating order costs")
+      
+      const response = await this.makeRequest<{ code: number; result: any }>("/orders/estimate-costs", {
+        method: "POST",
+        body: JSON.stringify(orderData),
+      })
+
+      return response
+    } catch (error) {
+      console.error("[PrintfulService] Failed to estimate order costs:", error)
+      throw error
+    }
+  }
+
+  // Helper method to validate print files for a variant
+  validatePrintFiles(variant: PrintfulVariant): any[] {
+    if (!variant.files || variant.files.length === 0) {
+      console.log(`[PrintfulService] No files found for variant ${variant.id}`)
+      return []
+    }
+
+    const validPrintFiles = variant.files
+      .filter((file: any) => {
+        // Only include files that are:
+        // 1. Not preview files
+        // 2. Not temporary files
+        // 3. Have status 'ok'
+        // 4. Are actual print files
+        const isValid = file.type !== 'preview' && 
+                       file.type !== 'back' && 
+                       file.status === 'ok' && 
+                       !file.is_temporary &&
+                       file.id &&
+                       file.url // Ensure file has a valid URL
+                       
+        if (!isValid) {
+          console.log(`[PrintfulService] Excluding invalid file:`, {
+            id: file.id,
+            type: file.type,
+            status: file.status,
+            is_temporary: file.is_temporary,
+            has_url: !!file.url
+          })
+        }
+        
+        return isValid
+      })
+      .map((file: any) => ({
+        id: file.id,
+        type: file.type,
+        url: file.url,
+      }))
+
+    console.log(`[PrintfulService] Found ${validPrintFiles.length} valid print files for variant ${variant.id}`)
+    return validPrintFiles
   }
 
   // Helper method to format product data for frontend

@@ -109,7 +109,7 @@ export function ShopPage() {
     addItem({
       id: `${product.id}-${variant?.id || "default"}`,
       productId: product.id,
-      variantId: variant?.variant_id, // Use the actual Printful variant_id
+      variantId: variant?.id, // Use the sync variant ID (variant.id) instead of catalog variant ID (variant.variant_id)
       name: product.name,
       price: Number.parseFloat(variant?.price || product.price),
       currency: product.currency,

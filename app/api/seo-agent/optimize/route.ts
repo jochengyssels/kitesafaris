@@ -96,10 +96,16 @@ async function findPageFilePath(pageUrl: string): Promise<string | null> {
       await fs.access(fullPath)
       return fullPath
     } catch {
-      // Try alternative paths
+      // Try alternative paths with more comprehensive patterns
       const alternatives = [
         path.join(process.cwd(), 'app', pageUrl.replace(/^\//, ''), 'page.tsx'),
         path.join(process.cwd(), 'app', pageUrl.replace(/^\//, ''), 'index.tsx'),
+        path.join(process.cwd(), 'app', pageUrl.replace(/^\//, ''), 'page.js'),
+        path.join(process.cwd(), 'app', pageUrl.replace(/^\//, ''), 'index.js'),
+        // Handle dynamic routes
+        path.join(process.cwd(), 'app', pageUrl.replace(/^\//, ''), '[slug]', 'page.tsx'),
+        // Handle nested routes
+        path.join(process.cwd(), 'app', pageUrl.replace(/^\//, ''), 'layout.tsx'),
       ]
       
       for (const altPath of alternatives) {
@@ -109,6 +115,18 @@ async function findPageFilePath(pageUrl: string): Promise<string | null> {
         } catch {
           continue
         }
+      }
+      
+      // If still not found, try to find any page.tsx in the directory
+      try {
+        const dirPath = path.join(process.cwd(), 'app', pageUrl.replace(/^\//, ''))
+        const files = await fs.readdir(dirPath)
+        const pageFile = files.find(file => file === 'page.tsx' || file === 'page.js')
+        if (pageFile) {
+          return path.join(dirPath, pageFile)
+        }
+      } catch {
+        // Directory doesn't exist
       }
       
       return null
@@ -146,10 +164,12 @@ async function applySEOChange(filePath: string, change: any): Promise<boolean> {
       case 'meta':
         if (change.description.includes('title')) {
           // Update meta title
-          updatedContent = updateMetaTitle(content, change.suggestedValue)
+          const titleValue = change.suggestedValue || change.after || "Optimized Title"
+          updatedContent = updateMetaTitle(content, titleValue)
         } else if (change.description.includes('description')) {
           // Update meta description
-          updatedContent = updateMetaDescription(content, change.suggestedValue)
+          const descValue = change.suggestedValue || change.after || "Optimized Description"
+          updatedContent = updateMetaDescription(content, descValue)
         }
         break
         
@@ -176,15 +196,23 @@ async function applySEOChange(filePath: string, change: any): Promise<boolean> {
 }
 
 function updateMetaTitle(content: string, newTitle: string): string {
-  // Update export const metadata title
+  // Update export const metadata title - improved regex
   const titleRegex = /(export\s+const\s+metadata[\s\S]*?title:\s*["'])([^"']*)(["'][\s\S]*?})/
   if (titleRegex.test(content)) {
     return content.replace(titleRegex, `$1${newTitle}$3`)
   }
   
+  // Try alternative metadata patterns
+  const altTitleRegex = /(title:\s*["'])([^"']*)(["'])/g
+  if (altTitleRegex.test(content)) {
+    return content.replace(altTitleRegex, `$1${newTitle}$3`)
+  }
+  
   // Add metadata if it doesn't exist
   if (!content.includes('export const metadata')) {
-    const metadataBlock = `export const metadata: Metadata = {
+    const metadataBlock = `import type { Metadata } from "next"
+
+export const metadata: Metadata = {
   title: "${newTitle}",
   description: "Caribbean kite safari adventures",
 }
@@ -197,10 +225,16 @@ function updateMetaTitle(content: string, newTitle: string): string {
 }
 
 function updateMetaDescription(content: string, newDescription: string): string {
-  // Update export const metadata description
+  // Update export const metadata description - improved regex
   const descRegex = /(export\s+const\s+metadata[\s\S]*?description:\s*["'])([^"']*)(["'][\s\S]*?})/
   if (descRegex.test(content)) {
     return content.replace(descRegex, `$1${newDescription}$3`)
+  }
+  
+  // Try alternative description patterns
+  const altDescRegex = /(description:\s*["'])([^"']*)(["'])/g
+  if (altDescRegex.test(content)) {
+    return content.replace(altDescRegex, `$1${newDescription}$3`)
   }
   
   // Add description to existing metadata
@@ -213,6 +247,12 @@ function updateMetaDescription(content: string, newDescription: string): string 
 }
 
 function addStructuredData(content: string, schemaType: string): string {
+  // Check if structured data already exists
+  if (content.includes('application/ld+json')) {
+    console.log('[SEO Agent] Structured data already exists, skipping')
+    return content
+  }
+  
   // Add JSON-LD script tag
   const jsonLdScript = `
   <script
@@ -230,13 +270,18 @@ function addStructuredData(content: string, schemaType: string): string {
   />
 `
   
-  // Find a good place to insert the script (before closing body tag or at end of component)
+  // Find a good place to insert the script
   if (content.includes('</body>')) {
     return content.replace('</body>', `${jsonLdScript}\n</body>`)
+  } else if (content.includes('</main>')) {
+    return content.replace('</main>', `${jsonLdScript}\n</main>`)
   } else if (content.includes('</div>')) {
     // Insert before the last closing div
     const lastDivIndex = content.lastIndexOf('</div>')
     return content.slice(0, lastDivIndex) + jsonLdScript + content.slice(lastDivIndex)
+  } else if (content.includes('export default')) {
+    // Insert before the export default statement
+    return content.replace('export default', `${jsonLdScript}\n\nexport default`)
   }
   
   return content

@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { headers } from 'next/headers'
 import { printfulService } from '@/lib/printful-service'
+import { CartItem } from '@/lib/printful/types'
+import { mapCartToPrintfulItems } from '@/lib/printful/mapCartToPrintful'
+import { assertSyncVariantsHaveFiles, assertCatalogVariantHasValidFile } from '@/lib/printful/validate'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-08-27.basil',
@@ -9,63 +12,80 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
-// Helper function to get the actual Printful variant_id from sync variant ID
-async function getActualVariantId(syncVariantId: number): Promise<number> {
-  try {
-    // Get all products to find the one containing this sync variant ID
-    const products = await printfulService.getProducts()
+/**
+ * Converts Stripe session metadata items to CartItem format
+ */
+function parseCartItemsFromSession(items: any[]): CartItem[] {
+  return items.map((item: any) => {
+    // After fixing the shop page, variantId now contains the sync variant ID
+    // We need to determine if this is a sync variant or catalog variant
+    const hasSyncVariantId = item.syncVariantId || item.variantId
+    const hasCatalogVariantId = item.catalogVariantId
     
-    for (const product of products) {
-      const variants = await printfulService.getProductVariants(product.id)
-      const variant = variants.find(v => v.id === syncVariantId)
-      if (variant) {
-        console.log(`Mapped sync variant ID ${syncVariantId} to actual variant ID ${variant.variant_id}`)
-        return variant.variant_id
-      }
+    console.log(`[Webhook] Parsing cart item:`, {
+      originalVariantId: item.variantId,
+      syncVariantId: item.syncVariantId,
+      catalogVariantId: item.catalogVariantId,
+      hasSyncVariantId: !!hasSyncVariantId,
+      hasCatalogVariantId: !!hasCatalogVariantId
+    })
+    
+    return {
+      qty: item.quantity || 1,
+      // Use variantId as syncVariantId (since we fixed the shop page to use sync variant IDs)
+      syncVariantId: hasSyncVariantId ? (item.syncVariantId || item.variantId) : undefined,
+      catalogVariantId: hasCatalogVariantId ? item.catalogVariantId : undefined,
+      printFileUrl: item.printFileUrl,
+      name: item.name,
+      price: item.price,
+      sku: item.sku
     }
-    
-    console.warn(`Could not find actual variant ID for sync variant ID ${syncVariantId}`)
-    return syncVariantId // Fallback to original ID
-  } catch (error) {
-    console.error(`Error mapping variant ID ${syncVariantId}:`, error)
-    return syncVariantId // Fallback to original ID
-  }
+  })
 }
 
-// Helper function to get print files for a variant
-async function getPrintFilesForVariant(variantId: number): Promise<any[]> {
-  try {
-    // Get all products to find the one containing this variant
-    const products = await printfulService.getProducts()
-    
-    for (const product of products) {
-      const variants = await printfulService.getProductVariants(product.id)
-      const variant = variants.find(v => v.variant_id === variantId)
-      if (variant && variant.files) {
-        // Return print files (exclude preview files and temporary files)
-        const printFiles = variant.files
-          .filter((file: any) => 
-            file.type !== 'preview' && 
-            file.type !== 'back' && 
-            file.status === 'ok' && 
-            !file.is_temporary
-          )
-          .map((file: any) => ({
-            id: file.id,
-            type: file.type,
-          }))
-        
-        console.log(`Found ${printFiles.length} print files for variant ${variantId}`)
-        return printFiles
-      }
+/**
+ * Preflight validation for cart items before sending to Printful
+ */
+async function validateCartItems(cartItems: CartItem[]): Promise<void> {
+  console.log(`[Webhook] Preflight validation for ${cartItems.length} cart items`)
+  
+  const syncVariantIds: number[] = []
+  const catalogItems: { catalogVariantId: number; printFileUrl: string }[] = []
+  
+  // Separate sync variants from catalog variants
+  for (const item of cartItems) {
+    if (item.syncVariantId) {
+      syncVariantIds.push(item.syncVariantId)
+      console.log(`[Webhook] Found sync variant: ${item.syncVariantId}`)
+    } else if (item.catalogVariantId) {
+      catalogItems.push({
+        catalogVariantId: item.catalogVariantId,
+        printFileUrl: item.printFileUrl || ''
+      })
+      console.log(`[Webhook] Found catalog variant: ${item.catalogVariantId}`)
+    } else {
+      console.warn(`[Webhook] Cart item has no valid variant ID:`, item)
     }
-    
-    console.warn(`Could not find print files for variant ID ${variantId}`)
-    return [] // Return empty array if no files found
-  } catch (error) {
-    console.error(`Error getting print files for variant ID ${variantId}:`, error)
-    return [] // Return empty array on error
   }
+  
+  // Validate sync variants have print files
+  if (syncVariantIds.length > 0) {
+    console.log(`[Webhook] Validating ${syncVariantIds.length} sync variants`)
+    await assertSyncVariantsHaveFiles(syncVariantIds)
+  }
+  
+  // For catalog variants, we need print file URLs
+  if (catalogItems.length > 0) {
+    console.log(`[Webhook] Validating ${catalogItems.length} catalog variants`)
+    for (const catalogItem of catalogItems) {
+      if (!catalogItem.printFileUrl) {
+        throw new Error(`Catalog variant ${catalogItem.catalogVariantId} requires a print file URL. This appears to be a catalog product that needs custom artwork.`)
+      }
+      assertCatalogVariantHasValidFile(catalogItem.catalogVariantId, catalogItem.printFileUrl)
+    }
+  }
+  
+  console.log(`[Webhook] ✅ Preflight validation passed for all ${cartItems.length} items`)
 }
 
 export async function POST(request: NextRequest) {
@@ -117,6 +137,28 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Missing required order metadata' }, { status: 400 })
       }
 
+      // Parse cart items from session metadata
+      const cartItems = parseCartItemsFromSession(items)
+      console.log(`[Webhook] Parsed ${cartItems.length} cart items from session metadata`)
+
+      // Preflight validation - fail fast if items are invalid
+      let printfulItems: any[]
+      try {
+        await validateCartItems(cartItems)
+        printfulItems = mapCartToPrintfulItems(cartItems)
+        console.log(`[Webhook] Successfully mapped ${printfulItems.length} items to Printful format`)
+      } catch (error) {
+        console.error('[Webhook] Preflight validation failed:', error)
+        // Mark order as requires manual review - DO NOT call Printful API
+        // TODO: Implement order status tracking in your database
+        console.error('[Webhook] Order marked for manual review due to preflight failure')
+        return NextResponse.json({ 
+          success: false, 
+          error: 'Preflight validation failed', 
+          details: error instanceof Error ? error.message : 'Unknown error'
+        }, { status: 400 })
+      }
+
       // Create order with Printful
       const orderData = {
         external_id: `KS-${Date.now()}`,
@@ -132,16 +174,7 @@ export async function POST(request: NextRequest) {
           phone: customerPhone || "",
           email: customerEmail,
         },
-        items: await Promise.all(items.map(async (item: any) => {
-          const actualVariantId = await getActualVariantId(item.variantId || item.productId)
-          const printFiles = await getPrintFilesForVariant(actualVariantId)
-          
-          return {
-            variant_id: actualVariantId,
-            quantity: item.quantity,
-            files: printFiles,
-          }
-        })),
+        items: printfulItems,
       }
 
       console.log("Creating Printful order:", orderData)
@@ -149,19 +182,26 @@ export async function POST(request: NextRequest) {
       // Create order with Printful directly
       try {
         const printfulResult = await printfulService.createOrder(orderData)
-        console.log("Printful order created successfully:", printfulResult.result?.id)
-        console.log("Full Printful response:", JSON.stringify(printfulResult, null, 2))
+        console.log("[Webhook] ✅ Printful order created successfully:", printfulResult.result?.id)
+        console.log("[Webhook] Full Printful response:", JSON.stringify(printfulResult, null, 2))
+        
+        // TODO: Update order status in your database to 'fulfilled' or 'processing'
+        
       } catch (error) {
-        console.error("Printful order creation failed:", error)
-        console.error("Order data that failed:", JSON.stringify(orderData, null, 2))
-        console.error("Error details:", {
+        console.error("[Webhook] ❌ Printful order creation failed:", error)
+        console.error("[Webhook] Order data that failed:", JSON.stringify(orderData, null, 2))
+        console.error("[Webhook] Error details:", {
           message: error instanceof Error ? error.message : "Unknown error",
           stack: error instanceof Error ? error.stack : undefined,
           name: error instanceof Error ? error.name : undefined
         })
-        // You might want to implement retry logic or alerting here
-        // For now, we'll still return success to Stripe to avoid webhook retries
-        // but log the error for manual investigation
+        
+        // Mark order as requires manual review due to Printful API error
+        // TODO: Implement order status tracking in your database
+        console.error("[Webhook] Order marked for manual review due to Printful API error")
+        
+        // Still return success to Stripe to avoid webhook retries
+        // The order will be manually reviewed and processed
       }
 
       // Store order information in your database if needed

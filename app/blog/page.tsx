@@ -17,6 +17,30 @@ export const metadata: Metadata = {
 
 const blogPosts = [
   {
+    slug: "kitesafaris-aba-kiting-partnership",
+    title: "KiteSafaris Partners with ABA Kiting for Luxury Catamaran Operations",
+    excerpt:
+      "Strategic partnership expands luxury catamaran kitesurfing experiences across Caribbean and Mediterranean destinations. Premium fleet operations with year-round coverage.",
+    coverImage: "/partners/partnership-kitesafaris-abakiting.jpg",
+    readTime: 8,
+    author: "KiteSafaris Team",
+    publishDate: "September 2025",
+    category: "Partnership",
+    featured: true,
+  },
+  {
+    slug: "kitesafaris-prokite-sardegna-partnership",
+    title: "KiteSafaris Partners with ProKite Sardegna for Premium Kitesurfing Education",
+    excerpt:
+      "Strategic partnership brings world-class IKO certified instruction to luxury catamaran safari clients in Sardinia. Learn from the best with integrated safari and lesson packages.",
+    coverImage: "https://daggzx92agk0rfom.public.blob.vercel-storage.com/sardinia:img-kitesurfing-lessons.jpg",
+    readTime: 6,
+    author: "KiteSafaris Team",
+    publishDate: "September 2025",
+    category: "Partnership",
+    featured: false,
+  },
+  {
     slug: "best-flights-europe-antigua-kite-safaris",
     title: "Best Flights from Europe to Antigua for Kite Safaris (December–April)",
     excerpt:
@@ -26,7 +50,7 @@ const blogPosts = [
     author: "KiteSafaris Team",
     publishDate: "December 2024",
     category: "Travel Guide",
-    featured: true,
+    featured: false,
   },
   {
     slug: "caribbean-kiteboarding-wind-patterns",

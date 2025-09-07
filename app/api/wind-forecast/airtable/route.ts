@@ -50,20 +50,20 @@ export async function GET(request: NextRequest) {
 
     const airtable = new AirtableService()
     
-    // Calculate time range for the request
+    // Calculate time range for the request (forecast data is for future dates)
     const now = new Date()
-    const startTime = new Date(now.getTime() - hours * 60 * 60 * 1000)
+    const endTime = new Date(now.getTime() + hours * 60 * 60 * 1000)
     
     console.log(`[Wind Forecast API] Fetching ${hours} hours of data from Airtable`)
-    console.log(`[Wind Forecast API] Time range: ${startTime.toISOString()} to ${now.toISOString()}`)
+    console.log(`[Wind Forecast API] Time range: ${now.toISOString().split('T')[0]} to ${endTime.toISOString().split('T')[0]}`)
 
     // Fetch records from Airtable
     const records = await airtable.getRecords('wind_forecasts', {
       maxRecords: 1000,
       filterByFormula: `AND(
         {location_name} = "${locationName}",
-        {forecast_time} >= "${startTime.toISOString()}",
-        {forecast_time} <= "${now.toISOString()}"
+        {forecast_time} >= "${now.toISOString().split('T')[0]}",
+        {forecast_time} <= "${endTime.toISOString().split('T')[0]}"
       )`,
       sort: [{ field: 'forecast_time', direction: 'asc' }]
     })

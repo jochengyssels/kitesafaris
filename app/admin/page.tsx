@@ -15,6 +15,10 @@ import {
   LogOut,
   Camera,
   CheckSquare,
+  Image,
+  Upload,
+  Scan,
+  BookOpen,
 } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -101,6 +105,34 @@ export default function AdminDashboard() {
       icon: CheckSquare,
       href: "/admin/tasks",
       color: "bg-indigo-500",
+    },
+    {
+      title: "Gallery Config",
+      description: "Configure and manage photo galleries and media",
+      icon: Image,
+      href: "/admin/gallery-config",
+      color: "bg-purple-600",
+    },
+    {
+      title: "Printful Scanner",
+      description: "Scan Printful products for print file validation",
+      icon: Scan,
+      href: "/admin/printful-scanner",
+      color: "bg-red-500",
+    },
+    {
+      title: "Upload Photos",
+      description: "Upload and manage photos for the website",
+      icon: Upload,
+      href: "/admin/upload-photos",
+      color: "bg-green-500",
+    },
+    {
+      title: "Blog Creator",
+      description: "Create and manage blog posts with AI automation",
+      icon: BookOpen,
+      href: "/admin/blog-creator",
+      color: "bg-indigo-600",
     },
     {
       title: "Settings",
