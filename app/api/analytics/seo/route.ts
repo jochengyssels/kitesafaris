@@ -77,7 +77,7 @@ export async function GET(request: NextRequest) {
     
     // Fallback to mock data if GSC fails
     const gscService = new GoogleSearchConsoleService()
-    const mockData: SEOInsights = gscService.getMockData(range)
+    const mockData: SEOInsights = await gscService.getMockData(range)
 
     return NextResponse.json({
       success: true,

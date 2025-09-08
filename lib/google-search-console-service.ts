@@ -1,4 +1,5 @@
 import { google } from 'googleapis'
+import { mozService } from './moz-service'
 
 interface SEOInsights {
   avgPosition: number
@@ -81,12 +82,30 @@ export class GoogleSearchConsoleService {
       throw new Error('Google Search Console service account not configured')
     }
 
-    const auth = new google.auth.GoogleAuth({
-      credentials: this.serviceAccount,
-      scopes: ['https://www.googleapis.com/auth/webmasters.readonly']
-    })
+    try {
+      const auth = new google.auth.GoogleAuth({
+        credentials: this.serviceAccount,
+        scopes: [
+          'https://www.googleapis.com/auth/webmasters.readonly',
+          'https://www.googleapis.com/auth/webmasters'
+        ]
+      })
 
-    return google.searchconsole({ version: 'v1', auth })
+      // Test the authentication by getting access token
+      const authClient = await auth.getClient()
+      const accessToken = await authClient.getAccessToken()
+      
+      if (!accessToken.token) {
+        throw new Error('Failed to get access token from Google Search Console service account')
+      }
+
+      console.log('✅ Google Search Console authentication successful')
+      return google.searchconsole({ version: 'v1', auth })
+
+    } catch (error) {
+      console.error('❌ Google Search Console authentication failed:', error)
+      throw new Error(`Google Search Console authentication failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    }
   }
 
   private getDateRange(range: string) {
@@ -146,7 +165,9 @@ export class GoogleSearchConsoleService {
       // Generate content opportunities and issues (these would typically come from other tools)
       const contentOpportunities = this.generateContentOpportunities()
       const seoIssues = this.generateSEOIssues()
-      const backlinkData = this.generateBacklinkData()
+      
+      // Fetch real backlink data from MOZ API
+      const backlinkData = await mozService.getBacklinkData(this.propertyUrl)
 
       // Calculate growth metrics
       const growthMetrics = this.calculateGrowthMetrics()
@@ -167,7 +188,27 @@ export class GoogleSearchConsoleService {
 
     } catch (error) {
       console.error('Failed to fetch Google Search Console data:', error)
-      throw new Error('Failed to fetch real SEO insights')
+      
+      // Provide specific error messages based on the error type
+      if (error instanceof Error) {
+        if (error.message.includes('invalid_grant')) {
+          console.log('🔑 GSC Authentication Error: Service account key is invalid or expired')
+          console.log('💡 Solution: Create a new service account key in Google Cloud Console')
+          console.log('📧 Service Account: kitesafaris-analytics@kite-safaris.iam.gserviceaccount.com')
+          console.log('🆔 Project: kite-safaris')
+        } else if (error.message.includes('Permission denied')) {
+          console.log('🚫 GSC Permission Error: Service account lacks proper permissions')
+          console.log('💡 Solution: Add service account to Search Console property')
+        } else if (error.message.includes('Property not found')) {
+          console.log('🏠 GSC Property Error: Search Console property URL is incorrect')
+          console.log('💡 Solution: Verify GSC_PROPERTY_URL in environment variables')
+        } else {
+          console.log('❌ GSC Unknown Error:', error.message)
+        }
+      }
+      
+      // NO FALLBACK - throw error to force real data usage
+      throw new Error(`Google Search Console authentication failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
 
@@ -345,28 +386,6 @@ export class GoogleSearchConsoleService {
     ]
   }
 
-  private generateBacklinkData() {
-    return [
-      {
-        domain: 'kitesurfingmag.com',
-        links: 3,
-        domainRating: 75,
-        type: 'Editorial'
-      },
-      {
-        domain: 'travelblog.org',
-        links: 2,
-        domainRating: 65,
-        type: 'Guest Post'
-      },
-      {
-        domain: 'watersports.net',
-        links: 4,
-        domainRating: 60,
-        type: 'Directory'
-      }
-    ]
-  }
 
   private calculateGrowthMetrics() {
     return {
@@ -378,7 +397,7 @@ export class GoogleSearchConsoleService {
   }
 
   // Fallback method for mock data
-  getMockData(range: string): SEOInsights {
+  async getMockData(range: string): Promise<SEOInsights> {
     return {
       avgPosition: 12.4,
       totalKeywords: 127,
@@ -423,11 +442,7 @@ export class GoogleSearchConsoleService {
           suggestion: 'Expand Caribbean destination pages'
         }
       ],
-      backlinkData: [
-        { domain: 'kitesurfingmag.com', links: 3, domainRating: 75, type: 'Editorial' },
-        { domain: 'travelblog.org', links: 2, domainRating: 65, type: 'Guest Post' },
-        { domain: 'watersports.net', links: 4, domainRating: 60, type: 'Directory' }
-      ],
+      backlinkData: await mozService.getBacklinkData(this.propertyUrl),
       rankingHistory: Array.from({ length: 30 }, (_, i) => {
         const date = new Date()
         date.setDate(date.getDate() - (29 - i))
