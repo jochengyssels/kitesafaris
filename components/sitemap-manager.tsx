@@ -98,7 +98,13 @@ export function SitemapManager() {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await fetch("/api/admin/sitemap")
+      const response = await fetch("/api/admin/sitemap", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-cache" // Force fresh data
+      })
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`)
       }
@@ -183,6 +189,76 @@ export function SitemapManager() {
     }
     
     toast.success(`Sitemap exported as ${format.toUpperCase()}`)
+  }
+
+  const downloadSitemap = async (sitemapType: string) => {
+    try {
+      const response = await fetch(`/${sitemapType}`)
+      if (!response.ok) {
+        throw new Error(`Failed to fetch ${sitemapType}`)
+      }
+      
+      const xmlContent = await response.text()
+      const dataBlob = new Blob([xmlContent], { type: "application/xml" })
+      const url = URL.createObjectURL(dataBlob)
+      const link = document.createElement("a")
+      link.href = url
+      link.download = `${sitemapType}`
+      link.click()
+      URL.revokeObjectURL(url)
+      
+      toast.success(`${sitemapType} downloaded successfully`)
+    } catch (error) {
+      console.error(`Error downloading ${sitemapType}:`, error)
+      toast.error(`Failed to download ${sitemapType}`)
+    }
+  }
+
+  const downloadAllSitemaps = async () => {
+    try {
+      const sitemapTypes = [
+        "sitemap.xml",
+        "sitemap-index.xml", 
+        "sitemap-images.xml",
+        "sitemap-mobile.xml",
+        "sitemap-news.xml",
+        "sitemap-video.xml"
+      ]
+      
+      const sitemapPromises = sitemapTypes.map(async (sitemapType) => {
+        const response = await fetch(`/${sitemapType}`)
+        if (!response.ok) {
+          throw new Error(`Failed to fetch ${sitemapType}`)
+        }
+        const content = await response.text()
+        return { name: sitemapType, content }
+      })
+      
+      const sitemaps = await Promise.all(sitemapPromises)
+      
+      // Create a simple zip-like structure using JSZip (we'll need to add this dependency)
+      // For now, let's create individual downloads with a delay
+      for (let i = 0; i < sitemaps.length; i++) {
+        const sitemap = sitemaps[i]
+        const dataBlob = new Blob([sitemap.content], { type: "application/xml" })
+        const url = URL.createObjectURL(dataBlob)
+        const link = document.createElement("a")
+        link.href = url
+        link.download = sitemap.name
+        link.click()
+        URL.revokeObjectURL(url)
+        
+        // Small delay between downloads to avoid browser blocking
+        if (i < sitemaps.length - 1) {
+          await new Promise(resolve => setTimeout(resolve, 500))
+        }
+      }
+      
+      toast.success("All sitemaps downloaded successfully")
+    } catch (error) {
+      console.error("Error downloading all sitemaps:", error)
+      toast.error("Failed to download all sitemaps")
+    }
   }
 
   const generateXMLSitemap = (data: SitemapData): string => {
@@ -373,6 +449,64 @@ ${urls.map(url => `  <url>
             </div>
           </div>
         )}
+      </div>
+
+      {/* Sitemap Downloads */}
+      <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+        <h3 className="text-xl font-semibold text-deep-navy mb-4">Download Sitemaps</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <button
+            onClick={() => downloadSitemap("sitemap.xml")}
+            className="flex items-center gap-2 px-4 py-3 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors border border-blue-200"
+          >
+            <FileText className="w-4 h-4" />
+            <span className="text-sm font-medium">Main Sitemap</span>
+          </button>
+          <button
+            onClick={() => downloadSitemap("sitemap-index.xml")}
+            className="flex items-center gap-2 px-4 py-3 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors border border-green-200"
+          >
+            <FileText className="w-4 h-4" />
+            <span className="text-sm font-medium">Sitemap Index</span>
+          </button>
+          <button
+            onClick={() => downloadSitemap("sitemap-images.xml")}
+            className="flex items-center gap-2 px-4 py-3 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors border border-purple-200"
+          >
+            <FileText className="w-4 h-4" />
+            <span className="text-sm font-medium">Images Sitemap</span>
+          </button>
+          <button
+            onClick={() => downloadSitemap("sitemap-mobile.xml")}
+            className="flex items-center gap-2 px-4 py-3 bg-orange-50 text-orange-700 rounded-lg hover:bg-orange-100 transition-colors border border-orange-200"
+          >
+            <Smartphone className="w-4 h-4" />
+            <span className="text-sm font-medium">Mobile Sitemap</span>
+          </button>
+          <button
+            onClick={() => downloadSitemap("sitemap-news.xml")}
+            className="flex items-center gap-2 px-4 py-3 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors border border-red-200"
+          >
+            <FileText className="w-4 h-4" />
+            <span className="text-sm font-medium">News Sitemap</span>
+          </button>
+          <button
+            onClick={() => downloadSitemap("sitemap-video.xml")}
+            className="flex items-center gap-2 px-4 py-3 bg-indigo-50 text-indigo-700 rounded-lg hover:bg-indigo-100 transition-colors border border-indigo-200"
+          >
+            <FileText className="w-4 h-4" />
+            <span className="text-sm font-medium">Video Sitemap</span>
+          </button>
+        </div>
+        <div className="mt-4 pt-4 border-t border-gray-200">
+          <button
+            onClick={downloadAllSitemaps}
+            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-deep-navy to-turquoise-500 text-white rounded-lg hover:from-deep-navy/90 hover:to-turquoise-600 transition-all shadow-lg"
+          >
+            <Download className="w-5 h-5" />
+            <span className="font-medium">Download All Sitemaps</span>
+          </button>
+        </div>
       </div>
 
       {/* Search */}
