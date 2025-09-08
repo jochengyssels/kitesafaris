@@ -24,191 +24,43 @@ import {
 interface AutomatedAlertsProps {
   alerts: any[]
   dateRange: string
+  apiError?: string
 }
 
-export function AutomatedAlerts({ alerts, dateRange }: AutomatedAlertsProps) {
+export function AutomatedAlerts({ alerts, dateRange, apiError }: AutomatedAlertsProps) {
   const [selectedFilter, setSelectedFilter] = useState("all")
   const [selectedSeverity, setSelectedSeverity] = useState("all")
 
-  // Mock data for demonstration
-  const mockAlerts = [
-    {
-      id: "alert-001",
-      type: "traffic_spike",
-      severity: "high",
-      title: "Traffic Spike Detected",
-      description: "Website traffic increased by 150% compared to yesterday",
-      timestamp: "2024-01-15T10:30:00Z",
-      status: "active",
-      category: "performance",
-      details: {
-        currentTraffic: 2400,
-        previousTraffic: 960,
-        change: 150,
-        source: "Organic Search"
-      },
-      recommendations: [
-        "Monitor server performance to handle increased load",
-        "Check if this is due to viral content or external promotion",
-        "Consider scaling resources if traffic continues"
-      ]
-    },
-    {
-      id: "alert-002",
-      type: "ranking_drop",
-      severity: "medium",
-      title: "Keyword Ranking Drop",
-      description: "Main keyword 'kite safari antigua' dropped from position 3 to 8",
-      timestamp: "2024-01-14T15:45:00Z",
-      status: "active",
-      category: "seo",
-      details: {
-        keyword: "kite safari antigua",
-        previousPosition: 3,
-        currentPosition: 8,
-        change: -5,
-        estimatedTrafficLoss: 400
-      },
-      recommendations: [
-        "Check for recent algorithm updates",
-        "Review page content and technical SEO",
-        "Analyze competitor changes",
-        "Consider content updates or link building"
-      ]
-    },
-    {
-      id: "alert-003",
-      type: "conversion_drop",
-      severity: "high",
-      title: "Booking Conversion Rate Drop",
-      description: "Booking conversion rate dropped from 3.2% to 2.1% this week",
-      timestamp: "2024-01-13T09:15:00Z",
-      status: "resolved",
-      category: "business",
-      details: {
-        previousRate: 3.2,
-        currentRate: 2.1,
-        change: -1.1,
-        estimatedRevenueLoss: 8500
-      },
-      recommendations: [
-        "Review booking flow for technical issues",
-        "Check for changes in traffic quality",
-        "Analyze user behavior on booking pages",
-        "Test booking form functionality"
-      ]
-    },
-    {
-      id: "alert-004",
-      type: "page_speed",
-      severity: "medium",
-      title: "Page Speed Degradation",
-      description: "Homepage loading time increased from 2.1s to 4.3s",
-      timestamp: "2024-01-12T14:20:00Z",
-      status: "active",
-      category: "technical",
-      details: {
-        page: "/",
-        previousSpeed: 2.1,
-        currentSpeed: 4.3,
-        change: 2.2,
-        impact: "High bounce rate increase expected"
-      },
-      recommendations: [
-        "Optimize images and media files",
-        "Check for new third-party scripts",
-        "Review server response times",
-        "Consider CDN implementation"
-      ]
-    },
-    {
-      id: "alert-005",
-      type: "backlink_lost",
-      severity: "low",
-      title: "High-Value Backlink Lost",
-      description: "Lost backlink from kiteboarding.com (DR: 85)",
-      timestamp: "2024-01-11T11:30:00Z",
-      status: "active",
-      category: "seo",
-      details: {
-        domain: "kiteboarding.com",
-        domainRating: 85,
-        linkType: "dofollow",
-        estimatedImpact: "Minor ranking impact"
-      },
-      recommendations: [
-        "Reach out to site owner to restore link",
-        "Create new content to attract similar links",
-        "Focus on building relationships with industry sites"
-      ]
-    },
-    {
-      id: "alert-006",
-      type: "error_rate",
-      severity: "high",
-      title: "High Error Rate Detected",
-      description: "404 error rate increased to 8.2% (normal: <2%)",
-      timestamp: "2024-01-10T16:45:00Z",
-      status: "resolved",
-      category: "technical",
-      details: {
-        errorRate: 8.2,
-        normalRate: 2.0,
-        change: 6.2,
-        affectedPages: ["/old-booking", "/legacy-trips"]
-      },
-      recommendations: [
-        "Set up proper redirects for moved pages",
-        "Update internal links",
-        "Monitor error logs regularly",
-        "Implement 404 page improvements"
-      ]
-    },
-    {
-      id: "alert-007",
-      type: "competitor_activity",
-      severity: "medium",
-      title: "Competitor Content Activity",
-      description: "Competitor published new kiteboarding guide targeting your keywords",
-      timestamp: "2024-01-09T13:15:00Z",
-      status: "active",
-      category: "competitive",
-      details: {
-        competitor: "KiteAdventures.com",
-        content: "Complete Kiteboarding Guide 2024",
-        keywords: ["kiteboarding guide", "kiteboarding tips"],
-        estimatedImpact: "Potential traffic competition"
-      },
-      recommendations: [
-        "Analyze competitor content strategy",
-        "Create superior content on same topics",
-        "Monitor their ranking progress",
-        "Consider content partnerships"
-      ]
-    },
-    {
-      id: "alert-008",
-      type: "seasonal_trend",
-      severity: "low",
-      title: "Seasonal Traffic Pattern",
-      description: "Antigua destination page traffic up 40% (seasonal trend)",
-      timestamp: "2024-01-08T10:00:00Z",
-      status: "active",
-      category: "trend",
-      details: {
-        page: "/destinations/antigua",
-        trafficIncrease: 40,
-        season: "Winter",
-        expectedDuration: "3 months"
-      },
-      recommendations: [
-        "Optimize content for winter season",
-        "Increase marketing budget for this destination",
-        "Prepare for increased booking inquiries",
-        "Update seasonal pricing if needed"
-      ]
-    }
-  ]
+  // Error state component
+  const ErrorState = ({ title, message }: { title: string, message: string }) => (
+    <div className="bg-white rounded-xl p-8 shadow-sm border border-sand-beige-200 text-center">
+      <div className="flex flex-col items-center">
+        <div className="p-4 bg-red-100 rounded-full mb-4">
+          <AlertTriangle className="h-8 w-8 text-red-600" />
+        </div>
+        <h3 className="text-lg font-semibold text-navy-900 mb-2">{title}</h3>
+        <p className="text-gray-600 max-w-md">{message}</p>
+      </div>
+    </div>
+  )
+
+  // Check if we have real data
+  const hasData = !apiError
+
+  // If no data is available, show error state
+  if (!hasData) {
+    return (
+      <div className="space-y-6">
+        <ErrorState 
+          title="Alerts Data Unavailable"
+          message={apiError || "We're currently unable to retrieve alerts data. This could be due to API connectivity issues, missing data sources, or service unavailability."}
+        />
+      </div>
+    )
+  }
+
+  // Use real alerts data from API
+  const realAlerts = alerts || []
 
   const alertTypes = [
     { value: "all", label: "All Alerts", icon: Bell },
@@ -257,19 +109,19 @@ export function AutomatedAlerts({ alerts, dateRange }: AutomatedAlertsProps) {
     }
   }
 
-  const filteredAlerts = mockAlerts.filter(alert => {
+  const filteredAlerts = realAlerts.filter(alert => {
     const typeMatch = selectedFilter === "all" || alert.category === selectedFilter
     const severityMatch = selectedSeverity === "all" || alert.severity === selectedSeverity
     return typeMatch && severityMatch
   })
 
   const alertStats = {
-    total: mockAlerts.length,
-    active: mockAlerts.filter(a => a.status === "active").length,
-    resolved: mockAlerts.filter(a => a.status === "resolved").length,
-    high: mockAlerts.filter(a => a.severity === "high").length,
-    medium: mockAlerts.filter(a => a.severity === "medium").length,
-    low: mockAlerts.filter(a => a.severity === "low").length,
+    total: realAlerts.length,
+    active: realAlerts.filter(a => a.status === "active").length,
+    resolved: realAlerts.filter(a => a.status === "resolved").length,
+    high: realAlerts.filter(a => a.severity === "high").length,
+    medium: realAlerts.filter(a => a.severity === "medium").length,
+    low: realAlerts.filter(a => a.severity === "low").length,
   }
 
   return (
@@ -368,7 +220,7 @@ export function AutomatedAlerts({ alerts, dateRange }: AutomatedAlertsProps) {
           </div>
 
           <div className="text-sm text-gray-500">
-            Showing {filteredAlerts.length} of {mockAlerts.length} alerts
+            Showing {filteredAlerts.length} of {realAlerts.length} alerts
           </div>
         </div>
       </div>

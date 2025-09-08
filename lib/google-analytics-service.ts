@@ -86,12 +86,30 @@ class GoogleAnalyticsService {
       throw new Error('Google Analytics service account not configured')
     }
 
-    const auth = new google.auth.GoogleAuth({
-      credentials: this.serviceAccount,
-      scopes: ['https://www.googleapis.com/auth/analytics.readonly']
-    })
+    try {
+      const auth = new google.auth.GoogleAuth({
+        credentials: this.serviceAccount,
+        scopes: [
+          'https://www.googleapis.com/auth/analytics.readonly',
+          'https://www.googleapis.com/auth/analytics'
+        ]
+      })
 
-    return google.analyticsdata({ version: 'v1beta', auth })
+      // Test the authentication by getting access token
+      const authClient = await auth.getClient()
+      const accessToken = await authClient.getAccessToken()
+      
+      if (!accessToken.token) {
+        throw new Error('Failed to get access token from Google Analytics service account')
+      }
+
+      console.log('✅ Google Analytics authentication successful')
+      return google.analyticsdata({ version: 'v1beta', auth })
+
+    } catch (error) {
+      console.error('❌ Google Analytics authentication failed:', error)
+      throw new Error(`Google Analytics authentication failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    }
   }
 
   private getDateRange(range: string) {
@@ -151,10 +169,27 @@ class GoogleAnalyticsService {
 
     } catch (error) {
       console.error('Failed to fetch Google Analytics data:', error)
-      console.log('Falling back to mock data while Google Analytics APIs are being enabled...')
       
-      // Return mock data as fallback while APIs are being enabled
-      return this.getMockData(range)
+      // Provide specific error messages based on the error type
+      if (error instanceof Error) {
+        if (error.message.includes('invalid_grant')) {
+          console.log('🔑 Authentication Error: Service account key is invalid or expired')
+          console.log('💡 Solution: Create a new service account key in Google Cloud Console')
+          console.log('📧 Service Account: kitesafaris-analytics@kite-safaris.iam.gserviceaccount.com')
+          console.log('🆔 Project: kite-safaris')
+        } else if (error.message.includes('Permission denied')) {
+          console.log('🚫 Permission Error: Service account lacks proper permissions')
+          console.log('💡 Solution: Add service account to GA4 property with Viewer role')
+        } else if (error.message.includes('Property not found')) {
+          console.log('🏠 Property Error: GA4 property ID is incorrect or property not found')
+          console.log('💡 Solution: Verify GA4_PROPERTY_ID in environment variables')
+        } else {
+          console.log('❌ Unknown Error:', error.message)
+        }
+      }
+      
+      // NO FALLBACK - throw error to force real data usage
+      throw new Error(`Google Analytics authentication failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
 

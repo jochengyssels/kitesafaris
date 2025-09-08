@@ -53,8 +53,7 @@ export default function HeroSection() {
             <Link href="/booking">
               <Button
                 size="lg"
-                variant="outline"
-                className="border-2 border-white text-white hover:bg-white hover:text-deep-navy font-montserrat font-bold text-lg px-8 py-6 rounded-full transition-all duration-300 hover:scale-105 shadow-2xl"
+                className="bg-coral-orange hover:bg-coral-orange/90 text-white font-montserrat font-bold text-lg px-8 py-6 rounded-full transition-all duration-300 hover:scale-105 shadow-2xl"
               >
                 Book Your Adventure
               </Button>
