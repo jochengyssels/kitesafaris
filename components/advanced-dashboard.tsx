@@ -8,6 +8,7 @@ import { BusinessMetrics } from "@/components/business-metrics"
 import { SEOInsights } from "@/components/seo-insights"
 import { AutomatedAlerts } from "@/components/automated-alerts"
 import { ExportReports } from "@/components/export-reports"
+import { AIAdvice } from "@/components/ai-advice"
 import { 
   BarChart3, 
   TrendingUp, 
@@ -19,7 +20,8 @@ import {
   RefreshCw,
   Calendar,
   Filter,
-  XCircle
+  XCircle,
+  Brain
 } from "lucide-react"
 
 interface DashboardData {
@@ -52,6 +54,7 @@ export function AdvancedDashboard() {
     { id: "analytics", label: "Website Analytics", icon: TrendingUp },
     { id: "business", label: "Business Metrics", icon: DollarSign },
     { id: "seo", label: "SEO Insights", icon: Search },
+    { id: "ai-advice", label: "AI Advice", icon: Brain },
     { id: "alerts", label: "Alerts", icon: AlertTriangle },
   ]
 
@@ -60,16 +63,32 @@ export function AdvancedDashboard() {
       setRefreshing(true)
       setApiErrors({})
       
-      // Fetch both website and SEO data
-      const [websiteResponse, seoResponse] = await Promise.all([
+      // Fetch website, SEO, and alerts data
+      const [websiteResponse, seoResponse, alertsResponse] = await Promise.all([
         fetch('/api/analytics/website'),
-        fetch('/api/analytics/seo')
+        fetch('/api/analytics/seo'),
+        fetch(`/api/analytics/alerts?range=${dateRange}`)
       ])
       
-      const [websiteResult, seoResult] = await Promise.all([
+      const [websiteResult, seoResult, alertsResult] = await Promise.all([
         websiteResponse.json(),
-        seoResponse.json()
+        seoResponse.json(),
+        alertsResponse.json()
       ])
+      
+      // Store analytics data in Airtable (fire and forget)
+      try {
+        fetch('/api/analytics/store', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).catch(error => {
+          console.warn('Failed to store analytics data:', error)
+        })
+      } catch (error) {
+        console.warn('Failed to initiate analytics storage:', error)
+      }
       
       if (websiteResult.success && websiteResult.data) {
         const data = websiteResult.data
@@ -139,12 +158,20 @@ export function AdvancedDashboard() {
             seoGrowth: seoData.seoGrowth
           }
         }
+
+        // Process alerts data if available
+        let alerts = []
+        if (alertsResult.success && alertsResult.data) {
+          alerts = alertsResult.data
+        } else if (alertsResult.error) {
+          setApiErrors(prev => ({ ...prev, alerts: alertsResult.error }))
+        }
         
         setDashboardData({
           websiteMetrics,
           businessMetrics: null,
           seoInsights,
-          alerts: [],
+          alerts,
           lastUpdated: new Date().toISOString()
         })
         setHasData(true)
@@ -156,7 +183,10 @@ export function AdvancedDashboard() {
 
     } catch (error) {
       console.error("Failed to fetch dashboard data:", error)
-      setApiErrors({ general: 'Failed to connect to analytics services' })
+      setApiErrors({ 
+        general: 'Failed to connect to analytics services',
+        alerts: 'Failed to fetch alerts data'
+      })
       setHasData(false)
       setLoading(false)
     } finally {
@@ -418,6 +448,12 @@ export function AdvancedDashboard() {
               data={dashboardData?.seoInsights}
               dateRange={dateRange}
               apiError={apiErrors.seo}
+            />
+          )}
+          
+          {activeTab === "ai-advice" && (
+            <AIAdvice 
+              dateRange={dateRange}
             />
           )}
           

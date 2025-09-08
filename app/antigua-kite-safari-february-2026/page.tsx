@@ -102,6 +102,12 @@ export default function AntiguaFebruary2026Page() {
                 Book Valentine's Trip - €1,900
               </Link>
               <Link
+                href="/blog/antigua-kitesafari-packing-guide"
+                className="bg-turquoise text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-turquoise/90 transition-colors"
+              >
+                Packing List Antigua
+              </Link>
+              <Link
                 href="#romantic-features"
                 className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-deep-navy transition-colors"
               >
@@ -267,6 +273,12 @@ export default function AntiguaFebruary2026Page() {
                 className="bg-coral-orange text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-coral-orange/90 transition-colors"
               >
                 Book Valentine's Trip - €1,900
+              </Link>
+              <Link
+                href="/blog/antigua-kitesafari-packing-guide"
+                className="bg-turquoise text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-turquoise/90 transition-colors"
+              >
+                Packing List Antigua
               </Link>
               <Link
                 href="https://wa.me/32492576427"

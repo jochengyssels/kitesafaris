@@ -18,6 +18,18 @@ export const metadata: Metadata = {
 
 const blogPosts = [
   {
+    slug: "antigua-kitesafari-packing-guide",
+    title: "Complete Packing List for Your Antigua Kitesafari Adventure",
+    excerpt:
+      "Comprehensive packing guide for Antigua kitesafari adventure. Expert tips for tropical climate, sun protection, and Caribbean kitesurfing essentials.",
+    coverImage: "/antigua-kiteboarding-catamaran-sunset.jpg",
+    readTime: 12,
+    author: "KiteSafaris Team",
+    publishDate: "January 2025",
+    category: "Travel Guide",
+    featured: true,
+  },
+  {
     slug: "kitesafaris-kitehouse-sardinia-partnership",
     title: "KiteSafaris Forms Strategic Partnership with Kitehouse Sardinia",
     excerpt:
@@ -27,7 +39,7 @@ const blogPosts = [
     author: "KiteSafaris Team",
     publishDate: "September 2025",
     category: "Partnership",
-    featured: true,
+    featured: false,
   },
   {
     slug: "kitesafaris-aba-kiting-partnership",

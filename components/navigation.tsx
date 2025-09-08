@@ -53,6 +53,15 @@ export function Navigation() {
       ],
     },
     {
+      label: "Kite",
+      href: "/kitesurfing-lessons",
+      isSimple: false,
+      submenu: [
+        { href: "/kitesurfing-lessons", label: "🏄‍♂️ Kitesurfing Lessons" },
+        { href: "/advanced-clinic", label: "🏆 Advanced Clinic" },
+      ],
+    },
+    {
       label: "Shop",
       href: "/shop",
       icon: "shopping-bag",

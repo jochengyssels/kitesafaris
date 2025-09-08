@@ -1,0 +1,42 @@
+[
+  {
+    "filename": "packing-images/kitesurfing-equipment/kitesurfing-equipment-main.svg",
+    "category": "kitesurfing-equipment",
+    "title": "Kitesurfing Equipment",
+    "description": "Essential kiteboarding gear for your Antigua adventure",
+    "type": "placeholder",
+    "alt": "Kitesurfing Equipment - Essential kiteboarding gear for your Antigua adventure"
+  },
+  {
+    "filename": "packing-images/tropical-clothing/tropical-clothing-main.svg",
+    "category": "tropical-clothing",
+    "title": "Tropical Clothing",
+    "description": "Quick-dry and sun-protective clothing essentials",
+    "type": "placeholder",
+    "alt": "Tropical Clothing - Quick-dry and sun-protective clothing essentials"
+  },
+  {
+    "filename": "packing-images/sun-protection/sun-protection-main.svg",
+    "category": "sun-protection",
+    "title": "Sun Protection",
+    "description": "Critical sun safety items for Caribbean conditions",
+    "type": "placeholder",
+    "alt": "Sun Protection - Critical sun safety items for Caribbean conditions"
+  },
+  {
+    "filename": "packing-images/travel-essentials/travel-essentials-main.svg",
+    "category": "travel-essentials",
+    "title": "Travel Essentials",
+    "description": "Must-have items for your kitesafari adventure",
+    "type": "placeholder",
+    "alt": "Travel Essentials - Must-have items for your kitesafari adventure"
+  },
+  {
+    "filename": "packing-images/caribbean-travel/caribbean-travel-main.svg",
+    "category": "caribbean-travel",
+    "title": "Caribbean Travel",
+    "description": "Perfect for your tropical kitesurfing vacation",
+    "type": "placeholder",
+    "alt": "Caribbean Travel - Perfect for your tropical kitesurfing vacation"
+  }
+]

@@ -178,7 +178,7 @@ export function DestinationDetail({ destination }: DestinationDetailProps) {
               </h1>
 
               {/* Stats bar */}
-              <div className="flex flex-wrap gap-6 text-white">
+              <div className="flex flex-wrap gap-6 text-white mb-6">
                 <div className="flex items-center gap-2">
                   <Wind className="w-6 h-6 text-coral-orange" />
                   <span className="font-open-sans">
@@ -196,6 +196,25 @@ export function DestinationDetail({ destination }: DestinationDetailProps) {
                   <span className="font-open-sans">{destination.difficulty}</span>
                 </div>
               </div>
+
+              {/* CTA Button for Antigua */}
+              {destination.id === "antigua" && (
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link href="/destinations/antigua/itinerary">
+                    <button className="bg-gradient-to-r from-coral-orange to-orange-500 hover:from-coral-orange/90 hover:to-orange-600 text-white font-bold py-4 px-8 rounded-full text-lg shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 flex items-center gap-3">
+                      <Calendar className="w-6 h-6" />
+                      <span>View Itinerary</span>
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+                  </Link>
+                  <Link href="/booking">
+                    <button className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white font-semibold py-4 px-8 rounded-full text-lg border border-white/30 hover:border-white/50 transition-all duration-300 flex items-center gap-3">
+                      <Anchor className="w-6 h-6" />
+                      <span>Book Now</span>
+                    </button>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -264,6 +283,98 @@ export function DestinationDetail({ destination }: DestinationDetailProps) {
           </section>
 
           <SardinianAwakeningCTA variant="destinations" />
+
+          {/* Antigua-specific resources section */}
+          {destination.id === "antigua" && (
+            <section>
+              <div className="bg-gradient-to-br from-deep-navy to-turquoise rounded-lg p-8 text-white">
+                <h2 className="font-montserrat font-bold text-3xl mb-6">Complete Antigua Kitesafari Guide</h2>
+                <p className="font-open-sans text-lg mb-8 leading-relaxed">
+                  Everything you need to know for your Antigua kitesafari adventure. From comprehensive packing guides to flight information, 
+                  we've got you covered for the ultimate Caribbean kitesurfing experience.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <Link
+                    href="/blog/antigua-kitesafari-packing-guide"
+                    className="block bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-6 transition-all duration-200 hover:scale-105"
+                  >
+                    <div className="flex items-center gap-3 mb-3">
+                      <Anchor className="w-6 h-6 text-coral-orange" />
+                      <h3 className="font-montserrat font-bold text-xl">Packing List Antigua</h3>
+                    </div>
+                    <p className="font-open-sans text-gray-200 text-sm leading-relaxed">
+                      Complete packing guide for Antigua kitesafari adventure with expert tips for tropical climate and sun protection.
+                    </p>
+                  </Link>
+                  
+                  <Link
+                    href="/blog/best-flights-europe-antigua-kite-safaris"
+                    className="block bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-6 transition-all duration-200 hover:scale-105"
+                  >
+                    <div className="flex items-center gap-3 mb-3">
+                      <Calendar className="w-6 h-6 text-coral-orange" />
+                      <h3 className="font-montserrat font-bold text-xl">Best Flights to Antigua</h3>
+                    </div>
+                    <p className="font-open-sans text-gray-200 text-sm leading-relaxed">
+                      Top flight routes from Europe to Antigua for your kite safari adventure with airlines, schedules, and pricing.
+                    </p>
+                  </Link>
+                  
+                  <Link
+                    href="/blog/caribbean-kiteboarding-wind-patterns"
+                    className="block bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-6 transition-all duration-200 hover:scale-105"
+                  >
+                    <div className="flex items-center gap-3 mb-3">
+                      <Wind className="w-6 h-6 text-coral-orange" />
+                      <h3 className="font-montserrat font-bold text-xl">Caribbean Wind Patterns</h3>
+                    </div>
+                    <p className="font-open-sans text-gray-200 text-sm leading-relaxed">
+                      Learn about trade winds, seasonal variations, and best times to kiteboard in the Caribbean.
+                    </p>
+                  </Link>
+                  
+                  <Link
+                    href="/blog/kiteboarding-safety-tips-tropical-destinations"
+                    className="block bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-6 transition-all duration-200 hover:scale-105"
+                  >
+                    <div className="flex items-center gap-3 mb-3">
+                      <Star className="w-6 h-6 text-coral-orange" />
+                      <h3 className="font-montserrat font-bold text-xl">Safety Tips</h3>
+                    </div>
+                    <p className="font-open-sans text-gray-200 text-sm leading-relaxed">
+                      Essential safety tips for kiteboarding in tropical destinations with weather and equipment guidance.
+                    </p>
+                  </Link>
+                  
+                  <Link
+                    href="/blog/photography-tips-kiteboarding-adventure"
+                    className="block bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-6 transition-all duration-200 hover:scale-105"
+                  >
+                    <div className="flex items-center gap-3 mb-3">
+                      <Camera className="w-6 h-6 text-coral-orange" />
+                      <h3 className="font-montserrat font-bold text-xl">Photography Tips</h3>
+                    </div>
+                    <p className="font-open-sans text-gray-200 text-sm leading-relaxed">
+                      Professional photography tips for capturing your kiteboarding adventure with equipment recommendations.
+                    </p>
+                  </Link>
+                  
+                  <Link
+                    href="/destinations/antigua/itinerary"
+                    className="block bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-6 transition-all duration-200 hover:scale-105"
+                  >
+                    <div className="flex items-center gap-3 mb-3">
+                      <MapPin className="w-6 h-6 text-coral-orange" />
+                      <h3 className="font-montserrat font-bold text-xl">Detailed Itinerary</h3>
+                    </div>
+                    <p className="font-open-sans text-gray-200 text-sm leading-relaxed">
+                      Day-by-day breakdown of your Antigua kitesafari adventure with all activities and locations.
+                    </p>
+                  </Link>
+                </div>
+              </div>
+            </section>
+          )}
 
           {/* Sardinia-specific resources section */}
           {destination.id === "sardinia" && (
@@ -557,57 +668,88 @@ export function DestinationDetail({ destination }: DestinationDetailProps) {
 
         {/* Photo gallery */}
         <section className="mt-16">
-          <PixabayGallery
-            destination={destination.id}
-            title={`${destination.name} Gallery`}
-            perPage={16}
-            className="mb-8"
-          />
-
-          {/* Keep original gallery as fallback/additional content */}
-          <div className="mt-12 pt-8 border-t border-sand-beige/30">
-            <h3 className="font-montserrat font-semibold text-xl text-deep-navy mb-6 text-center">Featured Images</h3>
-            <div className="relative">
-              <div className="relative aspect-[3/2] rounded-lg overflow-hidden">
-                <Image
-                  src={destination.gallery[currentImageIndex] || "/placeholder.svg"}
-                  alt={`${destination.name} kitesurfing spot aerial view luxury catamaran kitesurfing kite safari gallery`}
-                  fill
-                  className="object-cover"
-                />
+          {destination.id === "antigua" ? (
+            /* Local gallery for Antigua */
+            <div className="space-y-6">
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-slate-800 mb-2">{destination.name} Gallery</h3>
+                <div className="w-24 h-1 bg-gradient-to-r from-teal-400 to-blue-500 mx-auto rounded-full" />
               </div>
-
-              {/* Navigation buttons */}
-              <button
-                onClick={prevImage}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all duration-200"
-                aria-label="Previous image"
-              >
-                <ChevronLeft className="w-6 h-6 text-deep-navy" />
-              </button>
-              <button
-                onClick={nextImage}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all duration-200"
-                aria-label="Next image"
-              >
-                <ChevronRight className="w-6 h-6 text-deep-navy" />
-              </button>
-
-              {/* Image indicators */}
-              <div className="flex justify-center gap-2 mt-4">
-                {destination.gallery.map((_, index) => (
-                  <button
+              
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                {destination.gallery.map((imageSrc, index) => (
+                  <div
                     key={index}
+                    className="group relative aspect-[4/3] overflow-hidden rounded-lg bg-slate-100 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer"
                     onClick={() => setCurrentImageIndex(index)}
-                    className={`w-3 h-3 rounded-full transition-colors duration-200 ${
-                      index === currentImageIndex ? "bg-turquoise" : "bg-gray-300"
-                    }`}
-                    aria-label={`Go to image ${index + 1}`}
-                  />
+                  >
+                    <Image
+                      src={imageSrc}
+                      alt={`${destination.name} gallery image ${index + 1}`}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 16vw"
+                    />
+                  </div>
                 ))}
               </div>
             </div>
-          </div>
+          ) : (
+            /* Pixabay gallery for other destinations */
+            <PixabayGallery
+              destination={destination.id}
+              title={`${destination.name} Gallery`}
+              perPage={16}
+              className="mb-8"
+            />
+          )}
+
+          {/* Featured Images section for Antigua */}
+          {destination.id === "antigua" && (
+            <div className="mt-12 pt-8 border-t border-sand-beige/30">
+              <h3 className="font-montserrat font-semibold text-xl text-deep-navy mb-6 text-center">Featured Image</h3>
+              <div className="relative">
+                <div className="relative aspect-[3/2] rounded-lg overflow-hidden">
+                  <Image
+                    src={destination.gallery[currentImageIndex] || "/placeholder.svg"}
+                    alt={`${destination.name} kitesurfing spot aerial view luxury catamaran kitesurfing kite safari gallery`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+
+                {/* Navigation buttons */}
+                <button
+                  onClick={prevImage}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all duration-200"
+                  aria-label="Previous image"
+                >
+                  <ChevronLeft className="w-6 h-6 text-deep-navy" />
+                </button>
+                <button
+                  onClick={nextImage}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all duration-200"
+                  aria-label="Next image"
+                >
+                  <ChevronRight className="w-6 h-6 text-deep-navy" />
+                </button>
+
+                {/* Image indicators */}
+                <div className="flex justify-center gap-2 mt-4">
+                  {destination.gallery.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`w-3 h-3 rounded-full transition-colors duration-200 ${
+                        index === currentImageIndex ? "bg-turquoise" : "bg-gray-300"
+                      }`}
+                      aria-label={`Go to image ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </section>
 
         {/* CTA section */}

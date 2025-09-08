@@ -24,6 +24,7 @@ import {
 import { tripDataService, calculateDiscountedPrice, calculateSavings, hasDiscount } from "@/lib/trip-data-service"
 import { BookingSummarySticky } from "@/components/booking-summary-sticky"
 import { calcCabinPricing, formatCurrency, getAvailabilityMessage } from "@/lib/booking/pricing"
+import { WeatherConditions } from "@/components/weather-conditions"
 
 interface Destination {
   id: string
@@ -1755,6 +1756,21 @@ export function BookingForm() {
               </div>
 
               <div className="space-y-6">
+                {/* Weather Conditions - Only show in final step */}
+                {bookingData.selectedTripId && (
+                  <WeatherConditions
+                    destination={bookingData.destination}
+                    tripStartDate={(() => {
+                      const trip = tripDataService.getTripById(bookingData.selectedTripId);
+                      return trip?.startDate;
+                    })()}
+                    tripEndDate={(() => {
+                      const trip = tripDataService.getTripById(bookingData.selectedTripId);
+                      return trip?.endDate;
+                    })()}
+                  />
+                )}
+
                 {/* Payment Method - Only show when user clicks Pay Deposit */}
                 {showPaymentMethod && (
                   <div className="bg-white border border-gray-200 rounded-lg p-6">

@@ -28,6 +28,10 @@ export default function BookingPage() {
                 Complete your booking in just a few steps. Get instant confirmation and transparent pricing. 
                 Explore our <Link href="/destinations" className="text-coral-orange hover:text-orange-500 font-semibold">kite safari destinations</Link> and 
                 <Link href="/packages" className="text-coral-orange hover:text-orange-500 font-semibold"> luxury packages</Link>.
+                <br />
+                <Link href="/blog/antigua-kitesafari-packing-guide" className="text-turquoise hover:text-turquoise/80 font-semibold">
+                  📦 Complete Antigua Packing Guide
+                </Link>
               </p>
             </div>
             <BookingForm />

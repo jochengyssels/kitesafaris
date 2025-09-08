@@ -57,9 +57,9 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const range = searchParams.get('range') || '30d'
     
-    console.log('🚀 Fetching REAL SEO insights from Google Search Console...')
+    console.log('🚀 Attempting to fetch SEO insights from Google Search Console...')
     
-    // Fetch real data from Google Search Console
+    // Try to fetch real data from Google Search Console
     const gscService = new GoogleSearchConsoleService()
     const data = await gscService.getSEOInsights(range)
 
@@ -69,11 +69,12 @@ export async function GET(request: NextRequest) {
       range,
       timestamp: new Date().toISOString(),
       source: 'Google Search Console',
-      note: 'Real SEO data from Google Search Console'
+      note: 'Live SEO data from Google Search Console'
     })
 
   } catch (error) {
     console.error('Failed to fetch SEO insights:', error)
+    console.log('🔄 Falling back to mock data...')
     
     // Fallback to mock data if GSC fails
     const gscService = new GoogleSearchConsoleService()
@@ -85,7 +86,7 @@ export async function GET(request: NextRequest) {
       range,
       timestamp: new Date().toISOString(),
       source: 'Mock Data (Fallback)',
-      note: 'Using fallback data due to Google Search Console error',
+      note: 'Using fallback data due to Google Search Console authentication issues',
       error: error instanceof Error ? error.message : 'Unknown error'
     })
   }

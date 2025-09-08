@@ -62,8 +62,8 @@ export async function GET(request: NextRequest) {
       maxRecords: 1000,
       filterByFormula: `AND(
         {location_name} = "${locationName}",
-        {forecast_time} >= "${now.toISOString().split('T')[0]}",
-        {forecast_time} <= "${endTime.toISOString().split('T')[0]}"
+        {forecast_time} >= "${now.toISOString()}",
+        {forecast_time} <= "${endTime.toISOString()}"
       )`,
       sort: [{ field: 'forecast_time', direction: 'asc' }]
     })

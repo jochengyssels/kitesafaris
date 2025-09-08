@@ -193,7 +193,7 @@ class GoogleAnalyticsService {
     }
   }
 
-  private getMockData(range: string): GA4Metrics {
+  getMockData(range: string): GA4Metrics {
     const days = range === '7d' ? 7 : range === '30d' ? 30 : range === '90d' ? 90 : 365
     
     return {

@@ -2,6 +2,38 @@
 @import "tw-animate-css";
 @import "react-big-calendar/lib/css/react-big-calendar.css";
 
+/* PDF Generation Styles */
+.pdf-capture {
+  -webkit-print-color-adjust: exact !important;
+  color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
+/* Print-friendly styles for PDF generation */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  body {
+    background: white !important;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  /* Ensure gradients and backgrounds are preserved */
+  .bg-gradient-to-r,
+  .bg-gradient-to-br,
+  .bg-gradient-to-t {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+}
+
 @custom-variant dark (&:is(.dark *));
 
 :root {

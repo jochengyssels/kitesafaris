@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
     const authHeader = request.headers.get('authorization')
     const expectedToken = process.env.WIND_SCHEDULER_SECRET
     if (expectedToken && authHeader !== `Bearer ${expectedToken}`) {
+      console.log(`[Wind Scheduler] Auth check failed - expected: ${expectedToken}, received: ${authHeader}`)
       return NextResponse.json({
         success: false,
         message: 'Unauthorized scheduler access'
@@ -61,7 +62,7 @@ export async function POST(request: NextRequest) {
       location_name: locationName,
       latitude: locationLat,
       longitude: locationLng,
-      forecast_time: new Date(data.time).toISOString().split('T')[0], // Convert to YYYY-MM-DD format
+      forecast_time: data.time, // Keep full ISO timestamp for hourly granularity
       wind_speed_knots: data.windSpeed,
       wind_direction_degrees: data.windDirection,
       wind_direction_cardinal: data.windDirectionCardinal,
@@ -76,7 +77,7 @@ export async function POST(request: NextRequest) {
       maxRecords: 100,
       filterByFormula: `AND(
         {location_name} = "${locationName}",
-        {forecast_time} >= "${new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0]}"
+        {forecast_time} >= "${new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()}"
       )`,
       sort: [{ field: 'forecast_time', direction: 'desc' }]
     })
@@ -123,7 +124,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Clean up old records (keep only last 7 days)
-    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
     const oldRecords = await airtable.getRecords('wind_forecasts', {
       maxRecords: 1000,
       filterByFormula: `{forecast_time} < "${sevenDaysAgo}"`

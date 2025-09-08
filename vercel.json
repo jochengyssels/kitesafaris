@@ -5,12 +5,19 @@
     },
     "app/api/wind-forecast/scheduler/route.ts": {
       "maxDuration": 60
+    },
+    "app/api/analytics/cron/route.ts": {
+      "maxDuration": 300
     }
   },
   "crons": [
     {
       "path": "/api/wind-forecast/scheduler",
       "schedule": "0 */3 * * *"
+    },
+    {
+      "path": "/api/analytics/cron",
+      "schedule": "0 9 * * *"
     }
   ],
   "headers": [

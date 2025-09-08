@@ -17,6 +17,7 @@ import {
 } from "lucide-react"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, BarChart, Bar, PieChart, Pie, Cell, ResponsiveContainer } from "recharts"
+import { SEOScoreProgression } from "@/components/seo-score-progression"
 
 interface DashboardMetricsProps {
   websiteMetrics: any
@@ -499,6 +500,9 @@ export function DashboardMetrics({ websiteMetrics, businessMetrics, seoInsights,
           </div>
         </div>
       </div>
+
+      {/* SEO Score Progression Chart */}
+      <SEOScoreProgression dateRange="30d" />
     </div>
   )
 }

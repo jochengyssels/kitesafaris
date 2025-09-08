@@ -252,6 +252,12 @@ export default function AntiguaDecember6Page() {
                 Book Now - €1,900 per person
               </Link>
               <Link
+                href="/blog/antigua-kitesafari-packing-guide"
+                className="bg-turquoise text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-turquoise/90 transition-colors"
+              >
+                Packing List Antigua
+              </Link>
+              <Link
                 href="https://wa.me/32492576427"
                 target="_blank"
                 rel="noopener noreferrer"
