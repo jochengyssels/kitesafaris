@@ -16,7 +16,8 @@ import {
   Target,
   Award,
   UserCheck,
-  UserX
+  UserX,
+  AlertTriangle
 } from "lucide-react"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, BarChart, Bar, PieChart, Pie, Cell, ResponsiveContainer } from "recharts"
@@ -24,71 +25,61 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, BarChart, Bar, PieChart, 
 interface BusinessMetricsProps {
   data: any
   dateRange: string
+  apiError?: string
 }
 
-export function BusinessMetrics({ data, dateRange }: BusinessMetricsProps) {
+export function BusinessMetrics({ data, dateRange, apiError }: BusinessMetricsProps) {
   const [selectedMetric, setSelectedMetric] = useState("revenue")
 
-  // Mock data for demonstration
-  const revenueData = [
-    { month: "Jan", revenue: 42000, bookings: 18, avgBooking: 2333 },
-    { month: "Feb", revenue: 38000, bookings: 16, avgBooking: 2375 },
-    { month: "Mar", revenue: 45000, bookings: 20, avgBooking: 2250 },
-    { month: "Apr", revenue: 52000, bookings: 22, avgBooking: 2364 },
-    { month: "May", revenue: 48000, bookings: 19, avgBooking: 2526 },
-    { month: "Jun", revenue: 56000, bookings: 24, avgBooking: 2333 },
-  ]
+  // Error state component
+  const ErrorState = ({ title, message }: { title: string, message: string }) => (
+    <div className="bg-white rounded-xl p-8 shadow-sm border border-sand-beige-200 text-center">
+      <div className="flex flex-col items-center">
+        <div className="p-4 bg-red-100 rounded-full mb-4">
+          <AlertTriangle className="h-8 w-8 text-red-600" />
+        </div>
+        <h3 className="text-lg font-semibold text-navy-900 mb-2">{title}</h3>
+        <p className="text-gray-600 max-w-md">{message}</p>
+      </div>
+    </div>
+  )
 
-  const leadSources = [
-    { source: "Website Form", leads: 45, conversions: 12, rate: 26.7, color: "#0891b2" },
-    { source: "Organic Search", leads: 38, conversions: 15, rate: 39.5, color: "#ea580c" },
-    { source: "Social Media", leads: 22, conversions: 6, rate: 27.3, color: "#ca8a04" },
-    { source: "Referral", leads: 18, conversions: 8, rate: 44.4, color: "#16a34a" },
-    { source: "Email Campaign", leads: 15, conversions: 4, rate: 26.7, color: "#dc2626" },
-    { source: "Direct Contact", leads: 12, conversions: 7, rate: 58.3, color: "#9333ea" },
-  ]
+  // No data state component
+  const NoDataState = ({ title, message }: { title: string, message: string }) => (
+    <div className="bg-white rounded-xl p-8 shadow-sm border border-sand-beige-200 text-center">
+      <div className="flex flex-col items-center">
+        <div className="p-4 bg-gray-100 rounded-full mb-4">
+          <AlertTriangle className="h-8 w-8 text-gray-600" />
+        </div>
+        <h3 className="text-lg font-semibold text-navy-900 mb-2">{title}</h3>
+        <p className="text-gray-600 max-w-md">{message}</p>
+      </div>
+    </div>
+  )
 
-  const destinations = [
-    { destination: "Antigua", bookings: 24, revenue: 48000, avgPrice: 2000, satisfaction: 4.9 },
-    { destination: "Sardinia", bookings: 18, revenue: 36000, avgPrice: 2000, satisfaction: 4.8 },
-    { destination: "Greece", bookings: 12, revenue: 24000, avgPrice: 2000, satisfaction: 4.7 },
-    { destination: "Croatia", bookings: 8, revenue: 16000, avgPrice: 2000, satisfaction: 4.6 },
-    { destination: "Barbados", bookings: 6, revenue: 12000, avgPrice: 2000, satisfaction: 4.8 },
-  ]
+  // Check if we have real data
+  const hasData = data && !apiError
 
-  const customerDemographics = [
-    { country: "Germany", customers: 35, percentage: 28, revenue: 70000 },
-    { country: "Netherlands", customers: 28, percentage: 22, revenue: 56000 },
-    { country: "UK", customers: 22, percentage: 18, revenue: 44000 },
-    { country: "France", customers: 18, percentage: 14, revenue: 36000 },
-    { country: "Switzerland", customers: 12, percentage: 10, revenue: 24000 },
-    { country: "Other", customers: 8, percentage: 8, revenue: 16000 },
-  ]
+  // If no data is available, show error state
+  if (!hasData) {
+    return (
+      <div className="space-y-6">
+        <ErrorState 
+          title="Business Metrics Data Unavailable"
+          message={apiError || "We're currently unable to retrieve business metrics data. This could be due to API connectivity issues, missing data sources, or service unavailability."}
+        />
+      </div>
+    )
+  }
 
-  const conversionFunnel = [
-    { stage: "Website Visitors", count: 12400, percentage: 100 },
-    { stage: "Lead Generation", count: 248, percentage: 2.0 },
-    { stage: "Inquiries", count: 186, percentage: 1.5 },
-    { stage: "Proposals Sent", count: 124, percentage: 1.0 },
-    { stage: "Bookings", count: 68, percentage: 0.55 },
-  ]
-
-  const recentBookings = [
-    { id: "BK001", customer: "John Smith", destination: "Antigua", amount: 2400, date: "2024-01-15", status: "confirmed" },
-    { id: "BK002", customer: "Maria Garcia", destination: "Sardinia", amount: 2200, date: "2024-01-14", status: "confirmed" },
-    { id: "BK003", customer: "David Johnson", destination: "Greece", amount: 2000, date: "2024-01-13", status: "pending" },
-    { id: "BK004", customer: "Anna Müller", destination: "Antigua", amount: 2400, date: "2024-01-12", status: "confirmed" },
-    { id: "BK005", customer: "Pierre Dubois", destination: "Croatia", amount: 1800, date: "2024-01-11", status: "confirmed" },
-  ]
-
-  const ebookSubscribers = [
-    { month: "Jan", subscribers: 45, downloads: 120 },
-    { month: "Feb", subscribers: 52, downloads: 135 },
-    { month: "Mar", subscribers: 48, downloads: 128 },
-    { month: "Apr", subscribers: 61, downloads: 155 },
-    { month: "May", subscribers: 58, downloads: 142 },
-    { month: "Jun", subscribers: 67, downloads: 168 },
-  ]
+  // Use real data from API
+  const revenueData = data.revenueData || []
+  const leadSources = data.leadSources || []
+  const destinations = data.destinations || []
+  const customerDemographics = data.customerDemographics || []
+  const conversionFunnel = data.conversionFunnel || []
+  const recentBookings = data.recentBookings || []
+  const ebookSubscribers = data.ebookSubscribers || []
 
   return (
     <div className="space-y-6">
@@ -98,15 +89,32 @@ export function BusinessMetrics({ data, dateRange }: BusinessMetricsProps) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-              <p className="text-3xl font-bold text-navy-900">€281k</p>
-              <div className="flex items-center mt-2">
-                <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-                <span className="text-sm text-green-600">+15.2%</span>
-                <span className="text-sm text-gray-500 ml-1">vs last period</span>
-              </div>
+              {data.totalRevenue ? (
+                <>
+                  <p className="text-3xl font-bold text-navy-900">€{data.totalRevenue.toLocaleString()}</p>
+                  {data.revenueChange && (
+                    <div className="flex items-center mt-2">
+                      {data.revenueChange > 0 ? (
+                        <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
+                      ) : (
+                        <TrendingDown className="h-4 w-4 text-red-500 mr-1" />
+                      )}
+                      <span className={`text-sm ${data.revenueChange > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {data.revenueChange > 0 ? '+' : ''}{data.revenueChange}%
+                      </span>
+                      <span className="text-sm text-gray-500 ml-1">vs last period</span>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <p className="text-3xl font-bold text-gray-400">--</p>
+                  <p className="text-sm text-red-600 mt-2">No data available</p>
+                </>
+              )}
             </div>
-            <div className="p-3 bg-gold-100 rounded-lg">
-              <DollarSign className="h-6 w-6 text-gold-600" />
+            <div className={`p-3 rounded-lg ${data.totalRevenue ? 'bg-gold-100' : 'bg-gray-100'}`}>
+              <DollarSign className={`h-6 w-6 ${data.totalRevenue ? 'text-gold-600' : 'text-gray-400'}`} />
             </div>
           </div>
         </div>
