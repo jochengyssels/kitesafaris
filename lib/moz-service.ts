@@ -62,7 +62,6 @@ export class MozService {
           target: targetUrl,
           scope: 'page',
           limit: 25,
-          sort: 'domain_authority',
           filter: 'external',
           source_cols: ['title', 'anchor_text', 'spam_score', 'domain_authority', 'page_authority', 'link_type', 'source_url', 'target_url']
         })
@@ -75,6 +74,8 @@ export class MozService {
       }
 
       const data: MozResponse = await response.json()
+      
+      console.log('🔍 MOZ API Raw Response:', JSON.stringify(data, null, 2))
       
       // Transform MOZ data to our format
       const backlinkData: MozBacklinkData[] = data.results.map(link => ({
