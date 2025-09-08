@@ -51,7 +51,7 @@ export class MozService {
     try {
       console.log('🔗 Fetching real backlink data from MOZ Link Explorer...')
       
-      // MOZ Link Explorer API endpoint for backlinks
+      // MOZ Link Explorer API endpoint for backlinks - using correct v2 format
       const response = await fetch(`${this.baseUrl}/links`, {
         method: 'POST',
         headers: {
@@ -63,12 +63,15 @@ export class MozService {
           scope: 'page',
           limit: 25,
           sort: 'domain_authority',
-          filter: 'external'
+          filter: 'external',
+          source_cols: ['title', 'anchor_text', 'spam_score', 'domain_authority', 'page_authority', 'link_type', 'source_url', 'target_url']
         })
       })
 
       if (!response.ok) {
-        throw new Error(`MOZ API error: ${response.status} ${response.statusText}`)
+        const errorText = await response.text()
+        console.error('MOZ API Error Details:', errorText)
+        throw new Error(`MOZ API error: ${response.status} ${response.statusText} - ${errorText}`)
       }
 
       const data: MozResponse = await response.json()
@@ -111,8 +114,8 @@ export class MozService {
 
     } catch (error) {
       console.error('❌ Failed to fetch MOZ backlink data:', error)
-      console.log('📊 Falling back to mock backlink data')
-      return this.getMockBacklinkData()
+      // Don't fall back to mock data - return empty array to indicate no data
+      return []
     }
   }
 

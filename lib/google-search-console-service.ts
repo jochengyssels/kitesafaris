@@ -168,6 +168,11 @@ export class GoogleSearchConsoleService {
       
       // Fetch real backlink data from MOZ API
       const backlinkData = await mozService.getBacklinkData(this.propertyUrl)
+      
+      // If no backlink data is available, log the issue
+      if (backlinkData.length === 0) {
+        console.log('⚠️ No backlink data available from MOZ API')
+      }
 
       // Calculate growth metrics
       const growthMetrics = this.calculateGrowthMetrics()
@@ -442,7 +447,7 @@ export class GoogleSearchConsoleService {
           suggestion: 'Expand Caribbean destination pages'
         }
       ],
-      backlinkData: await mozService.getBacklinkData(this.propertyUrl),
+      backlinkData: [], // No backlink data in mock mode
       rankingHistory: Array.from({ length: 30 }, (_, i) => {
         const date = new Date()
         date.setDate(date.getDate() - (29 - i))
