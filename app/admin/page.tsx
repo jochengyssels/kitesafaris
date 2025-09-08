@@ -72,10 +72,10 @@ export default function AdminDashboard() {
       color: "bg-emerald-500",
     },
     {
-      title: "Analytics",
-      description: "Website performance and visitor insights",
+      title: "Advanced Analytics",
+      description: "Comprehensive dashboard with website, business, and SEO insights",
       icon: BarChart3,
-      href: "/admin/analytics",
+      href: "/analytics",
       color: "bg-gold-500",
     },
     {

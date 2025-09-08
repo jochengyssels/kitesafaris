@@ -6,9 +6,9 @@ import { JsonLd, generateReviewSchema } from "@/components/seo/JsonLd"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Reviews & Testimonials | KiteSafaris.com",
+  title: "Kite Safari Reviews | Kitesurfing Testimonials | KiteSafaris.com",
   description:
-    "Read authentic reviews and testimonials from our kiteboarding safari guests. See why travelers choose KiteSafaris for unforgettable adventures.",
+    "Read authentic kite safari reviews and kitesurfing testimonials from our guests. Discover why travelers choose KiteSafaris for unforgettable adventures!",
   alternates: {
     canonical: "https://www.kitesafaris.com/reviews"
   },

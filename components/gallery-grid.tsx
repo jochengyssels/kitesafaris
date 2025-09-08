@@ -14,6 +14,7 @@ interface GalleryItem {
   mood: "action" | "scenery" | "group"
   title: string
   description: string
+  alt: string
   isUserSubmitted?: boolean
   aspectRatio: number
 }
@@ -28,6 +29,7 @@ const galleryItems: GalleryItem[] = [
     mood: "action",
     title: "High-speed kiteboarding in Antigua",
     description: "Professional kiteboarder performing aerial maneuvers over crystal clear Caribbean waters",
+    alt: "Kitesurfer jumping waves Antigua luxury kite safari Caribbean catamaran kitesurfing",
     aspectRatio: 1.5,
   },
   {
@@ -38,6 +40,7 @@ const galleryItems: GalleryItem[] = [
     mood: "scenery",
     title: "Golden sunset over Antigua waters",
     description: "Breathtaking sunset view with kites silhouetted against the golden Caribbean sky",
+    alt: "Luxury catamaran sunset Antigua kite safari Caribbean kitesurfing aerial view",
     aspectRatio: 1.2,
   },
   {
@@ -49,6 +52,7 @@ const galleryItems: GalleryItem[] = [
     mood: "group",
     title: "Group kiteboarding lesson in Antigua",
     description: "Friends learning kiteboarding together in the pristine waters of Antigua",
+    alt: "Small group kite vacation Antigua professional kite instruction luxury catamaran",
     aspectRatio: 1.8,
   },
   {
@@ -59,6 +63,7 @@ const galleryItems: GalleryItem[] = [
     mood: "action",
     title: "Guest adventure in Barbuda",
     description: "Amazing jump captured by our guest during their Barbuda safari",
+    alt: "Barbuda kitesurfing spot aerial view luxury kite safari Caribbean catamaran",
     isUserSubmitted: true,
     aspectRatio: 1.3,
   },
@@ -72,6 +77,7 @@ const galleryItems: GalleryItem[] = [
     mood: "action",
     title: "Epic kiteboarding session in Antigua",
     description: "High-energy kiteboarding image showcasing perfect Caribbean wind conditions",
+    alt: "Kitesurfer jumping waves Antigua luxury catamaran kitesurfing kite safari",
     aspectRatio: 1.6,
   },
   {
@@ -82,6 +88,7 @@ const galleryItems: GalleryItem[] = [
     mood: "scenery",
     title: "Pristine Greek Aegean coastline",
     description: "Untouched natural beauty of Greece's upcoming kiteboarding spots",
+    alt: "Greece kitesurfing spot aerial view luxury catamaran Mediterranean kite safari",
     aspectRatio: 1.4,
   },
   {
@@ -93,6 +100,7 @@ const galleryItems: GalleryItem[] = [
     mood: "group",
     title: "Gourmet dining on board",
     description: "Fresh, locally-sourced meals prepared by our professional chef",
+    alt: "Luxury catamaran interior kite safari accommodation gourmet dining",
     aspectRatio: 1.6,
   },
   {
@@ -104,6 +112,7 @@ const galleryItems: GalleryItem[] = [
     mood: "scenery",
     title: "Sunset champagne celebration",
     description: "Celebrate your kiteboarding achievements with premium champagne",
+    alt: "Luxury catamaran interior kite safari accommodation sunset celebration",
     aspectRatio: 1.3,
   },
   {
@@ -115,6 +124,7 @@ const galleryItems: GalleryItem[] = [
     mood: "group",
     title: "Refreshing drinks after kiting",
     description: "Cool down with refreshing beverages after an active kiteboarding session",
+    alt: "Small group kite vacation luxury catamaran interior kite safari accommodation",
     aspectRatio: 1.5,
   },
   {
@@ -126,6 +136,7 @@ const galleryItems: GalleryItem[] = [
     mood: "scenery",
     title: "Aperol spritz at sunset",
     description: "Enjoy the perfect Italian aperitivo while watching the Caribbean sunset",
+    alt: "Luxury catamaran interior kite safari accommodation sunset drinks",
     aspectRatio: 1.4,
   },
   {
@@ -137,6 +148,7 @@ const galleryItems: GalleryItem[] = [
     mood: "scenery",
     title: "Fresh tropical fruit salad",
     description: "Start your day with fresh, locally-sourced tropical fruits",
+    alt: "Luxury catamaran interior kite safari accommodation gourmet dining",
     aspectRatio: 1.6,
   },
   {
@@ -148,6 +160,7 @@ const galleryItems: GalleryItem[] = [
     mood: "scenery",
     title: "Luxury master bedroom",
     description: "Spacious master bedroom with panoramic windows and premium amenities",
+    alt: "Luxury catamaran interior kite safari accommodation master bedroom",
     aspectRatio: 1.4,
   },
   {
@@ -159,6 +172,7 @@ const galleryItems: GalleryItem[] = [
     mood: "scenery",
     title: "Modern en-suite bathroom",
     description: "Contemporary bathroom with premium fixtures and ocean views",
+    alt: "Luxury catamaran interior kite safari accommodation modern bathroom",
     aspectRatio: 1.3,
   },
   {
@@ -170,6 +184,7 @@ const galleryItems: GalleryItem[] = [
     mood: "group",
     title: "Spacious dining and lounge area",
     description: "Comfortable dining and relaxation space with panoramic views",
+    alt: "Luxury catamaran interior kite safari accommodation dining lounge",
     aspectRatio: 1.6,
   },
   {
@@ -181,6 +196,7 @@ const galleryItems: GalleryItem[] = [
     mood: "scenery",
     title: "Professional cockpit area",
     description: "Well-equipped cockpit for navigation and relaxation",
+    alt: "Luxury catamaran interior kite safari accommodation professional cockpit",
     aspectRatio: 1.5,
   },
   {
@@ -192,6 +208,7 @@ const galleryItems: GalleryItem[] = [
     mood: "scenery",
     title: "Comfortable guest cabin",
     description: "Cozy guest cabin with storage and natural light",
+    alt: "Luxury catamaran interior kite safari accommodation guest cabin",
     aspectRatio: 1.4,
   },
   {
@@ -383,7 +400,7 @@ export function GalleryGrid() {
               <div className="relative">
                 <Image
                   src={item.type === "video" ? item.thumbnail || item.src : item.src}
-                  alt={item.description}
+                  alt={item.alt}
                   width={400}
                   height={Math.round(400 / item.aspectRatio)}
                   className="w-full h-auto object-cover"

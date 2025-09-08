@@ -4,14 +4,15 @@ import HighlightCards from "@/components/highlight-cards"
 import DestinationsMap from "@/components/destinations-map"
 import { TestimonialCarousel } from "@/components/testimonial-carousel"
 import { SardinianAwakeningCTA } from "@/components/sardinian-awakening-cta"
+import BlogOverview from "@/components/blog-overview"
 import Link from "next/link"
 import Image from "next/image"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "undefined",
+  title: "Luxury Kite Safari Adventures | Caribbean Greece Sardinia | KiteSafaris.com",
   description:
-    "Experience the ultimate Caribbean kite safari on luxury catamarans. Expert kiteboarding coaching, small groups, guaranteed wind. Book your kitesurf adventure today!",
+    "Discover luxury kite safari adventures on catamaran kitesurfing trips across Caribbean, Greece & Sardinia. Book your unforgettable kitesurfing vacation today!",
   keywords: "caribbean catamaran, kitesurf caribbean, kitesurfing caribbean, kiteboarding caribbean, kitesurf packages, catamaran cruises caribbean, kitesurfing trips, kiteboarding vacations",
   alternates: {
     canonical: "https://kitesafaris.com",
@@ -138,7 +139,11 @@ export default function HomePage() {
             </h2>
             <p className="text-lg md:text-xl text-gray-600 font-open-sans max-w-3xl mx-auto leading-relaxed">
               Three extraordinary destinations. One unforgettable adventure. Experience world-class kiteboarding aboard
-              luxury catamarans in the Caribbean, Greece, and Sardinia.
+              luxury catamarans in the <Link href="/destinations/antigua" className="text-coral-orange hover:text-orange-500 font-semibold">Caribbean</Link>, 
+              <Link href="/destinations/greece" className="text-coral-orange hover:text-orange-500 font-semibold"> Greece</Link>, and 
+              <Link href="/destinations/sardinia" className="text-coral-orange hover:text-orange-500 font-semibold"> Sardinia</Link>. 
+              Each destination offers unique wind conditions and cultural experiences perfect for your 
+              <Link href="/packages" className="text-coral-orange hover:text-orange-500 font-semibold"> luxury kite safari adventure</Link>.
             </p>
           </div>
 
@@ -155,7 +160,7 @@ export default function HomePage() {
                   <div className="relative h-64 md:h-80 overflow-hidden">
                     <Image
                       src={destination.image || "/placeholder.svg"}
-                      alt={`${destination.name} kiteboarding destination with luxury catamaran and perfect wind conditions`}
+                      alt={`${destination.name} kitesurfing spot aerial view luxury catamaran kitesurfing kite safari`}
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-110"
                       priority
@@ -187,27 +192,45 @@ export default function HomePage() {
                     <p className="text-gray-600 font-open-sans mb-6 line-clamp-3">
                       {destination.description}
                     </p>
-                    <Link
-                      href={`/destinations/${destination.id}`}
-                      className="inline-flex items-center text-coral-orange font-semibold hover:text-orange-500 transition-colors group"
-                      aria-label={`Explore ${destination.name} kite safari destination`}
-                    >
-                      Explore {destination.name}
-                      <svg
-                        className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
+                    <div className="space-y-3">
+                      <Link
+                        href={`/destinations/${destination.id}`}
+                        className="inline-flex items-center text-coral-orange font-semibold hover:text-orange-500 transition-colors group"
+                        aria-label={`Explore ${destination.name} kite safari destination`}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M17 8l4 4m0 0l-4 4m4-4H3"
-                        ></path>
-                      </svg>
-                    </Link>
+                        {destination.id === 'antigua' ? 'Luxury kite safari in Antigua' : 
+                         destination.id === 'greece' ? 'Professional kitesurfing in Greece' : 
+                         'Small group catamaran experience in Sardinia'}
+                        <svg
+                          className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M17 8l4 4m0 0l-4 4m4-4H3"
+                          ></path>
+                        </svg>
+                      </Link>
+                      <div className="flex gap-3">
+                        <Link
+                          href="/booking"
+                          className="text-sm text-gray-600 hover:text-coral-orange transition-colors"
+                        >
+                          Book your {destination.name} adventure →
+                        </Link>
+                        <Link
+                          href="/packages"
+                          className="text-sm text-gray-600 hover:text-coral-orange transition-colors"
+                        >
+                          View packages →
+                        </Link>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )
@@ -220,6 +243,60 @@ export default function HomePage() {
 
       <SardinianAwakeningCTA variant="homepage" />
 
+      <BlogOverview />
+
+      {/* You Might Also Like Section */}
+      <section className="py-16 bg-gradient-to-br from-turquoise-50 to-sand-beige-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-deep-navy font-montserrat mb-4">
+              You Might Also Like
+            </h2>
+            <p className="text-lg text-gray-600 font-open-sans max-w-2xl mx-auto">
+              Discover more about our kite safari experiences and prepare for your adventure.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Link href="/guides" className="group bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-turquoise-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-turquoise-200 transition-colors">
+                  <span className="text-2xl">📚</span>
+                </div>
+                <h3 className="font-montserrat font-bold text-lg text-deep-navy mb-2">Expert Guides</h3>
+                <p className="text-sm text-gray-600 font-open-sans">Learn from IKO certified instructors</p>
+              </div>
+            </Link>
+            <Link href="/faq" className="group bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-coral-orange/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-coral-orange/20 transition-colors">
+                  <span className="text-2xl">❓</span>
+                </div>
+                <h3 className="font-montserrat font-bold text-lg text-deep-navy mb-2">FAQ</h3>
+                <p className="text-sm text-gray-600 font-open-sans">Get answers to common questions</p>
+              </div>
+            </Link>
+            <Link href="/reviews" className="group bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-200 transition-colors">
+                  <span className="text-2xl">⭐</span>
+                </div>
+                <h3 className="font-montserrat font-bold text-lg text-deep-navy mb-2">Reviews</h3>
+                <p className="text-sm text-gray-600 font-open-sans">Read guest experiences</p>
+              </div>
+            </Link>
+            <Link href="/contact" className="group bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-green-200 transition-colors">
+                  <span className="text-2xl">💬</span>
+                </div>
+                <h3 className="font-montserrat font-bold text-lg text-deep-navy mb-2">Contact Us</h3>
+                <p className="text-sm text-gray-600 font-open-sans">Plan your perfect trip</p>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <DestinationsMap />
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -227,7 +304,8 @@ export default function HomePage() {
             <h2 className="font-montserrat font-bold text-3xl text-navy mb-4">Kite Safari Experts</h2>
             <p className="font-open-sans text-gray-600 max-w-2xl mx-auto">
               We deliver unforgettable kitesurfing adventures with a perfect track record of reliability and premium
-              catamaran experiences.
+              catamaran experiences. Read our <Link href="/reviews" className="text-coral-orange hover:text-orange-500 font-semibold">guest reviews</Link> and 
+              <Link href="/booking" className="text-coral-orange hover:text-orange-500 font-semibold"> book your adventure</Link> today.
             </p>
           </div>
           <TestimonialCarousel />

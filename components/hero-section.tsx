@@ -41,14 +41,25 @@ export default function HeroSection() {
             Experience the ultimate Catamaran kitesurfing adventure.
           </p>
 
-          <Link href="/destinations">
-            <Button
-              size="lg"
-              className="bg-coral-orange hover:bg-coral-orange/90 text-white font-montserrat font-bold text-lg px-8 py-6 rounded-full transition-all duration-300 hover:scale-105 shadow-2xl mx-auto animate-in fade-in slide-in-from-bottom-2 duration-1000 delay-700"
-            >
-              Explore Kite Safaris
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-in fade-in slide-in-from-bottom-2 duration-1000 delay-700">
+            <Link href="/destinations">
+              <Button
+                size="lg"
+                className="bg-coral-orange hover:bg-coral-orange/90 text-white font-montserrat font-bold text-lg px-8 py-6 rounded-full transition-all duration-300 hover:scale-105 shadow-2xl"
+              >
+                Explore Kite Safaris
+              </Button>
+            </Link>
+            <Link href="/booking">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-2 border-white text-white hover:bg-white hover:text-deep-navy font-montserrat font-bold text-lg px-8 py-6 rounded-full transition-all duration-300 hover:scale-105 shadow-2xl"
+              >
+                Book Your Adventure
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
 

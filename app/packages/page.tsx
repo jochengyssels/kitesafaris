@@ -8,8 +8,8 @@ import PricingTable from "@/components/pricing-table"
 import { Calendar, MapPin, Wind, Users, Star, ArrowRight, Clock, Tag } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Kitesurf Packages | 7-Day Catamaran Trips | KiteSafaris",
-  description: "Browse kitesurf packages: 7-day Caribbean safaris, all-inclusive adventures with expert crew and small groups. Book your kiteboarding vacation today!",
+  title: "Kite Safari Packages | All-Inclusive Kitesurfing | KiteSafaris.com",
+  description: "Discover all-inclusive kite safari packages with luxury catamaran trips, expert coaching & small groups. Book your premium kitesurfing adventure today!",
   keywords: "kitesurf packages, 7-day catamaran trips, Caribbean kitesurf safaris, all-inclusive kitesurfing, small group kitesurfing, kiteboarding vacations, kitesurfing trips, kite catamaran, kitesurfing catamaran, kite cruise italy, wing foil holiday, kite and sail italy, kitesurfing catamaran, kite cruise spain, women's only kiteboarding trip, kite adventures, kitesurfing trips, kiteboarding vacations",
   alternates: {
     canonical: "https://www.kitesafaris.com/packages"

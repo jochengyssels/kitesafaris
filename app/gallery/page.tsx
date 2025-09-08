@@ -1,16 +1,25 @@
 import { Navigation } from "@/components/navigation"
 import { GalleryGrid } from "@/components/gallery-grid"
+import { generateImageStructuredData } from "@/lib/image-sitemap"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Gallery - KiteSafaris.com",
+  title: "Kite Safari Photos | Catamaran Kitesurfing Gallery | KiteSafaris.com",
   description:
-    "Explore stunning photos and videos from our catamaran kite cruises across the Caribbean and Mediterranean",
+    "Explore stunning kite safari photos and catamaran kitesurfing gallery from our luxury adventures across Caribbean & Mediterranean. See the magic!",
 }
 
 export default function GalleryPage() {
+  const structuredData = generateImageStructuredData()
+
   return (
     <div className="min-h-screen bg-deep-navy">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData),
+        }}
+      />
       <Navigation />
       <main className="pt-20">
         <div className="container mx-auto px-4 py-12">

@@ -3,6 +3,12 @@ import { EnhancedFooter } from "@/components/enhanced-footer"
 import { FloatingActionButtons } from "@/components/floating-action-buttons"
 import Image from "next/image"
 import Link from "next/link"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Luxury Catamaran Fleet | Kite Safari Boats | KiteSafaris.com",
+  description: "Discover our luxury catamaran fleet and kite safari boats! Premium vessels with professional crew, safety equipment & kite storage for unforgettable adventures.",
+}
 
 export default function FleetPage() {
   return (
@@ -31,7 +37,7 @@ export default function FleetPage() {
               <div className="relative h-64">
                 <Image
                   src="https://daggzx92agk0rfom.public.blob.vercel-storage.com/antigua:img-catamaran-islands-view.jpg"
-                  alt="Caribbean Catamaran - Luxury catamaran for Caribbean kiteboarding safaris with professional crew and kite equipment"
+                  alt="Luxury catamaran kitesurfing Caribbean Antigua kite safari boats professional crew"
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 33vw"
@@ -104,7 +110,7 @@ export default function FleetPage() {
               <div className="relative h-64">
                 <Image
                   src="https://daggzx92agk0rfom.public.blob.vercel-storage.com/catamaran:img-sailing-nature.jpg"
-                  alt="Mediterranean Catamaran - Luxury catamaran for Greek Islands kiteboarding safaris with professional crew and kite equipment"
+                  alt="Luxury catamaran kitesurfing Greece Mediterranean kite safari boats Meltemi winds"
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 33vw"
@@ -177,7 +183,7 @@ export default function FleetPage() {
               <div className="relative h-64">
                 <Image
                   src="https://daggzx92agk0rfom.public.blob.vercel-storage.com/catamaran:img-mountain-shore.jpg"
-                  alt="Premium Catamaran - Luxury catamaran for premium kiteboarding safaris with professional crew and kite equipment"
+                  alt="Luxury catamaran fleet kite safari boats premium catamaran kitesurfing accommodation"
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 33vw"

@@ -163,7 +163,7 @@ export function DestinationDetail({ destination }: DestinationDetailProps) {
               "/placeholder.svg" ||
               "/placeholder.svg"
             }
-            alt={`Kiteboarding scene in ${destination.name}`}
+            alt={`${destination.name} kitesurfing spot aerial view luxury catamaran kitesurfing kite safari`}
             fill
             className="object-cover"
             priority
@@ -487,22 +487,69 @@ export function DestinationDetail({ destination }: DestinationDetailProps) {
             </div>
           </section>
 
-          <section>
+          {/* Related Content Section */}
+          <section className="mb-16">
             <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-lg">
-              <h2 className="font-montserrat font-bold text-2xl text-deep-navy mb-6">Other Destinations</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {otherDestinations.map((dest) => (
-                  <Link
-                    key={dest.id}
-                    href={`/destinations/${dest.id}`}
-                    className="block p-4 rounded-lg hover:bg-sand-beige transition-colors duration-200 border border-sand-beige/30"
-                  >
-                    <div className="flex items-center gap-3">
-                      <MapPin className="w-5 h-5 text-turquoise" />
-                      <span className="font-open-sans text-gray-700 hover:text-deep-navy font-medium">{dest.name}</span>
+              <h2 className="font-montserrat font-bold text-2xl text-deep-navy mb-6">Plan Your {destination.name} Adventure</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <Link href="/booking" className="group p-4 rounded-lg hover:bg-sand-beige transition-colors duration-200 border border-sand-beige/30">
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-coral-orange/10 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-coral-orange/20 transition-colors">
+                      <span className="text-xl">📅</span>
                     </div>
-                  </Link>
-                ))}
+                    <h3 className="font-montserrat font-semibold text-deep-navy mb-1">Book Now</h3>
+                    <p className="text-sm text-gray-600">Secure your spot</p>
+                  </div>
+                </Link>
+                <Link href="/packages" className="group p-4 rounded-lg hover:bg-sand-beige transition-colors duration-200 border border-sand-beige/30">
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-turquoise/10 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-turquoise/20 transition-colors">
+                      <span className="text-xl">📦</span>
+                    </div>
+                    <h3 className="font-montserrat font-semibold text-deep-navy mb-1">Packages</h3>
+                    <p className="text-sm text-gray-600">All-inclusive options</p>
+                  </div>
+                </Link>
+                <Link href="/guides" className="group p-4 rounded-lg hover:bg-sand-beige transition-colors duration-200 border border-sand-beige/30">
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-yellow-200 transition-colors">
+                      <span className="text-xl">👨‍🏫</span>
+                    </div>
+                    <h3 className="font-montserrat font-semibold text-deep-navy mb-1">Expert Guides</h3>
+                    <p className="text-sm text-gray-600">IKO certified instructors</p>
+                  </div>
+                </Link>
+                <Link href="/faq" className="group p-4 rounded-lg hover:bg-sand-beige transition-colors duration-200 border border-sand-beige/30">
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-green-200 transition-colors">
+                      <span className="text-xl">❓</span>
+                    </div>
+                    <h3 className="font-montserrat font-semibold text-deep-navy mb-1">FAQ</h3>
+                    <p className="text-sm text-gray-600">Common questions</p>
+                  </div>
+                </Link>
+              </div>
+              
+              <div className="border-t border-sand-beige/30 pt-6">
+                <h3 className="font-montserrat font-bold text-xl text-deep-navy mb-4">Other Destinations</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {otherDestinations.map((dest) => (
+                    <Link
+                      key={dest.id}
+                      href={`/destinations/${dest.id}`}
+                      className="block p-4 rounded-lg hover:bg-sand-beige transition-colors duration-200 border border-sand-beige/30"
+                    >
+                      <div className="flex items-center gap-3">
+                        <MapPin className="w-5 h-5 text-turquoise" />
+                        <span className="font-open-sans text-gray-700 hover:text-deep-navy font-medium">
+                          {dest.id === 'greece' ? 'Professional kitesurfing in Greece' : 
+                           dest.id === 'sardinia' ? 'Small group catamaran experience in Sardinia' : 
+                           dest.name}
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
           </section>
@@ -524,7 +571,7 @@ export function DestinationDetail({ destination }: DestinationDetailProps) {
               <div className="relative aspect-[3/2] rounded-lg overflow-hidden">
                 <Image
                   src={destination.gallery[currentImageIndex] || "/placeholder.svg"}
-                  alt={`${destination.name} gallery image ${currentImageIndex + 1}`}
+                  alt={`${destination.name} kitesurfing spot aerial view luxury catamaran kitesurfing kite safari gallery`}
                   fill
                   className="object-cover"
                 />

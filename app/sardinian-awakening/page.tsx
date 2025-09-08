@@ -3,9 +3,9 @@ import { Navigation } from "@/components/navigation"
 import { SardinianAwakeningLanding } from "@/components/sardinian-awakening-landing"
 
 export const metadata: Metadata = {
-  title: "Sardinian Awakening - Free Ebook | KiteSafaris.com",
+  title: "Kitesurfing Ebook | Sardinian Kite Story | KiteSafaris.com",
   description:
-    "Download the candid memoir of leaving Belgium's corporate world for wind, freedom and the kitesurfer's life in Sardinia. Free ebook by KiteSafaris.",
+    "Download our free kitesurfing ebook - the inspiring Sardinian kite story of leaving corporate life for wind, freedom & the kitesurfer's dream. Get it now!",
   keywords: "sardinia ebook, corporate escape, kitesurfing lifestyle, digital nomad, freedom, memoir",
   openGraph: {
     title: "Sardinian Awakening - Escape the Corporate World",

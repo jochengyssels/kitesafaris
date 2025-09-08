@@ -2,8 +2,14 @@
 
 import type React from "react"
 import { MessageCircle, MessageSquare, Phone, Mail, Send, CheckCircle, AlertCircle, Loader2, Globe, Shield, Clock } from "lucide-react"
+import type { Metadata } from "next"
 
 import { Navigation } from "@/components/navigation"
+
+export const metadata: Metadata = {
+  title: "Contact Kite Safari | Book Kitesurfing Vacation | KiteSafaris.com",
+  description: "Contact our kite safari experts to book your kitesurfing vacation! Get personalized assistance for luxury catamaran adventures across Caribbean & Mediterranean.",
+}
 import { EnhancedFooter } from "@/components/enhanced-footer"
 import { FloatingActionButtons } from "@/components/floating-action-buttons"
 import { DestinationFocusedMap } from "@/components/destination-focused-map"

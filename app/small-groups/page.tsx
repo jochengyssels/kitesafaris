@@ -4,9 +4,9 @@ import { JsonLd, generateReviewSchema } from "@/components/seo/JsonLd"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "undefined",
+  title: "Small Group Kite Safari | Intimate Kitesurfing | KiteSafaris.com",
   description:
-    "Experience intimate kite safari adventures with maximum 8 guests per trip. Personalized attention, better learning, and authentic connections on luxury catamarans.",
+    "Experience intimate kitesurfing adventures with small group kite safari trips! Max 8 guests for personalized attention, better learning & authentic connections.",
   keywords:
     "small group kiteboarding, intimate kite safari, personalized instruction, luxury catamaran small groups, Caribbean kiteboarding lessons",
   alternates: {

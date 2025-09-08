@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation"
 import { DestinationDetail } from "@/components/destination-detail"
 import { Navigation } from "@/components/navigation"
+import { BreadcrumbNavigation } from "@/components/breadcrumb-navigation"
 import { AntiguaTripCalendar } from "@/components/antigua-trip-calendar"
 import { SardiniaPartnerSchools } from "@/components/sardinia-partner-schools"
 
@@ -311,6 +312,14 @@ export default async function DestinationDetailPage({ params }: PageProps) {
       )}
       <Navigation />
       <div className="pt-20">
+        <div className="container mx-auto px-4 py-6">
+          <BreadcrumbNavigation 
+            items={[
+              { label: "Destinations", href: "/destinations" },
+              { label: destination.name }
+            ]} 
+          />
+        </div>
         <DestinationDetail destination={destination} />
         {destination.id === "antigua" && (
           <div className="mt-8">
@@ -343,8 +352,8 @@ export async function generateMetadata({ params }: PageProps) {
     switch (dest.id) {
       case "sardinia":
         return {
-          title: `Kitesurf Sardinia | Punta Trettu - Best Kitesurfing Destination Italy - KiteSafaris`,
-          description: `Discover why Sardinia is Italy's premier kitesurfing destination. Punta Trettu offers perfect conditions for all levels with consistent winds, flat water, and professional instruction April-October. Exclusive KiteSafaris discounts.`,
+          title: `Sardinia Kitesurfing | Punta Trettu | Mediterranean Kite Safari - KiteSafaris`,
+          description: `Experience Sardinia kitesurfing at Punta Trettu on Mediterranean kite safari adventures! Perfect conditions, consistent winds & professional instruction. Discover now!`,
           keywords: [
             "kitesurf Sardinia",
             "Punta Trettu",
@@ -382,8 +391,8 @@ export async function generateMetadata({ params }: PageProps) {
         }
       case "antigua":
         return {
-          title: `Kiteboarding Antigua | Kitesurf Antigua | Caribbean Kite Safari Adventures - KiteSafaris`,
-          description: `Discover the best kiteboarding in Antigua with KiteSafaris. Kitesurf Antigua's premier spots including Hansons Bay, Nonsuch Bay, and Barbuda. 7-day luxury catamaran adventures from €1,900.`,
+          title: `Antigua Kitesurfing | Caribbean Kite Safari | Luxury Catamaran - KiteSafaris`,
+          description: `Experience Antigua kitesurfing on luxury catamaran Caribbean kite safari adventures! Discover Hansons Bay, Nonsuch Bay & Barbuda with expert coaching. Book now!`,
           keywords: [
             "kiteboarding antigua",
             "kitesurf antigua",
@@ -419,8 +428,8 @@ export async function generateMetadata({ params }: PageProps) {
         }
       case "greece":
         return {
-          title: `${dest.name} - KiteSafaris.com`,
-          description: dest.intro,
+          title: `Greece Kitesurfing | Cyclades Kite Safari | Meltemi Winds - KiteSafaris.com`,
+          description: `Discover Greece kitesurfing with Cyclades kite safari adventures! Experience consistent Meltemi winds, pristine islands & luxury catamaran comfort. Book now!`,
           keywords: [
             "Greek islands kitesurfing",
             "Aegean kitesurfing",

@@ -3,9 +3,9 @@ import { ShopPage } from "@/components/shop-page"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Kite Safari Shop | Caribbean Kiteboarding | KiteSafaris",
+  title: "Kitesurfing Merchandise | Kite Safari Gear | KiteSafaris.com",
   description:
-    "Shop premium KiteSafaris branded merchandise including apparel, accessories, and lifestyle products. High-quality gear for kiteboarding enthusiasts and ocean lovers.",
+    "Shop premium kitesurfing merchandise and kite safari gear! Discover KiteSafaris branded apparel, accessories & lifestyle products for ocean lovers.",
   keywords: "kiteboarding merchandise, KiteSafaris gear, sailing apparel, ocean lifestyle, branded clothing",
   alternates: {
     canonical: "https://www.kitesafaris.com/shop"
