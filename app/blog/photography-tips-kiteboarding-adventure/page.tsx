@@ -5,9 +5,12 @@ import Link from "next/link"
 import { Clock, User, ArrowLeft, Calendar, Camera, Settings, Lightbulb } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "How to Capture Stunning Kiteboarding Photos on Your Safari | KiteSafaris Blog",
+  title: "Kiteboarding Photography Tips for Safari Adventures | KiteSafaris Blog",
   description: "Professional photography tips for capturing your kiteboarding adventure. Equipment recommendations and composition techniques.",
   keywords: "kiteboarding photography, action photography, sports photography, adventure photography, camera tips",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/blog/photography-tips-kiteboarding-adventure",
+  },
   openGraph: {
     title: "How to Capture Stunning Kiteboarding Photos on Your Safari",
     description: "Professional photography tips for capturing your kiteboarding adventure. Equipment recommendations and composition techniques.",

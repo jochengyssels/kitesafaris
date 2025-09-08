@@ -1,5 +1,6 @@
 import { Navigation } from "@/components/navigation"
 import { TestimonialGrid } from "@/components/testimonial-grid"
+import { JsonLd, generateTouristTripSchema } from "@/components/seo/JsonLd"
 import Image from "next/image"
 import Link from "next/link"
 import type { Metadata } from "next"
@@ -30,46 +31,34 @@ export const metadata: Metadata = {
 }
 
 export default function AntiguaDecember6Page() {
+  // TouristTrip schema for Antigua December 2025 safari
+  const antiguaTripSchema = generateTouristTripSchema({
+    name: "Antigua Kite Safari December 6-13, 2025",
+    description: "7-day luxury catamaran kiteboarding adventure in Antigua & Barbuda with perfect trade winds and expert guidance",
+    destination: "Antigua & Barbuda",
+    price: "1900",
+    priceCurrency: "EUR",
+    duration: "P7D",
+    provider: "KiteSafaris",
+    url: "https://kitesafaris.com/antigua-kite-safari-december-6-2025",
+    image: "/antigua-december-kite-safari.jpg",
+    touristType: "Kitesurfing enthusiasts",
+    includes: [
+      "Luxury catamaran accommodation",
+      "Professional IKO certified instructor",
+      "All meals and beverages",
+      "Rescue boat assistance",
+      "Access to remote kite spots",
+      "Snorkeling gear and safety equipment"
+    ],
+    departureDate: "2025-12-06",
+    returnDate: "2025-12-13"
+  })
+
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd data={antiguaTripSchema} />
       <Navigation />
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Event",
-            name: "Antigua Kite Safari December 6-13, 2025",
-            description: "7-day luxury catamaran kiteboarding adventure in Antigua & Barbuda",
-            startDate: "2025-12-06",
-            endDate: "2025-12-13",
-            location: {
-              "@type": "Place",
-              name: "Antigua & Barbuda",
-              geo: {
-                "@type": "GeoCoordinates",
-                latitude: 17.0608,
-                longitude: -61.7964,
-              },
-            },
-            offers: {
-              "@type": "Offer",
-              price: "1900",
-              priceCurrency: "EUR",
-              availability: "https://schema.org/InStock",
-              validFrom: "2024-01-01",
-              validThrough: "2025-12-05",
-              url: "https://kitesafaris.com/booking",
-            },
-            organizer: {
-              "@type": "Organization",
-              name: "KiteSafaris.com",
-              url: "https://kitesafaris.com",
-            },
-          }),
-        }}
-      />
 
       <main className="pt-20">
         {/* Hero Section */}

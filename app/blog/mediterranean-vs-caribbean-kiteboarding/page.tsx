@@ -5,9 +5,12 @@ import Link from "next/link"
 import { Clock, User, ArrowLeft, Calendar, MapPin, Wind, Thermometer } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Mediterranean vs Caribbean: Which Kiteboarding Destination is Right for You? | KiteSafaris Blog",
+  title: "Mediterranean vs Caribbean Kiteboarding Destinations | KiteSafaris Blog",
   description: "Compare wind conditions, water temperatures, and cultural experiences between Mediterranean and Caribbean kiteboarding destinations.",
   keywords: "Mediterranean kiteboarding, Caribbean kiteboarding, kiteboarding destinations, wind conditions comparison",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/blog/mediterranean-vs-caribbean-kiteboarding",
+  },
   openGraph: {
     title: "Mediterranean vs Caribbean: Which Kiteboarding Destination is Right for You?",
     description: "Compare wind conditions, water temperatures, and cultural experiences between Mediterranean and Caribbean kiteboarding destinations.",

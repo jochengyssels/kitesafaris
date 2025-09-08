@@ -13,14 +13,14 @@ export function JsonLd({ data }: JsonLdProps) {
   )
 }
 
-// Organization schema for KiteSafaris
+// TourismBusiness schema for KiteSafaris (enhanced for tourism industry)
 export const organizationSchema = {
   "@context": "https://schema.org",
-  "@type": "Organization",
+  "@type": "TourismBusiness",
   "name": "KiteSafaris",
-  "description": "Premium kitesurfing safaris in the Caribbean and Mediterranean. Expert-guided catamaran trips with guaranteed wind conditions.",
+  "description": "Luxury small-group kitesurfing safaris aboard premium catamarans",
   "url": "https://www.kitesafaris.com",
-  "logo": "https://www.kitesafaris.com/images/logo.png",
+  "logo": "https://www.kitesafaris.com/logo.png",
   "foundingDate": "2020",
   "founder": {
     "@type": "Person",
@@ -28,11 +28,11 @@ export const organizationSchema = {
   },
   "address": {
     "@type": "PostalAddress",
-    "addressCountry": "Antigua and Barbuda",
-    "addressRegion": "Caribbean"
+    "addressCountry": "Multiple locations"
   },
   "contactPoint": {
     "@type": "ContactPoint",
+    "telephone": "+32-492-57-64-27",
     "contactType": "customer service",
     "email": "info@kitesafaris.com",
     "availableLanguage": ["English", "Italian", "French"]
@@ -60,9 +60,19 @@ export const organizationSchema = {
           "@type": "Service",
           "name": "7-Day Caribbean Kitesurf Safari",
           "description": "All-inclusive kitesurfing adventure with expert crew"
-        }
+        },
+        "price": "1900",
+        "priceCurrency": "EUR",
+        "availability": "https://schema.org/InStock"
       }
     ]
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "reviewCount": "127",
+    "bestRating": "5",
+    "worstRating": "1"
   }
 }
 
@@ -172,6 +182,61 @@ export function generateLocalBusinessSchema(destination: {
     "priceRange": "€€€",
     "currenciesAccepted": "EUR, USD",
     "paymentAccepted": "Cash, Credit Card, Bank Transfer"
+  }
+}
+
+// TouristTrip schema generator for destination pages
+export function generateTouristTripSchema(trip: {
+  name: string
+  description: string
+  destination: string
+  price: string
+  priceCurrency: string
+  duration: string
+  provider: string
+  url: string
+  image?: string
+  touristType?: string
+  includes?: string[]
+  departureDate?: string
+  returnDate?: string
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "TouristTrip",
+    "name": trip.name,
+    "description": trip.description,
+    "provider": {
+      "@type": "Organization",
+      "name": trip.provider
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": trip.price,
+      "priceCurrency": trip.priceCurrency,
+      "availability": "https://schema.org/InStock",
+      "url": trip.url
+    },
+    "touristType": trip.touristType || "Kitesurfing enthusiasts",
+    "duration": trip.duration,
+    "itinerary": {
+      "@type": "ItemList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@type": "Place",
+            "name": trip.destination,
+            "description": `Kitesurfing destination in ${trip.destination}`
+          }
+        }
+      ]
+    },
+    "image": trip.image,
+    "departureDate": trip.departureDate,
+    "returnDate": trip.returnDate,
+    "includes": trip.includes
   }
 }
 

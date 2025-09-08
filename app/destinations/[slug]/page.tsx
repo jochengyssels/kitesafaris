@@ -352,7 +352,7 @@ export async function generateMetadata({ params }: PageProps) {
     switch (dest.id) {
       case "sardinia":
         return {
-          title: `Sardinia Kitesurfing | Punta Trettu | Mediterranean Kite Safari - KiteSafaris`,
+          title: `Sardinia Kitesurfing | Punta Trettu Mediterranean Safari | KiteSafaris`,
           description: `Experience Sardinia kitesurfing at Punta Trettu on Mediterranean kite safari adventures! Perfect conditions, consistent winds & professional instruction. Discover now!`,
           keywords: [
             "kitesurf Sardinia",
@@ -391,7 +391,7 @@ export async function generateMetadata({ params }: PageProps) {
         }
       case "antigua":
         return {
-          title: `Antigua Kitesurfing | Caribbean Kite Safari | Luxury Catamaran - KiteSafaris`,
+          title: `Antigua Kitesurfing | Caribbean Kite Safari | KiteSafaris`,
           description: `Experience Antigua kitesurfing on luxury catamaran Caribbean kite safari adventures! Discover Hansons Bay, Nonsuch Bay & Barbuda with expert coaching. Book now!`,
           keywords: [
             "kiteboarding antigua",
@@ -428,7 +428,7 @@ export async function generateMetadata({ params }: PageProps) {
         }
       case "greece":
         return {
-          title: `Greece Kitesurfing | Cyclades Kite Safari | Meltemi Winds - KiteSafaris.com`,
+          title: `Greece Kitesurfing | Cyclades Kite Safari | KiteSafaris`,
           description: `Discover Greece kitesurfing with Cyclades kite safari adventures! Experience consistent Meltemi winds, pristine islands & luxury catamaran comfort. Book now!`,
           keywords: [
             "Greek islands kitesurfing",
@@ -489,6 +489,9 @@ export async function generateMetadata({ params }: PageProps) {
     robots: "index, follow",
     googlebot: "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1",
     "google-site-verification": "your-google-verification-code",
+    alternates: {
+      canonical: `https://kitesafaris.com/destinations/${destination.id}`,
+    },
     openGraph: {
       ...metadata.openGraph,
       url: `https://kitesafaris.com/destinations/${destination.id}`,

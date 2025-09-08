@@ -4,9 +4,12 @@ import { ArrowLeft, FileText, Shield, Users, AlertTriangle } from "lucide-react"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions | KiteSafaris - Caribbean Kiteboarding Adventures",
+  title: "Terms & Conditions | KiteSafaris Caribbean Adventures",
   description: "Read our terms and conditions for KiteSafaris Caribbean kiteboarding adventures. Booking policies, safety requirements, and participant responsibilities.",
   keywords: "terms conditions, kiteboarding terms, Caribbean kite safari terms, booking conditions, safety requirements",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/policies/terms",
+  },
   openGraph: {
     title: "Terms & Conditions | KiteSafaris",
     description: "Read our terms and conditions for KiteSafaris Caribbean kiteboarding adventures.",

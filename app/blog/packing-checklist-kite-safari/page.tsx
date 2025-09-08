@@ -5,9 +5,12 @@ import Link from "next/link"
 import { Clock, User, ArrowLeft, Calendar, Luggage, CheckCircle } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Ultimate Packing Checklist for Your Kite Safari Adventure | KiteSafaris Blog",
+  title: "Ultimate Packing Checklist for Kite Safari Adventure | KiteSafaris Blog",
   description: "Don't forget anything! Complete packing guide for kiteboarding equipment, travel essentials, and luxury catamaran living.",
   keywords: "kite safari packing, kiteboarding travel checklist, catamaran packing, travel essentials",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/blog/packing-checklist-kite-safari",
+  },
   openGraph: {
     title: "Ultimate Packing Checklist for Your Kite Safari Adventure",
     description: "Complete packing guide for kiteboarding equipment, travel essentials, and luxury catamaran living.",

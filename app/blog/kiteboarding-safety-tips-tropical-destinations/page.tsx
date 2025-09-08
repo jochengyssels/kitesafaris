@@ -5,9 +5,12 @@ import Link from "next/link"
 import { Clock, User, ArrowLeft, Calendar, Shield, AlertTriangle, Sun } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Essential Safety Tips for Kiteboarding in Tropical Destinations | KiteSafaris Blog",
+  title: "Kiteboarding Safety Tips for Tropical Destinations | KiteSafaris Blog",
   description: "Stay safe while kiteboarding in tropical waters. Learn about weather conditions, equipment checks, and emergency procedures.",
   keywords: "kiteboarding safety, tropical kiteboarding, safety tips, kiteboarding equipment, emergency procedures",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/blog/kiteboarding-safety-tips-tropical-destinations",
+  },
   openGraph: {
     title: "Essential Safety Tips for Kiteboarding in Tropical Destinations",
     description: "Stay safe while kiteboarding in tropical waters. Learn about weather conditions, equipment checks, and emergency procedures.",

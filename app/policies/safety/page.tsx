@@ -4,6 +4,9 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Safety Guidelines | KiteSafaris.com",
   description: "Comprehensive safety protocols and guidelines for KiteSafaris.com adventures.",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/policies/safety",
+  },
 }
 
 export default function SafetyPage() {

@@ -10,7 +10,7 @@ import Image from "next/image"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Luxury Kite Safari Adventures | Caribbean Greece Sardinia | KiteSafaris.com",
+  title: "Luxury Kite Safari Adventures | Caribbean & Mediterranean | KiteSafaris",
   description:
     "Discover luxury kite safari adventures on catamaran kitesurfing trips across Caribbean, Greece & Sardinia. Book your unforgettable kitesurfing vacation today!",
   keywords: "caribbean catamaran, kitesurf caribbean, kitesurfing caribbean, kiteboarding caribbean, kitesurf packages, catamaran cruises caribbean, kitesurfing trips, kiteboarding vacations",
@@ -79,55 +79,6 @@ export default function HomePage() {
   return (
     <main>
       <Navigation />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "TravelAgency",
-            name: "KiteSafaris",
-            description: "Luxury Caribbean kite safari adventures on catamarans",
-            url: "https://kitesafaris.com",
-            logo: "https://kitesafaris.com/logo.png",
-            serviceType: "Kiteboarding Adventures",
-            areaServed: "Caribbean",
-            hasOfferCatalog: {
-              "@type": "OfferCatalog",
-              name: "Caribbean Kite Safari Packages",
-              itemListElement: [
-                {
-                  "@type": "Offer",
-                  itemOffered: {
-                    "@type": "Service",
-                    name: "Caribbean Kite Safari",
-                    description: "Luxury catamaran kiteboarding adventures"
-                  },
-                  price: "1900",
-                  priceCurrency: "EUR",
-                  availability: "https://schema.org/InStock",
-                  validFrom: "2025-12-06",
-                  validThrough: "2026-04-26",
-                  url: "https://kitesafaris.com/booking"
-                }
-              ]
-            },
-            address: {
-              "@type": "PostalAddress",
-              addressCountry: "Caribbean"
-            },
-            contactPoint: {
-              "@type": "ContactPoint",
-              contactType: "customer service",
-              email: "info@kitesafaris.com"
-            },
-            aggregateRating: {
-              "@type": "AggregateRating",
-              ratingValue: "4.9",
-              reviewCount: "127"
-            }
-          }),
-        }}
-      />
       <HeroSection />
       
       {/* Discover Our Kite Safari Destinations Section */}
@@ -309,20 +260,6 @@ export default function HomePage() {
             </p>
           </div>
           <TestimonialCarousel />
-        
-  <script
-    type="application/ld+json"
-    dangerouslySetInnerHTML={{
-      __html: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "KiteSafaris",
-        "description": "Luxury Caribbean kite safari adventures",
-        "url": "https://kitesafaris.com",
-        "logo": "https://kitesafaris.com/logo.png"
-      })
-    }}
-  />
 </div>
       </section>
     </main>

@@ -1,4 +1,5 @@
 import Navigation from "@/components/navigation"
+import { JsonLd, generateTouristTripSchema } from "@/components/seo/JsonLd"
 import type { Metadata } from "next"
 import Link from "next/link"
 
@@ -34,29 +35,33 @@ export const metadata: Metadata = {
 }
 
 export default function GreeceDestination() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Place",
-    "name": "Greece",
-    "description": "Kitesurfing destination in the Greek Islands",
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": "39.0742",
-      "longitude": "21.8243"
-    },
-    "address": {
-      "@type": "PostalAddress",
-      "addressCountry": "Greece"
-    },
-    "url": "https://kitesafaris.com/destinations/greece"
-  }
+  // TouristTrip schema for Greece kitesurfing safari
+  const greeceTripSchema = generateTouristTripSchema({
+    name: "Greece Kite Safari",
+    description: "7-day luxury catamaran kitesurfing adventure through the Greek Islands with consistent Meltemi winds and pristine Mediterranean waters",
+    destination: "Greek Islands",
+    price: "1900",
+    priceCurrency: "EUR",
+    duration: "P7D",
+    provider: "KiteSafaris",
+    url: "https://kitesafaris.com/destinations/greece",
+    image: "https://kitesafaris.com/images/greece-kitesurfing-guide.jpg",
+    touristType: "Kitesurfing enthusiasts",
+    includes: [
+      "Luxury catamaran accommodation",
+      "Professional IKO certified instructor",
+      "All meals and beverages",
+      "Kitesurfing equipment",
+      "Island transfers and excursions",
+      "Safety equipment and insurance"
+    ],
+    departureDate: "2025-06-01",
+    returnDate: "2025-09-30"
+  })
 
   return (
     <main>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={greeceTripSchema} />
       <Navigation />
       
       <div className="min-h-screen bg-gradient-to-b from-sand-beige-50 to-white">

@@ -4,9 +4,12 @@ import { generateImageStructuredData } from "@/lib/image-sitemap"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Kite Safari Photos | Catamaran Kitesurfing Gallery | KiteSafaris.com",
+  title: "Kite Safari Photos | Catamaran Kitesurfing Gallery | KiteSafaris",
   description:
     "Explore stunning kite safari photos and catamaran kitesurfing gallery from our luxury adventures across Caribbean & Mediterranean. See the magic!",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/gallery"
+  },
 }
 
 export default function GalleryPage() {

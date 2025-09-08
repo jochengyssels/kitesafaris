@@ -6,7 +6,7 @@ import { SardinianAwakeningCTA } from "@/components/sardinian-awakening-cta"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "KiteSafaris Partners with ProKite Sardegna for Premium Kitesurfing Education | KiteSafaris",
+  title: "KiteSafaris Partners with ProKite Sardegna | Premium Education",
   description:
     "KiteSafaris announces strategic partnership with ProKite Sardegna, bringing world-class IKO certified instruction to luxury catamaran safari clients in Sardinia.",
   keywords:

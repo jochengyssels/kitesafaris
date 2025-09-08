@@ -2,7 +2,10 @@ import type { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "Policies - KiteSafaris",
-  description: "KiteSafaris policies and guidelines",
+  description: "Comprehensive policies and guidelines for KiteSafaris luxury kiteboarding adventures. Safety protocols, booking terms, cancellation policies, and participant requirements.",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/policies"
+  },
 }
 
 export default function PoliciesPage() {

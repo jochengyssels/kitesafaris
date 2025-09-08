@@ -5,9 +5,12 @@ import Link from "next/link"
 import { Clock, User, ArrowLeft, Calendar, Plane, Wind, MapPin } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Understanding Caribbean Wind Patterns for Kiteboarding | KiteSafaris Blog",
+  title: "Caribbean Wind Patterns for Kiteboarding | KiteSafaris Blog",
   description: "Learn about the trade winds, seasonal variations, and best times to kiteboard in the Caribbean. Expert insights for optimal wind conditions.",
   keywords: "Caribbean wind patterns, trade winds, kiteboarding conditions, Caribbean kiteboarding, wind guide",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/blog/caribbean-kiteboarding-wind-patterns",
+  },
   openGraph: {
     title: "Understanding Caribbean Wind Patterns for Kiteboarding",
     description: "Learn about the trade winds, seasonal variations, and best times to kiteboard in the Caribbean.",

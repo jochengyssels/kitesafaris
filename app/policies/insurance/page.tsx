@@ -4,6 +4,9 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Insurance Coverage | KiteSafaris.com",
   description: "Comprehensive insurance coverage details for KiteSafaris.com operations.",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/policies/insurance",
+  },
 }
 
 export default function InsurancePage() {

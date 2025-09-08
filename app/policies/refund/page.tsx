@@ -4,6 +4,9 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Refund Policy | KiteSafaris.com",
   description: "Comprehensive refund policy for KiteSafaris.com bookings and cancellations.",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/policies/refund",
+  },
 }
 
 export default function RefundPolicyPage() {

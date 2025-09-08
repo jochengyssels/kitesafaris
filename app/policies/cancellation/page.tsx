@@ -4,6 +4,9 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Cancellation Policy | KiteSafaris.com",
   description: "Cancellation terms and conditions for KiteSafaris.com bookings.",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/policies/cancellation",
+  },
 }
 
 export default function CancellationPolicyPage() {

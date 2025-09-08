@@ -463,7 +463,10 @@ export async function generateMetadata({ params }: PageProps) {
   }
 
   return {
-    title: `${guide.title} | KiteSafaris.com`,
+    title: `${guide.title} | KiteSafaris`,
     description: guide.summary,
+    alternates: {
+      canonical: `https://www.kitesafaris.com/guides/${guide.slug}`,
+    },
   }
 }

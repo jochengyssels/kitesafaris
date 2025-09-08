@@ -4,6 +4,9 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Privacy Policy | KiteSafaris.com",
   description: "Privacy policy and data protection information for KiteSafaris.com users.",
+  alternates: {
+    canonical: "https://www.kitesafaris.com/policies/privacy",
+  },
 }
 
 export default function PrivacyPolicyPage() {
