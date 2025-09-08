@@ -49,6 +49,17 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Main navigation redirects
+      {
+        source: '/kitesafaris',
+        destination: '/destinations',
+        permanent: true,
+      },
+      {
+        source: '/kitesafaris/',
+        destination: '/destinations',
+        permanent: true,
+      },
       // Guide-related 404 redirects (removed self-redirects)
       // Caribbean kite cruises guide redirects (removed self-redirect)
       {
