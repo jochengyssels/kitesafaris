@@ -485,9 +485,9 @@ export function Navigation() {
               <Link
                 href="/booking"
                 className="bg-coral-orange hover:bg-orange-500 text-white font-montserrat font-bold px-6 py-2 rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105 focus:outline-none focus:ring-2 focus:ring-coral-orange focus:ring-opacity-50"
-                aria-label="Book your Caribbean kite safari now"
+                aria-label="Plan your Caribbean kite safari now"
               >
-                Book Your Safari
+                Plan Safari
               </Link>
             </div>
 
@@ -525,9 +525,9 @@ export function Navigation() {
                 href="/booking"
                 className="block w-full bg-coral-orange hover:bg-orange-500 text-white font-montserrat font-bold text-center py-4 px-6 rounded-full transition-all duration-300 mb-6"
                 onClick={() => setIsMobileMenuOpen(false)}
-                aria-label="Book your Caribbean kite safari now"
+                aria-label="Plan your Caribbean kite safari now"
               >
-                Book Your Safari
+                Plan Safari
               </Link>
 
               {menuStructure.map((item) => (
