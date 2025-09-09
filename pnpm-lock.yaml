@@ -179,6 +179,9 @@ importers:
       nodemailer:
         specifier: ^7.0.6
         version: 7.0.6
+      openai:
+        specifier: ^5.20.0
+        version: 5.20.0(zod@3.25.67)
       path:
         specifier: latest
         version: 0.12.7
@@ -2310,6 +2313,18 @@ packages:
   object-inspect@1.13.4:
     resolution: {integrity: sha512-W67iLl4J2EXEGTbfeHCffrjDfitvLANg0UlX3wFUUSTx92KXRFegMHUVgSqE+wvhAbi4WqjGg9czysTV2Epbew==}
     engines: {node: '>= 0.4'}
+
+  openai@5.20.0:
+    resolution: {integrity: sha512-Bmc2zLM/YWgFrDpXr9hwXqGGDdMmMpE9+qoZPsaHpn0Y/Qk1Vu26hNqXo7+nHdli+sLsXINvS1f8kR3NKhGKmA==}
+    hasBin: true
+    peerDependencies:
+      ws: ^8.18.0
+      zod: ^3.23.8
+    peerDependenciesMeta:
+      ws:
+        optional: true
+      zod:
+        optional: true
 
   package-json-from-dist@1.0.1:
     resolution: {integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==}
@@ -5079,6 +5094,10 @@ snapshots:
   object-assign@4.1.1: {}
 
   object-inspect@1.13.4: {}
+
+  openai@5.20.0(zod@3.25.67):
+    optionalDependencies:
+      zod: 3.25.67
 
   package-json-from-dist@1.0.1: {}
 

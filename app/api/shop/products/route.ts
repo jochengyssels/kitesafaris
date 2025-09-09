@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { printfulService } from "@/lib/printful-service"
+import { getExternalProducts, getExternalProductById, getExternalProductsByCategory, formatExternalProductForFrontend } from "@/lib/external-products"
 
 export async function GET(request: NextRequest) {
   try {
@@ -25,7 +26,22 @@ export async function GET(request: NextRequest) {
     }
 
     if (productId) {
-      // Fetch specific product with variants
+      // Check if it's an external product first
+      if (productId.startsWith('external-')) {
+        const externalProductId = productId.replace('external-', '')
+        const externalProduct = getExternalProductById(externalProductId)
+        if (!externalProduct) {
+          return NextResponse.json({ error: "Product not found" }, { status: 404 })
+        }
+        
+        const formattedProduct = formatExternalProductForFrontend(externalProduct)
+        return NextResponse.json({
+          success: true,
+          product: formattedProduct,
+        })
+      }
+
+      // Fetch specific Printful product with variants
       const product = await printfulService.getProduct(Number.parseInt(productId))
       if (!product) {
         return NextResponse.json({ error: "Product not found" }, { status: 404 })
@@ -41,20 +57,36 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch products by category
-    const products = await printfulService.getProductsByCategory(category || undefined)
+    let printfulProducts: any[] = []
+    let printfulProductsWithVariants: any[] = []
+    
+    try {
+      printfulProducts = await printfulService.getProductsByCategory(category || undefined)
+      
+      // Get variants for each Printful product (limit to first few for performance)
+      printfulProductsWithVariants = await Promise.all(
+        printfulProducts.slice(0, 20).map(async (product) => {
+          const variants = await printfulService.getProductVariants(product.id)
+          return printfulService.formatProductForFrontend(product, variants)
+        }),
+      )
+    } catch (error) {
+      console.error("[Shop API] Failed to fetch Printful products:", error)
+      // Continue with external products only if Printful fails
+    }
 
-    // Get variants for each product (limit to first few for performance)
-    const productsWithVariants = await Promise.all(
-      products.slice(0, 20).map(async (product) => {
-        const variants = await printfulService.getProductVariants(product.id)
-        return printfulService.formatProductForFrontend(product, variants)
-      }),
-    )
+    const externalProducts = getExternalProductsByCategory(category || undefined)
+
+    // Format external products
+    const externalProductsFormatted = externalProducts.map(product => formatExternalProductForFrontend(product))
+
+    // Combine both product types
+    const allProducts = [...printfulProductsWithVariants, ...externalProductsFormatted]
 
     return NextResponse.json({
       success: true,
-      products: productsWithVariants,
-      total: products.length,
+      products: allProducts,
+      total: printfulProducts.length + externalProducts.length,
       category: category || "all",
     })
   } catch (error) {

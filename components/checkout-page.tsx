@@ -36,7 +36,9 @@ export function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [orderComplete, setOrderComplete] = useState(false)
 
-  const subtotal = getTotalPrice()
+  // Calculate subtotal only for printful items
+  const printfulItems = items.filter(item => !item.isExternal)
+  const subtotal = printfulItems.reduce((total, item) => total + item.price * item.quantity, 0)
   const shipping = subtotal >= 75 ? 0 : 9.99
   const tax = subtotal * 0.08 // 8% tax estimate
   const total = subtotal + shipping + tax
@@ -45,12 +47,12 @@ export function CheckoutPage() {
   useEffect(() => {
     console.log("Checkout useEffect triggered:", { isHydrated, itemsLength: items.length, orderComplete })
     
-    if (isHydrated && items.length === 0 && !orderComplete) {
-      console.log("Checkout redirect: Cart is empty after hydration")
-      console.log("Redirecting to /shop due to empty cart")
+    if (isHydrated && printfulItems.length === 0 && !orderComplete) {
+      console.log("Checkout redirect: No KiteSafaris items in cart after hydration")
+      console.log("Redirecting to /shop due to no printful items")
       window.location.href = "/shop"
     }
-  }, [items, orderComplete, isHydrated])
+  }, [printfulItems, orderComplete, isHydrated])
 
   // Debug logging for cart state changes
   useEffect(() => {
@@ -72,10 +74,25 @@ export function CheckoutPage() {
         throw new Error("Cart is empty")
       }
 
-      // Validate all items have required data
-      const invalidItems = items.filter(item => !item.productId || !item.price)
+      // Separate external and printful items
+      const externalItems = items.filter(item => item.isExternal)
+      const printfulItems = items.filter(item => !item.isExternal)
+      
+      // If there are external items, remove them from the cart for this checkout
+      if (externalItems.length > 0) {
+        console.log("External items found in cart, removing them from checkout:", externalItems)
+        // Note: We can't directly modify the cart here, but we'll filter them out below
+      }
+      
+      // Validate printful items have required data
+      const invalidItems = printfulItems.filter(item => !item.productId || !item.price)
       if (invalidItems.length > 0) {
         throw new Error("Some items in cart are invalid")
+      }
+      
+      // If no printful items, redirect back to shop
+      if (printfulItems.length === 0) {
+        throw new Error("No KiteSafaris items in cart")
       }
 
       // Validate shipping information
@@ -85,9 +102,9 @@ export function CheckoutPage() {
         throw new Error("Please fill in all required shipping information")
       }
 
-      // Create Stripe checkout session
+      // Create Stripe checkout session (only for printful items)
       const checkoutData = {
-        items: items.map((item) => ({
+        items: printfulItems.map((item) => ({
           productId: item.productId,
           variantId: item.variantId,
           name: item.name,
@@ -359,8 +376,8 @@ export function CheckoutPage() {
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     Processing Order...
                   </div>
-                ) : items.length === 0 ? (
-                  "Cart is Empty"
+                ) : printfulItems.length === 0 ? (
+                  "No KiteSafaris Items"
                 ) : (
                   `Pay with Stripe - €${total.toFixed(2)}`
                 )}
@@ -375,7 +392,7 @@ export function CheckoutPage() {
 
             {/* Cart Items */}
             <div className="space-y-4 mb-6">
-              {items.map((item) => (
+              {printfulItems.map((item) => (
                 <div key={item.id} className="flex gap-4">
                   <div className="relative w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                     <Image

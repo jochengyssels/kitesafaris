@@ -4,14 +4,17 @@ import { useState, useEffect } from "react"
 
 export interface CartItem {
   id: string
-  productId: number
-  variantId?: number
+  productId: number | string // Can be number for Printful or string for external products
+  variantId?: number | string
   name: string
   price: number
   currency: string
   image: string
   quantity: number
   options: Array<{ id: string; value: string }>
+  isExternal?: boolean // Flag to identify external products
+  affiliateUrl?: string // For external products
+  vendor?: string // For external products
 }
 
 export function useCart() {

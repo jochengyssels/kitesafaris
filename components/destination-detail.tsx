@@ -25,6 +25,8 @@ import { SardinianAwakeningCTA } from "./sardinian-awakening-cta"
 import { DestinationFocusedMap } from "./destination-focused-map"
 import PuntaTrettuWebcam from "./webcam/PuntaTrettuWebcam"
 import WindForecastCard from "./weather/WindForecastCard"
+import { AntiguaWeatherWidget } from "./antigua-weather-widget"
+import { AntiguaBookingCalculator } from "./antigua-booking-calculator"
 
 interface Destination {
   id: string
@@ -197,22 +199,57 @@ export function DestinationDetail({ destination }: DestinationDetailProps) {
                 </div>
               </div>
 
-              {/* CTA Button for Antigua */}
+              {/* Enhanced CTA Section for Antigua */}
               {destination.id === "antigua" && (
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Link href="/destinations/antigua/itinerary">
-                    <button className="bg-gradient-to-r from-coral-orange to-orange-500 hover:from-coral-orange/90 hover:to-orange-600 text-white font-bold py-4 px-8 rounded-full text-lg shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 flex items-center gap-3">
-                      <Calendar className="w-6 h-6" />
-                      <span>View Itinerary</span>
-                      <ChevronRight className="w-5 h-5" />
-                    </button>
-                  </Link>
-                  <Link href="/booking">
-                    <button className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white font-semibold py-4 px-8 rounded-full text-lg border border-white/30 hover:border-white/50 transition-all duration-300 flex items-center gap-3">
-                      <Anchor className="w-6 h-6" />
-                      <span>Book Now</span>
-                    </button>
-                  </Link>
+                <div className="space-y-4">
+                  {/* Key Benefits */}
+                  <div className="flex flex-wrap gap-4 text-white/90 text-sm">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-coral-orange rounded-full"></div>
+                      <span>All-Inclusive Luxury</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-coral-orange rounded-full"></div>
+                      <span>Expert IKO Coaching</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-coral-orange rounded-full"></div>
+                      <span>365 Beaches to Explore</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-coral-orange rounded-full"></div>
+                      <span>Max 6 Guests</span>
+                    </div>
+                  </div>
+                  
+                  {/* CTA Buttons */}
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Link href="/booking">
+                      <button className="bg-gradient-to-r from-coral-orange to-orange-500 hover:from-coral-orange/90 hover:to-orange-600 text-white font-bold py-4 px-8 rounded-full text-lg shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 flex items-center gap-3">
+                        <Calendar className="w-6 h-6" />
+                        <span>View Trip Calendar</span>
+                        <ChevronRight className="w-5 h-5" />
+                      </button>
+                    </Link>
+                    <Link href="/booking">
+                      <button className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white font-semibold py-4 px-8 rounded-full text-lg border border-white/30 hover:border-white/50 transition-all duration-300 flex items-center gap-3">
+                        <Anchor className="w-6 h-6" />
+                        <span>Book Your Safari</span>
+                      </button>
+                    </Link>
+                  </div>
+                  
+                  {/* Price & Availability */}
+                  <div className="flex items-center gap-6 text-white/90">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl font-bold text-coral-orange">€1,900</span>
+                      <span className="text-sm">per cabin</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                      <span className="text-sm">Limited Spots Available</span>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -254,35 +291,88 @@ export function DestinationDetail({ destination }: DestinationDetailProps) {
           </section>
 
           <section>
-            <div className="bg-sand-beige rounded-lg p-8 shadow-lg">
-              <h2 className="font-montserrat font-bold text-2xl text-deep-navy mb-6">Quick Facts</h2>
+            <div className={`rounded-lg p-8 shadow-lg ${destination.id === "antigua" ? "bg-gradient-to-br from-deep-navy to-turquoise text-white" : "bg-sand-beige"}`}>
+              <h2 className={`font-montserrat font-bold text-2xl mb-6 ${destination.id === "antigua" ? "text-white" : "text-deep-navy"}`}>
+                {destination.id === "antigua" ? "Caribbean Paradise Facts" : "Quick Facts"}
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="flex items-center gap-3">
-                  <Calendar className="w-6 h-6 text-turquoise" />
+                  <Calendar className={`w-6 h-6 ${destination.id === "antigua" ? "text-coral-orange" : "text-turquoise"}`} />
                   <div>
-                    <div className="font-open-sans font-medium text-gray-800">Best Season</div>
-                    <div className="font-open-sans text-gray-600">{destination.season}</div>
+                    <div className={`font-open-sans font-medium ${destination.id === "antigua" ? "text-white" : "text-gray-800"}`}>
+                      {destination.id === "antigua" ? "Prime Season" : "Best Season"}
+                    </div>
+                    <div className={`font-open-sans ${destination.id === "antigua" ? "text-white/80" : "text-gray-600"}`}>
+                      {destination.id === "antigua" ? "Dec - Apr (Trade Winds)" : destination.season}
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Wind className="w-6 h-6 text-turquoise" />
+                  <Wind className={`w-6 h-6 ${destination.id === "antigua" ? "text-coral-orange" : "text-turquoise"}`} />
                   <div>
-                    <div className="font-open-sans font-medium text-gray-800">Wind Speed</div>
-                    <div className="font-open-sans text-gray-600">{destination.windSpeed}</div>
+                    <div className={`font-open-sans font-medium ${destination.id === "antigua" ? "text-white" : "text-gray-800"}`}>
+                      {destination.id === "antigua" ? "Consistent Winds" : "Wind Speed"}
+                    </div>
+                    <div className={`font-open-sans ${destination.id === "antigua" ? "text-white/80" : "text-gray-600"}`}>
+                      {destination.id === "antigua" ? "15-25 knots (Daily)" : destination.windSpeed}
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Users className="w-6 h-6 text-turquoise" />
+                  <Users className={`w-6 h-6 ${destination.id === "antigua" ? "text-coral-orange" : "text-turquoise"}`} />
                   <div>
-                    <div className="font-open-sans font-medium text-gray-800">Local Culture</div>
-                    <div className="font-open-sans text-gray-600">{destination.culture}</div>
+                    <div className={`font-open-sans font-medium ${destination.id === "antigua" ? "text-white" : "text-gray-800"}`}>
+                      {destination.id === "antigua" ? "Group Size" : "Local Culture"}
+                    </div>
+                    <div className={`font-open-sans ${destination.id === "antigua" ? "text-white/80" : "text-gray-600"}`}>
+                      {destination.id === "antigua" ? "Max 6 Guests" : destination.culture}
+                    </div>
                   </div>
                 </div>
               </div>
+              
+              {/* Additional Antigua-specific facts */}
+              {destination.id === "antigua" && (
+                <div className="mt-6 pt-6 border-t border-white/20">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-coral-orange">365</div>
+                      <div className="text-sm text-white/80">Beaches to Explore</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-coral-orange">7</div>
+                      <div className="text-sm text-white/80">Days Adventure</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-coral-orange">5</div>
+                      <div className="text-sm text-white/80">World-Class Spots</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-coral-orange">100%</div>
+                      <div className="text-sm text-white/80">All-Inclusive</div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </section>
 
           <SardinianAwakeningCTA variant="destinations" />
+
+          {/* Antigua-specific interactive features */}
+          {destination.id === "antigua" && (
+            <section className="space-y-8">
+              {/* Weather Widget */}
+              <div>
+                <AntiguaWeatherWidget />
+              </div>
+              
+              {/* Booking Calculator */}
+              <div>
+                <AntiguaBookingCalculator />
+              </div>
+            </section>
+          )}
 
           {/* Antigua-specific resources section */}
           {destination.id === "antigua" && (
@@ -470,31 +560,52 @@ export function DestinationDetail({ destination }: DestinationDetailProps) {
 
           {/* Trip highlights */}
           <section>
-            <h2 className="font-montserrat font-bold text-3xl text-deep-navy mb-6">Trip Highlights</h2>
-            <ul className="space-y-3">
-              {destination.highlights.map((highlight, index) => (
-                <li key={index} className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-turquoise flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
+            <h2 className={`font-montserrat font-bold text-3xl mb-6 ${destination.id === "antigua" ? "text-deep-navy" : "text-deep-navy"}`}>
+              {destination.id === "antigua" ? "Caribbean Adventure Highlights" : "Trip Highlights"}
+            </h2>
+            <div className={`rounded-lg p-8 ${destination.id === "antigua" ? "bg-gradient-to-br from-white to-turquoise/5 border border-turquoise/20" : "bg-white border border-gray-200"}`}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {destination.highlights.map((highlight, index) => (
+                  <div key={index} className="flex items-start gap-4 p-4 rounded-lg hover:bg-white/50 transition-colors duration-200">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                      destination.id === "antigua" 
+                        ? "bg-gradient-to-br from-coral-orange to-orange-500" 
+                        : "bg-turquoise"
+                    }`}>
+                      <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <span className={`font-open-sans leading-relaxed ${
+                        destination.id === "antigua" ? "text-deep-navy" : "text-gray-700"
+                      }`}>
+                        {highlight}
+                      </span>
+                    </div>
                   </div>
-                  <span className="font-open-sans text-gray-700">{highlight}</span>
-                </li>
-              ))}
-            </ul>
+                ))}
+              </div>
+            </div>
           </section>
 
           {/* Sample itinerary */}
           <section>
-            <h2 className="font-montserrat font-bold text-3xl text-deep-navy mb-8">Sample Itinerary</h2>
-            <div className="relative">
-              {/* Timeline line */}
-              <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-turquoise via-coral-orange to-turquoise"></div>
+            <h2 className={`font-montserrat font-bold text-3xl mb-8 ${destination.id === "antigua" ? "text-deep-navy" : "text-deep-navy"}`}>
+              {destination.id === "antigua" ? "7-Day Caribbean Adventure Itinerary" : "Sample Itinerary"}
+            </h2>
+            <div className={`rounded-lg p-8 ${destination.id === "antigua" ? "bg-gradient-to-br from-white to-turquoise/5 border border-turquoise/20" : "bg-white border border-gray-200"}`}>
+              <div className="relative">
+                {/* Timeline line */}
+                <div className={`absolute left-8 top-0 bottom-0 w-0.5 ${
+                  destination.id === "antigua" 
+                    ? "bg-gradient-to-b from-coral-orange via-turquoise to-coral-orange" 
+                    : "bg-gradient-to-b from-turquoise via-coral-orange to-turquoise"
+                }`}></div>
 
               <div className="space-y-6">
                 {destination.itinerary.map((item, index) => {
@@ -504,10 +615,16 @@ export function DestinationDetail({ destination }: DestinationDetailProps) {
                   return (
                     <div key={index} className="relative">
                       {/* Timeline dot */}
-                      <div className="absolute left-6 w-4 h-4 bg-white border-4 border-turquoise rounded-full z-10"></div>
+                      <div className={`absolute left-6 w-4 h-4 bg-white border-4 rounded-full z-10 ${
+                        destination.id === "antigua" ? "border-coral-orange" : "border-turquoise"
+                      }`}></div>
 
                       {/* Card */}
-                      <div className="ml-16 bg-white rounded-xl shadow-lg border border-sand-beige/30 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                      <div className={`ml-16 rounded-xl shadow-lg border overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 ${
+                        destination.id === "antigua" 
+                          ? "bg-white border-coral-orange/20" 
+                          : "bg-white border-sand-beige/30"
+                      }`}>
                         <div
                           className="p-6 cursor-pointer"
                           onClick={() => setExpandedDay(isExpanded ? null : index)}
@@ -525,7 +642,11 @@ export function DestinationDetail({ destination }: DestinationDetailProps) {
                           <div className="flex items-start justify-between">
                             <div className="flex items-start gap-4 flex-1">
                               {/* Activity icon */}
-                              <div className="w-12 h-12 bg-gradient-to-br from-coral-orange to-coral-orange/80 rounded-full flex items-center justify-center flex-shrink-0">
+                              <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
+                                destination.id === "antigua" 
+                                  ? "bg-gradient-to-br from-coral-orange to-orange-500" 
+                                  : "bg-gradient-to-br from-coral-orange to-coral-orange/80"
+                              }`}>
                                 <IconComponent className="w-6 h-6 text-white stroke-2" />
                               </div>
 
@@ -594,6 +715,7 @@ export function DestinationDetail({ destination }: DestinationDetailProps) {
                     </div>
                   )
                 })}
+              </div>
               </div>
             </div>
           </section>
@@ -754,17 +876,64 @@ export function DestinationDetail({ destination }: DestinationDetailProps) {
 
         {/* CTA section */}
         <section className="mt-16 text-center">
-          <div className="bg-gradient-to-r from-turquoise to-deep-navy rounded-lg p-8 text-white">
-            <h2 className="font-montserrat font-bold text-3xl mb-4">Ready for Your Adventure?</h2>
+          <div className={`rounded-lg p-8 text-white ${
+            destination.id === "antigua" 
+              ? "bg-gradient-to-r from-coral-orange to-orange-500" 
+              : "bg-gradient-to-r from-turquoise to-deep-navy"
+          }`}>
+            <h2 className="font-montserrat font-bold text-3xl mb-4">
+              {destination.id === "antigua" ? "Ready for Your Caribbean Adventure?" : "Ready for Your Adventure?"}
+            </h2>
             <p className="font-open-sans text-lg mb-6 max-w-2xl mx-auto">
-              Book your kiteboarding safari to {destination.name} and experience the adventure of a lifetime.
+              {destination.id === "antigua" 
+                ? "Join our exclusive 7-day luxury catamaran safari to Antigua & Barbuda. Experience world-class kitesurfing, gourmet cuisine, and 365 beaches of paradise."
+                : `Book your kiteboarding safari to ${destination.name} and experience the adventure of a lifetime.`
+              }
             </p>
-            <Link 
-              href="/booking" 
-              className="inline-block bg-coral-orange hover:bg-coral-orange/90 text-white font-montserrat font-semibold px-8 py-4 rounded-lg text-lg transition-colors duration-200"
-            >
-              Book This Safari
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link 
+                href="/booking" 
+                className={`inline-block font-montserrat font-semibold px-8 py-4 rounded-lg text-lg transition-all duration-200 transform hover:scale-105 ${
+                  destination.id === "antigua"
+                    ? "bg-white text-coral-orange hover:bg-white/90"
+                    : "bg-coral-orange hover:bg-coral-orange/90 text-white"
+                }`}
+              >
+                {destination.id === "antigua" ? "Book Your Caribbean Safari" : "Book This Safari"}
+              </Link>
+              {destination.id === "antigua" && (
+                <Link 
+                  href="/booking" 
+                  className="inline-block bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white font-montserrat font-semibold px-8 py-4 rounded-lg text-lg border border-white/30 hover:border-white/50 transition-all duration-200"
+                >
+                  View Trip Calendar
+                </Link>
+              )}
+            </div>
+            
+            {/* Additional Antigua-specific CTA info */}
+            {destination.id === "antigua" && (
+              <div className="mt-6 pt-6 border-t border-white/20">
+                <div className="flex flex-wrap justify-center gap-6 text-white/90 text-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                    <span>From €1,900 per cabin</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                    <span>All-inclusive luxury</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                    <span>Max 6 guests</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                    <span>Dec - Apr departures</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </section>
       </div>

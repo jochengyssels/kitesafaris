@@ -104,7 +104,22 @@ export function ShopPage() {
   }, [products, filters])
 
   const handleAddToCart = (product: Product, variantId?: number) => {
+    // Check if this is an affiliate link product
+    const isAffiliateLink = (product as any).isAffiliateLink
+    
+    if (isAffiliateLink) {
+      // For affiliate links, redirect directly to the affiliate URL
+      const affiliateUrl = (product as any).affiliateUrl
+      if (affiliateUrl) {
+        window.open(affiliateUrl, '_blank')
+        return
+      }
+    }
+
     const variant = variantId ? product.variants.find((v) => v.id === variantId) : product.variants[0]
+
+    // Check if this is an external product
+    const isExternal = (product as any).isExternal
 
     addItem({
       id: `${product.id}-${variant?.id || "default"}`,
@@ -116,6 +131,9 @@ export function ShopPage() {
       image: variant?.image || product.thumbnail,
       quantity: 1,
       options: variant?.options || [],
+      isExternal: isExternal,
+      affiliateUrl: isExternal ? (product as any).affiliateUrl : undefined,
+      vendor: isExternal ? (product as any).vendor : undefined,
     })
   }
 

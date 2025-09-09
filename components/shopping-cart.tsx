@@ -37,7 +37,31 @@ export function ShoppingCart({
 
   const handleCheckout = () => {
     setIsCheckingOut(true)
-    // Redirect to checkout page
+    
+    // Check if there are any external products in the cart
+    const externalItems = items.filter(item => item.isExternal)
+    const printfulItems = items.filter(item => !item.isExternal)
+    
+    if (externalItems.length > 0 && printfulItems.length === 0) {
+      // All items are external - redirect to the first external product's affiliate URL
+      const firstExternalItem = externalItems[0]
+      if (firstExternalItem.affiliateUrl) {
+        window.open(firstExternalItem.affiliateUrl, '_blank')
+        setIsCheckingOut(false)
+        return
+      }
+    } else if (externalItems.length > 0 && printfulItems.length > 0) {
+      // Mixed cart - show warning and separate the items
+      alert("You have items from different vendors in your cart. External products will be purchased separately. Proceeding with KiteSafaris items first.")
+      
+      // Remove external items from cart and redirect to checkout for printful items
+      externalItems.forEach(item => {
+        // Note: We can't directly call onRemoveItem here as it's not in scope
+        // Instead, we'll handle this in the checkout page
+      })
+    }
+    
+    // Redirect to checkout page for printful items
     window.location.href = "/shop/checkout"
   }
 
@@ -105,7 +129,21 @@ export function ShoppingCart({
 
                     {/* Product Details */}
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-gray-900 text-xs sm:text-sm line-clamp-2 mb-1">{item.name}</h4>
+                      <div className="flex items-start justify-between mb-1">
+                        <h4 className="font-medium text-gray-900 text-xs sm:text-sm line-clamp-2 flex-1">{item.name}</h4>
+                        {item.isExternal && (
+                          <span className="ml-2 px-2 py-1 bg-turquoise-blue/20 text-turquoise-900 text-xs rounded-full flex-shrink-0">
+                            External
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Vendor info for external products */}
+                      {item.isExternal && item.vendor && (
+                        <div className="text-xs text-turquoise-700 mb-1">
+                          by {item.vendor}
+                        </div>
+                      )}
 
                       {/* Options */}
                       {item.options.length > 0 && (
@@ -185,13 +223,45 @@ export function ShoppingCart({
               </p>
 
               {/* Checkout Button */}
-              <button
-                onClick={handleCheckout}
-                disabled={isCheckingOut}
-                className="w-full bg-coral-orange hover:bg-orange-500 text-white font-montserrat font-bold py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isCheckingOut ? "Processing..." : "Proceed to Checkout"}
-              </button>
+              {(() => {
+                const externalItems = items.filter(item => item.isExternal)
+                const printfulItems = items.filter(item => !item.isExternal)
+                
+                if (externalItems.length > 0 && printfulItems.length === 0) {
+                  // All external items
+                  return (
+                    <button
+                      onClick={handleCheckout}
+                      disabled={isCheckingOut}
+                      className="w-full bg-coral-orange hover:bg-orange-500 text-white font-montserrat font-bold py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isCheckingOut ? "Opening..." : "Buy"}
+                    </button>
+                  )
+                } else if (externalItems.length > 0 && printfulItems.length > 0) {
+                  // Mixed cart
+                  return (
+                    <button
+                      onClick={handleCheckout}
+                      disabled={isCheckingOut}
+                      className="w-full bg-coral-orange hover:bg-orange-500 text-white font-montserrat font-bold py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isCheckingOut ? "Processing..." : "Checkout KiteSafaris Items"}
+                    </button>
+                  )
+                } else {
+                  // All printful items
+                  return (
+                    <button
+                      onClick={handleCheckout}
+                      disabled={isCheckingOut}
+                      className="w-full bg-coral-orange hover:bg-orange-500 text-white font-montserrat font-bold py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isCheckingOut ? "Processing..." : "Proceed to Checkout"}
+                    </button>
+                  )
+                }
+              })()}
 
               {/* Continue Shopping */}
               <button

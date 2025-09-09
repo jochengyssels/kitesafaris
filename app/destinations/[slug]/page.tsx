@@ -22,49 +22,52 @@ const destinations = [
     season: "Dec - Apr",
     windSpeed: "15-25 knots",
     culture: "Caribbean island culture",
-    intro: "Experience the ultimate kiteboarding in Antigua with KiteSafaris. Kitesurf Antigua's world-class spots including Hansons Bay, Nonsuch Bay, and Barbuda on our 7-day luxury catamaran adventures. Ride the Caribbean trade winds, explore wild lagoons, and enjoy life on board. Limited to 6 spots. All meals, coaching, and fun included.",
+    intro: "Discover the Caribbean's premier kiteboarding paradise with KiteSafaris' exclusive 7-day luxury catamaran adventures. Experience world-class kitesurfing in Antigua's pristine waters, from the flat-water playgrounds of Hansons Bay to the wild lagoons of Barbuda. Our intimate groups of just 6 guests ensure personalized coaching, while our luxury catamaran provides the perfect base for exploring 365 beaches and crystal-clear waters. With consistent trade winds, professional instruction, and all-inclusive comfort, this is the ultimate kitesurfing safari experience.",
     highlights: [
-      "Hansons Bay - flat-water playground ideal for beginners and freestyle",
-      "Nonsuch Bay and Green Island - protected by reef with butter-flat water",
-      "Great Bird Island - remote and reef-protected with wildlife",
-      "Barbuda - Coco Point, Spanish Point, and Codrington Lagoon",
-      "Jolly Harbor and Falmouth Harbor - cultural stops with bars and restaurants",
+      "Hansons Bay - World-renowned flat-water paradise perfect for beginners and freestyle progression",
+      "Nonsuch Bay & Green Island - Protected reef systems creating butter-flat conditions with stunning scenery",
+      "Great Bird Island - Remote wildlife sanctuary with pristine waters and incredible marine life",
+      "Barbuda's Coco Point - Shallow crystal-clear waters ideal for learning and progression",
+      "Spanish Point & Codrington Lagoon - Wild, untouched spots for advanced riders seeking adventure",
+      "Jolly Harbor & Falmouth Harbor - Historic harbors with vibrant Caribbean culture and nightlife",
+      "365 Beaches - Explore a different beach every day of the year in paradise",
+      "Luxury Catamaran Living - Wake up to new spots daily with all-inclusive comfort and gourmet cuisine",
     ],
     itinerary: [
       {
         day: 1,
-        activity: "Arrival and yacht orientation",
-        description: "Welcome aboard at Jolly Harbor, safety briefing, and equipment setup",
+        activity: "Welcome Aboard & Jolly Harbor Orientation",
+        description: "Arrive at the stunning Jolly Harbor marina where our luxury catamaran awaits. After a warm Caribbean welcome, enjoy a comprehensive safety briefing and equipment setup. Settle into your comfortable cabin, explore the yacht's amenities, and join your fellow adventurers for a sunset cocktail as we prepare for the ultimate kitesurfing safari.",
       },
       {
         day: 2,
-        activity: "Hansons Bay session",
-        description: "Flat-water playground on northwest coast, perfect for beginners and freestyle",
+        activity: "Hansons Bay - Flat Water Paradise",
+        description: "Wake up to the gentle Caribbean breeze and sail to Hansons Bay, Antigua's most famous flat-water spot. This world-renowned location offers perfect conditions for beginners to learn and advanced riders to perfect their freestyle tricks. Spend the day in waist-deep, crystal-clear water with consistent winds and stunning mountain backdrops.",
       },
       {
         day: 3,
-        activity: "Nonsuch Bay exploration",
-        description: "Protected by reef with butter-flat water and scenic green hills",
+        activity: "Nonsuch Bay & Green Island Discovery",
+        description: "Explore the protected waters of Nonsuch Bay, where reef systems create butter-flat conditions perfect for progression. The scenic green hills provide a breathtaking backdrop as you kite in some of the Caribbean's most beautiful waters. After an exhilarating session, enjoy a beach barbecue on Green Island.",
       },
       {
         day: 4,
-        activity: "Great Bird Island adventure",
-        description: "Remote wildlife sanctuary with sea turtles and stunning sunsets",
+        activity: "Great Bird Island Wildlife Adventure",
+        description: "Sail to the remote Great Bird Island, a pristine wildlife sanctuary where you'll kite alongside sea turtles and tropical fish. This untouched paradise offers incredible riding conditions with the added bonus of snorkeling in crystal-clear waters. End the day with a spectacular sunset and stargazing session.",
       },
       {
         day: 5,
-        activity: "Barbuda expedition",
-        description: "Coco Point shallow waters and Spanish Point wilder conditions",
+        activity: "Barbuda Expedition - Coco Point & Spanish Point",
+        description: "Cross to the untouched island of Barbuda for a day of exploration. Start at Coco Point's shallow, crystal-clear waters perfect for learning, then challenge yourself at Spanish Point's wilder conditions. Experience the raw beauty of this uninhabited paradise with its pink sand beaches and incredible marine life.",
       },
       {
         day: 6,
-        activity: "Codrington Lagoon",
-        description: "Large shallow lagoon with safe conditions for progression",
+        activity: "Codrington Lagoon Mastery",
+        description: "Spend your final riding day in Barbuda's massive Codrington Lagoon, one of the Caribbean's largest shallow lagoons. Perfect your skills in these safe, consistent conditions while surrounded by incredible wildlife. Celebrate your progression with a beach party and traditional Caribbean feast.",
       },
       {
         day: 7,
-        activity: "Falmouth Harbor farewell",
-        description: "Historic harbor near Nelson's Dockyard, departure Saturday morning",
+        activity: "Falmouth Harbor Farewell",
+        description: "Sail to historic Falmouth Harbor, home to Nelson's Dockyard and rich maritime history. Enjoy a final breakfast together, share stories of your adventure, and explore the charming colonial architecture. Depart with memories of the ultimate Caribbean kitesurfing experience and new friendships forged in paradise.",
       },
     ],
     gallery: [
@@ -241,46 +244,119 @@ export default async function DestinationDetailPage({ params }: PageProps) {
   } : destination.id === "antigua" ? {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "Kiteboarding Antigua | Kitesurf Antigua | Caribbean Kite Safari Adventures",
-    "description": "Discover the best kiteboarding in Antigua with KiteSafaris. Kitesurf Antigua's premier spots including Hansons Bay, Nonsuch Bay, and Barbuda. 7-day luxury catamaran adventures.",
+    "name": "Antigua Kitesurfing | Luxury Caribbean Kite Safari | 7-Day Catamaran Adventure",
+    "description": "Experience the ultimate Antigua kitesurfing adventure! 7-day luxury catamaran safari to Hansons Bay, Nonsuch Bay & Barbuda. All-inclusive with expert coaching, gourmet meals & 365 beaches.",
     "url": "https://kitesafaris.com/destinations/antigua",
     "mainEntity": {
-      "@type": "Place",
-      "name": "Antigua & Barbuda",
-      "description": "Caribbean's premier kiteboarding destination with world-class spots and consistent trade winds",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Antigua",
-        "addressRegion": "Antigua & Barbuda",
-        "addressCountry": "AG"
+      "@type": "TouristTrip",
+      "name": "Antigua Kitesurfing Safari",
+      "description": "7-day luxury catamaran kitesurfing adventure exploring Antigua's world-class kiteboarding spots including Hansons Bay, Nonsuch Bay, and Barbuda",
+      "provider": {
+        "@type": "Organization",
+        "name": "KiteSafaris",
+        "url": "https://kitesafaris.com",
+        "sameAs": "https://www.kitesafaris.com"
       },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": 17.0608,
-        "longitude": -61.7964
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "EUR",
+        "price": "1900",
+        "priceSpecification": {
+          "@type": "PriceSpecification",
+          "minPrice": "1900",
+          "maxPrice": "2500",
+          "priceCurrency": "EUR"
+        },
+        "availability": "https://schema.org/InStock",
+        "validFrom": "2024-12-01",
+        "validThrough": "2025-04-30"
       },
-      "amenityFeature": [
+      "itinerary": [
         {
-          "@type": "LocationFeatureSpecification",
-          "name": "Kiteboarding",
-          "value": true
+          "@type": "TouristAttraction",
+          "name": "Hansons Bay",
+          "description": "World-renowned flat-water paradise perfect for beginners and freestyle progression"
         },
         {
-          "@type": "LocationFeatureSpecification", 
-          "name": "Kitesurfing",
-          "value": true
+          "@type": "TouristAttraction", 
+          "name": "Nonsuch Bay & Green Island",
+          "description": "Protected reef systems creating butter-flat conditions with stunning scenery"
         },
         {
-          "@type": "LocationFeatureSpecification",
-          "name": "All Levels",
-          "value": true
+          "@type": "TouristAttraction",
+          "name": "Great Bird Island",
+          "description": "Remote wildlife sanctuary with pristine waters and incredible marine life"
         },
         {
-          "@type": "LocationFeatureSpecification",
-          "name": "Trade Winds",
-          "value": true
+          "@type": "TouristAttraction",
+          "name": "Barbuda's Coco Point",
+          "description": "Shallow crystal-clear waters ideal for learning and progression"
+        },
+        {
+          "@type": "TouristAttraction",
+          "name": "Spanish Point & Codrington Lagoon",
+          "description": "Wild, untouched spots for advanced riders seeking adventure"
         }
-      ]
+      ],
+      "touristType": "Kitesurfing Enthusiasts",
+      "includes": [
+        "Luxury catamaran accommodation",
+        "Professional kitesurfing instruction",
+        "All kitesurfing equipment",
+        "Gourmet meals and beverages",
+        "Transportation between spots",
+        "Safety equipment and briefing"
+      ],
+      "duration": "P7D",
+      "maximumAttendeeCapacity": 6,
+      "location": {
+        "@type": "Place",
+        "name": "Antigua & Barbuda",
+        "description": "Caribbean's premier kiteboarding destination with world-class spots and consistent trade winds",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Antigua",
+          "addressRegion": "Antigua & Barbuda",
+          "addressCountry": "AG"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 17.0608,
+          "longitude": -61.7964
+        },
+        "amenityFeature": [
+          {
+            "@type": "LocationFeatureSpecification",
+            "name": "Kiteboarding",
+            "value": true
+          },
+          {
+            "@type": "LocationFeatureSpecification", 
+            "name": "Kitesurfing",
+            "value": true
+          },
+          {
+            "@type": "LocationFeatureSpecification",
+            "name": "All Levels",
+            "value": true
+          },
+          {
+            "@type": "LocationFeatureSpecification",
+            "name": "Trade Winds",
+            "value": true
+          },
+          {
+            "@type": "LocationFeatureSpecification",
+            "name": "Flat Water",
+            "value": true
+          },
+          {
+            "@type": "LocationFeatureSpecification",
+            "name": "Luxury Catamaran",
+            "value": true
+          }
+        ]
+      }
     },
     "breadcrumb": {
       "@type": "BreadcrumbList",
@@ -396,38 +472,50 @@ export async function generateMetadata({ params }: PageProps) {
         }
       case "antigua":
         return {
-          title: `Antigua Kitesurfing | Caribbean Kite Safari | KiteSafaris`,
-          description: `Experience Antigua kitesurfing on luxury catamaran Caribbean kite safari adventures! Discover Hansons Bay, Nonsuch Bay & Barbuda with expert coaching. Book now!`,
+          title: `Antigua Kitesurfing | Luxury Caribbean Kite Safari | 7-Day Catamaran Adventure`,
+          description: `Experience the ultimate Antigua kitesurfing adventure! 7-day luxury catamaran safari to Hansons Bay, Nonsuch Bay & Barbuda. All-inclusive with expert coaching, gourmet meals & 365 beaches. Book your Caribbean kite paradise!`,
           keywords: [
-            "kiteboarding antigua",
-            "kitesurf antigua",
-            "Caribbean kite safari",
-            "Antigua kiteboarding trip",
-            "catamaran safari Antigua",
-            "book kiteboarding holiday Caribbean",
-            "luxury kitesafari",
-            "Antigua kite spots",
-            "Caribbean kitesurfing vacation",
-            "kitesurfing antigua",
-            "antigua kiteboarding",
-            "kiteboarding caribbean",
-            "kitesurf caribbean",
+            "antigua kitesurfing",
+            "caribbean kite safari",
+            "luxury catamaran kitesurfing",
+            "hansons bay kitesurfing",
+            "nonsuch bay kitesurfing",
+            "barbuda kitesurfing",
+            "antigua kiteboarding trip",
+            "caribbean kitesurfing vacation",
+            "luxury kitesafari antigua",
+            "antigua kite spots",
+            "catamaran safari antigua",
+            "kitesurfing antigua barbuda",
+            "caribbean kiteboarding adventure",
+            "antigua kiteboarding lessons",
+            "luxury kitesurfing holiday",
+            "antigua kite safari 2025",
+            "caribbean kitesurfing spots",
+            "antigua kiteboarding catamaran",
+            "barbuda kiteboarding",
+            "antigua kitesurfing schools",
+            "caribbean kiteboarding trips",
+            "antigua kiteboarding packages",
+            "luxury kitesurfing antigua",
+            "antigua kiteboarding all inclusive",
+            "caribbean kitesurfing destinations"
           ].join(", "),
           openGraph: {
-            title: `Kiteboarding Antigua | Kitesurf Antigua | Caribbean Kite Safari Adventures`,
-            description: `Discover the best kiteboarding in Antigua with KiteSafaris. Kitesurf Antigua's premier spots including Hansons Bay, Nonsuch Bay, and Barbuda. 7-day luxury catamaran adventures.`,
+            title: `Antigua Kitesurfing | Luxury Caribbean Kite Safari | 7-Day Catamaran Adventure`,
+            description: `Discover the Caribbean's premier kiteboarding paradise! 7-day luxury catamaran adventures to Antigua's world-class spots including Hansons Bay, Nonsuch Bay, and Barbuda. All-inclusive with expert coaching, gourmet meals, and 365 beaches to explore.`,
             images: [
               {
                 url: "https://kitesafaris.com/antigua-aerial-harbor-view.jpg",
                 width: 1200,
                 height: 630,
-                alt: "Kiteboarding Antigua kitesurf Antigua Caribbean kite safari adventure",
+                alt: "Luxury Antigua kitesurfing catamaran safari Caribbean kiteboarding adventure Hansons Bay Nonsuch Bay Barbuda",
               },
             ],
           },
           twitter: {
-            title: `Kiteboarding Antigua | Kitesurf Antigua | Caribbean Adventures`,
-            description: `Discover the best kiteboarding in Antigua with KiteSafaris. Kitesurf Antigua's premier spots with luxury catamaran adventures from €1,900.`,
+            title: `Antigua Kitesurfing | Luxury Caribbean Kite Safari Adventure`,
+            description: `7-day luxury catamaran kitesurfing safari to Antigua & Barbuda. World-class spots, expert coaching, all-inclusive comfort. From €1,900. Book your Caribbean kite paradise!`,
             images: ["https://kitesafaris.com/antigua-aerial-harbor-view.jpg"],
           },
         }

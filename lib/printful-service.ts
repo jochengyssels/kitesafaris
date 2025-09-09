@@ -117,6 +117,7 @@ export class PrintfulService {
     }
 
     // Add store ID header if configured (required for multi-store accounts)
+    // Note: For single-store accounts, this header is optional
     if (this.storeId) {
       headers["X-PF-Store-ID"] = this.storeId
     }
@@ -147,6 +148,10 @@ export class PrintfulService {
           } else if (response.status === 403) {
             throw new Error(`Access forbidden: ${errorData.error?.message || 'Token lacks required scopes'}`)
           } else if (response.status === 400) {
+            // Handle store ID requirement error specifically
+            if (errorData.error?.message?.includes('store_id')) {
+              throw new Error(`Printful store ID required: Please configure PRINTFUL_STORE_ID in your environment variables. This is required for multi-store accounts.`)
+            }
             throw new Error(`Bad request: ${errorData.error?.message || 'Invalid request data'}`)
           } else if (response.status === 429) {
             throw new Error(`Rate limit exceeded: ${errorData.error?.message || 'Too many requests'}`)

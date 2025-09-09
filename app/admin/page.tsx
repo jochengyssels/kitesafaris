@@ -19,6 +19,7 @@ import {
   Upload,
   Scan,
   BookOpen,
+  Bot,
 } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -35,6 +36,13 @@ export default function AdminDashboard() {
       icon: Search,
       href: "/admin/seo-agent",
       color: "bg-turquoise-500",
+    },
+    {
+      title: "kAIte Settings",
+      description: "Configure your Virtual Kite Expert's visibility and behavior",
+      icon: Bot,
+      href: "/admin/kaite-settings",
+      color: "bg-blue-500",
     },
     {
       title: "Manage Trips",

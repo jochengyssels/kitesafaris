@@ -82,7 +82,14 @@ export function ProductGrid({ products, onAddToCart }: ProductGridProps) {
                 </span>
               </div>
 
-              <h3 className="font-montserrat font-bold text-sm sm:text-lg text-gray-900 mb-2 line-clamp-2">{product.name}</h3>
+              <div className="flex items-start justify-between mb-2">
+                <h3 className="font-montserrat font-bold text-sm sm:text-lg text-gray-900 line-clamp-2 flex-1">{product.name}</h3>
+                {(product as any).isAffiliateLink && (
+                  <span className="ml-2 px-2 py-1 bg-turquoise-blue/20 text-turquoise-900 text-xs rounded-full flex-shrink-0">
+                    External
+                  </span>
+                )}
+              </div>
 
               <div className="flex items-center justify-between mb-3 sm:mb-4">
                 <span className="font-montserrat text-lg sm:text-2xl font-bold text-coral-orange">
@@ -93,23 +100,49 @@ export function ProductGrid({ products, onAddToCart }: ProductGridProps) {
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-2">
-                <button
-                  onClick={() => setSelectedProduct(product)}
-                  className="flex-1 px-3 sm:px-4 py-2 bg-deep-navy text-white font-medium rounded-lg hover:bg-deep-navy/90 transition-colors focus:outline-none focus:ring-2 focus:ring-deep-navy focus:ring-opacity-50 text-sm sm:text-base"
-                >
-                  <span className="hidden sm:inline">View Details</span>
-                  <span className="sm:hidden">Details</span>
-                </button>
-                <button
-                  onClick={() => onAddToCart(product)}
-                  disabled={!product.available}
-                  className="px-3 sm:px-4 py-2 bg-coral-orange text-white font-medium rounded-lg hover:bg-orange-500 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-coral-orange focus:ring-opacity-50"
-                  aria-label={`Add ${product.name} to cart`}
-                >
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                  </svg>
-                </button>
+                {(() => {
+                  const isAffiliateLink = (product as any).isAffiliateLink
+                  
+                  if (isAffiliateLink) {
+                    // For affiliate links, show a single "Buy Now" button with consistent styling
+                    return (
+                      <button
+                        onClick={() => onAddToCart(product)}
+                        className="w-full px-3 sm:px-4 py-2 bg-coral-orange text-white font-medium rounded-lg hover:bg-orange-500 transition-colors focus:outline-none focus:ring-2 focus:ring-coral-orange focus:ring-opacity-50 text-sm sm:text-base"
+                      >
+                        <span className="flex items-center justify-center gap-2">
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                          Buy
+                        </span>
+                      </button>
+                    )
+                  } else {
+                    // For regular products, show View Details and Add to Cart buttons
+                    return (
+                      <>
+                        <button
+                          onClick={() => setSelectedProduct(product)}
+                          className="flex-1 px-3 sm:px-4 py-2 bg-deep-navy text-white font-medium rounded-lg hover:bg-deep-navy/90 transition-colors focus:outline-none focus:ring-2 focus:ring-deep-navy focus:ring-opacity-50 text-sm sm:text-base"
+                        >
+                          <span className="hidden sm:inline">View Details</span>
+                          <span className="sm:hidden">Details</span>
+                        </button>
+                        <button
+                          onClick={() => onAddToCart(product)}
+                          disabled={!product.available}
+                          className="px-3 sm:px-4 py-2 bg-coral-orange text-white font-medium rounded-lg hover:bg-orange-500 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-coral-orange focus:ring-opacity-50"
+                          aria-label={`Add ${product.name} to cart`}
+                        >
+                          <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                          </svg>
+                        </button>
+                      </>
+                    )
+                  }
+                })()}
               </div>
             </div>
           </div>

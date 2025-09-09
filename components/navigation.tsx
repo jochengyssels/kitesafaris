@@ -8,9 +8,17 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { CertificationBadges } from "./certification-badges"
 import Image from "next/image"
 
+interface SubMenuItem {
+  href: string
+  label: string
+  isGroup?: boolean
+  submenu?: SubMenuItem[]
+}
+
 export function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set())
   const [isMobile, setIsMobile] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
@@ -20,7 +28,13 @@ export function Navigation() {
   const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({})
   const menuItemRefs = useRef<{ [key: string]: HTMLDivElement | null }>({})
 
-  const menuStructure = [
+  const menuStructure: Array<{
+    label: string
+    href: string
+    isSimple: boolean
+    icon?: string
+    submenu?: SubMenuItem[]
+  }> = [
     {
       label: "Home",
       href: "/",
@@ -59,6 +73,31 @@ export function Navigation() {
       submenu: [
         { href: "/kitesurfing-lessons", label: "🏄‍♂️ Kitesurfing Lessons" },
         { href: "/advanced-clinic", label: "🏆 Advanced Clinic" },
+        { 
+          label: "SPOTS", 
+          href: "#", 
+          isGroup: true,
+          submenu: [
+            { 
+              href: "/destinations/caribbean", 
+              label: "🏝️ Caribbean",
+              isGroup: true,
+              submenu: [
+                { href: "/kite/spots/caribbean/hanson-bay", label: "🏄‍♂️ Hansons Bay, Antigua" },
+                { href: "/kite/spots/caribbean/nonsuch-bay", label: "🌊 Nonsuch Bay & Green Island" },
+              ]
+            },
+            { href: "/destinations/greece", label: "🇬🇷 Greece" },
+            { 
+              href: "/destinations/sardinia", 
+              label: "🇮🇹 Sardinia",
+              isGroup: true,
+              submenu: [
+                { href: "/kite/spots/sardinia/punta-trettu", label: "🏄‍♂️ Punta Trettu, Sardinia" },
+              ]
+            },
+          ]
+        },
       ],
     },
     {
@@ -208,6 +247,18 @@ export function Navigation() {
     }
   }, [router])
 
+  const toggleGroupExpansion = useCallback((groupKey: string) => {
+    setExpandedGroups(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(groupKey)) {
+        newSet.delete(groupKey)
+      } else {
+        newSet.add(groupKey)
+      }
+      return newSet
+    })
+  }, [])
+
 
   useEffect(() => {
     const checkMobile = () => {
@@ -337,21 +388,91 @@ export function Navigation() {
                         See All {item.label}
                       </Link>
                       {item.submenu.map((subItem, index) => (
-                        <Link
-                          key={subItem.href}
-                          href={subItem.href}
-                          className={`block px-4 py-3 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-coral-orange focus:ring-inset rounded-md mx-2 ${
-                            isActive(subItem.href)
-                              ? "text-coral-orange bg-sand-beige bg-opacity-50"
-                              : "text-gray-700 hover:text-coral-orange hover:bg-turquoise-blue hover:bg-opacity-10"
-                          }`}
-                          role="menuitem"
-                          aria-current={isActive(subItem.href) ? "page" : undefined}
-                          onKeyDown={(e) => handleSubmenuKeyDown(e, index, item.submenu!)}
-                          onClick={() => setActiveDropdown(null)}
-                        >
-                          {subItem.label}
-                        </Link>
+                        <div key={subItem.href || subItem.label}>
+                          {subItem.isGroup ? (
+                            <div className="px-4 py-2">
+                              <div className="px-4 py-3 text-sm font-bold text-coral-orange border-b border-gray-100 mb-1 transition-colors focus:outline-none focus:ring-2 focus:ring-coral-orange focus:ring-inset rounded-md mx-2 hover:bg-turquoise-blue hover:bg-opacity-10">
+                                {subItem.label}
+                              </div>
+                              {subItem.submenu?.map((nestedItem: SubMenuItem, nestedIndex: number) => (
+                                <div key={nestedItem.href || nestedItem.label}>
+                                  {nestedItem.isGroup ? (
+                                    <div className="px-4 py-2">
+                                      <button
+                                        className="flex items-center justify-between w-full px-4 py-2 text-sm font-bold text-coral-orange border-b border-gray-100 mb-1 transition-colors focus:outline-none focus:ring-2 focus:ring-coral-orange focus:ring-inset rounded-md mx-2 hover:bg-turquoise-blue hover:bg-opacity-10"
+                                        onClick={(e) => {
+                                          e.preventDefault()
+                                          toggleGroupExpansion(`${subItem.label}-${nestedItem.label}`)
+                                        }}
+                                        aria-expanded={expandedGroups.has(`${subItem.label}-${nestedItem.label}`)}
+                                      >
+                                        <span>{nestedItem.label}</span>
+                                        <svg
+                                          className={`h-4 w-4 transition-transform duration-200 ${
+                                            expandedGroups.has(`${subItem.label}-${nestedItem.label}`) ? "rotate-180" : ""
+                                          }`}
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                          stroke="currentColor"
+                                        >
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                      </button>
+                                      {expandedGroups.has(`${subItem.label}-${nestedItem.label}`) && nestedItem.submenu?.map((deepNestedItem: SubMenuItem, deepNestedIndex: number) => (
+                                        <Link
+                                          key={deepNestedItem.href}
+                                          href={deepNestedItem.href}
+                                          className={`block px-8 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-coral-orange focus:ring-inset rounded-md mx-2 ${
+                                            isActive(deepNestedItem.href)
+                                              ? "text-coral-orange bg-sand-beige bg-opacity-50"
+                                              : "text-gray-700 hover:text-coral-orange hover:bg-turquoise-blue hover:bg-opacity-10"
+                                          }`}
+                                          role="menuitem"
+                                          aria-current={isActive(deepNestedItem.href) ? "page" : undefined}
+                                          onKeyDown={(e) => handleSubmenuKeyDown(e, deepNestedIndex, nestedItem.submenu!)}
+                                          onClick={() => setActiveDropdown(null)}
+                                        >
+                                          {deepNestedItem.label}
+                                        </Link>
+                                      ))}
+                                    </div>
+                                  ) : (
+                                    <Link
+                                      key={nestedItem.href}
+                                      href={nestedItem.href}
+                                      className={`block px-6 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-coral-orange focus:ring-inset rounded-md mx-2 ${
+                                        isActive(nestedItem.href)
+                                          ? "text-coral-orange bg-sand-beige bg-opacity-50"
+                                          : "text-gray-700 hover:text-coral-orange hover:bg-turquoise-blue hover:bg-opacity-10"
+                                      }`}
+                                      role="menuitem"
+                                      aria-current={isActive(nestedItem.href) ? "page" : undefined}
+                                      onKeyDown={(e) => handleSubmenuKeyDown(e, nestedIndex, subItem.submenu!)}
+                                      onClick={() => setActiveDropdown(null)}
+                                    >
+                                      {nestedItem.label}
+                                    </Link>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <Link
+                              href={subItem.href}
+                              className={`block px-4 py-3 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-coral-orange focus:ring-inset rounded-md mx-2 ${
+                                isActive(subItem.href)
+                                  ? "text-coral-orange bg-sand-beige bg-opacity-50"
+                                  : "text-gray-700 hover:text-coral-orange hover:bg-turquoise-blue hover:bg-opacity-10"
+                              }`}
+                              role="menuitem"
+                              aria-current={isActive(subItem.href) ? "page" : undefined}
+                              onKeyDown={(e) => handleSubmenuKeyDown(e, index, item.submenu!)}
+                              onClick={() => setActiveDropdown(null)}
+                            >
+                              {subItem.label}
+                            </Link>
+                          )}
+                        </div>
                       ))}
                     </div>
                   )}
@@ -479,24 +600,100 @@ export function Navigation() {
                         See All {item.label}
                       </Link>
                       {item.submenu.map((subItem) => (
-                        <button
-                          key={subItem.href}
-                          className={`block w-full text-left font-open-sans text-sm py-2 px-4 rounded-lg transition-colors cursor-pointer ${
-                            isActive(subItem.href)
-                              ? "text-coral-orange bg-turquoise-blue bg-opacity-20"
-                              : "text-gray-300 hover:text-white hover:bg-deep-navy hover:bg-opacity-30"
-                          }`}
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setIsMobileMenuOpen(false)
-                            setActiveDropdown(null)
-                            router.push(subItem.href)
-                          }}
-                          aria-current={isActive(subItem.href) ? "page" : undefined}
-                          role="menuitem"
-                        >
-                          {subItem.label}
-                        </button>
+                        <div key={subItem.href || subItem.label}>
+                          {subItem.isGroup ? (
+                            <div className="px-4 py-2">
+                              <div className="block font-open-sans text-sm py-2 px-4 rounded-lg font-bold text-coral-orange border-b border-white border-opacity-20 mb-2 transition-colors hover:bg-deep-navy hover:bg-opacity-30 cursor-pointer">
+                                {subItem.label}
+                              </div>
+                              {subItem.submenu?.map((nestedItem: SubMenuItem) => (
+                                <div key={nestedItem.href || nestedItem.label}>
+                                  {nestedItem.isGroup ? (
+                                    <div className="px-4 py-2">
+                                      <button
+                                        className="flex items-center justify-between w-full text-left font-open-sans text-sm py-2 px-4 rounded-lg font-bold text-coral-orange border-b border-white border-opacity-20 mb-2 transition-colors hover:bg-deep-navy hover:bg-opacity-30 cursor-pointer"
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          toggleGroupExpansion(`${subItem.label}-${nestedItem.label}`)
+                                        }}
+                                        aria-expanded={expandedGroups.has(`${subItem.label}-${nestedItem.label}`)}
+                                      >
+                                        <span>{nestedItem.label}</span>
+                                        <svg
+                                          className={`h-4 w-4 transition-transform duration-200 ${
+                                            expandedGroups.has(`${subItem.label}-${nestedItem.label}`) ? "rotate-180" : ""
+                                          }`}
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                          stroke="currentColor"
+                                        >
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                      </button>
+                                      {expandedGroups.has(`${subItem.label}-${nestedItem.label}`) && nestedItem.submenu?.map((deepNestedItem: SubMenuItem) => (
+                                        <button
+                                          key={deepNestedItem.href}
+                                          className={`block w-full text-left font-open-sans text-sm py-2 px-8 rounded-lg transition-colors cursor-pointer ${
+                                            isActive(deepNestedItem.href)
+                                              ? "text-coral-orange bg-turquoise-blue bg-opacity-20"
+                                              : "text-gray-300 hover:text-white hover:bg-deep-navy hover:bg-opacity-30"
+                                          }`}
+                                          onClick={(e) => {
+                                            e.stopPropagation()
+                                            setIsMobileMenuOpen(false)
+                                            setActiveDropdown(null)
+                                            router.push(deepNestedItem.href)
+                                          }}
+                                          aria-current={isActive(deepNestedItem.href) ? "page" : undefined}
+                                          role="menuitem"
+                                        >
+                                          {deepNestedItem.label}
+                                        </button>
+                                      ))}
+                                    </div>
+                                  ) : (
+                                    <button
+                                      key={nestedItem.href}
+                                      className={`block w-full text-left font-open-sans text-sm py-2 px-6 rounded-lg transition-colors cursor-pointer ${
+                                        isActive(nestedItem.href)
+                                          ? "text-coral-orange bg-turquoise-blue bg-opacity-20"
+                                          : "text-gray-300 hover:text-white hover:bg-deep-navy hover:bg-opacity-30"
+                                      }`}
+                                      onClick={(e) => {
+                                        e.stopPropagation()
+                                        setIsMobileMenuOpen(false)
+                                        setActiveDropdown(null)
+                                        router.push(nestedItem.href)
+                                      }}
+                                      aria-current={isActive(nestedItem.href) ? "page" : undefined}
+                                      role="menuitem"
+                                    >
+                                      {nestedItem.label}
+                                    </button>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <button
+                              className={`block w-full text-left font-open-sans text-sm py-2 px-4 rounded-lg transition-colors cursor-pointer ${
+                                isActive(subItem.href)
+                                  ? "text-coral-orange bg-turquoise-blue bg-opacity-20"
+                                  : "text-gray-300 hover:text-white hover:bg-deep-navy hover:bg-opacity-30"
+                              }`}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setIsMobileMenuOpen(false)
+                                setActiveDropdown(null)
+                                router.push(subItem.href)
+                              }}
+                              aria-current={isActive(subItem.href) ? "page" : undefined}
+                              role="menuitem"
+                            >
+                              {subItem.label}
+                            </button>
+                          )}
+                        </div>
                       ))}
                     </div>
                   )}

@@ -5,6 +5,7 @@ import DestinationsMap from "@/components/destinations-map"
 import { TestimonialCarousel } from "@/components/testimonial-carousel"
 import { SardinianAwakeningCTA } from "@/components/sardinian-awakening-cta"
 import BlogOverview from "@/components/blog-overview"
+import { KAIteFloatingWidget } from "@/components/kaite-floating-widget"
 import Link from "next/link"
 import Image from "next/image"
 import type { Metadata } from "next"
@@ -77,6 +78,7 @@ const destinations = [
 
 export default function HomePage() {
   return (
+    <>
     <main>
       <Navigation />
       <HeroSection />
@@ -260,8 +262,12 @@ export default function HomePage() {
             </p>
           </div>
           <TestimonialCarousel />
-</div>
+        </div>
       </section>
     </main>
+
+    {/* kAIte Floating Widget */}
+    <KAIteFloatingWidget />
+    </>
   )
 }

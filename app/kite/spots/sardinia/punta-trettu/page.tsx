@@ -4,6 +4,7 @@ import { SardiniaPartnerSchools } from "@/components/sardinia-partner-schools"
 import WindForecastCard from "@/components/weather/WindForecastCard"
 import Link from "next/link"
 import { ArrowLeft, MapPin, Wind, Clock, Users, Award } from "lucide-react"
+import { BreadcrumbNavigation } from "@/components/breadcrumb-navigation"
 
 export const metadata: Metadata = {
   title: "Kitesurf Punta Trettu | Flat-Water Sardinia Spot Guide",
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
     images: ["https://kitesafaris.com/sardinia-punta-trettu-kiteboarding-mediterranean-c.png"],
   },
   alternates: {
-    canonical: "https://www.kitesafaris.com/destinations/sardinia/punta-trettu",
+    canonical: "https://www.kitesafaris.com/kite/spots/sardinia/punta-trettu",
   },
 }
 
@@ -77,7 +78,7 @@ export default function PuntaTrettuPage() {
     "@type": "WebPage",
     "name": "Kitesurf Punta Trettu | Flat-Water Sardinia Spot Guide",
     "description": "Complete guide to Kitesurf Punta Trettu, Sardinia: schools, lessons, wind & season, spot map, and webcam. Book lessons and plan your trip.",
-    "url": "https://www.kitesafaris.com/destinations/sardinia/punta-trettu",
+    "url": "https://www.kitesafaris.com/kite/spots/sardinia/punta-trettu",
     "mainEntity": {
       "@type": "Place",
       "name": "Punta Trettu",
@@ -105,20 +106,26 @@ export default function PuntaTrettuPage() {
         {
           "@type": "ListItem",
           "position": 2,
-          "name": "Destinations",
-          "item": "https://kitesafaris.com/destinations"
+          "name": "Kite",
+          "item": "https://kitesafaris.com/kitesurfing-lessons"
         },
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Sardinia",
-          "item": "https://kitesafaris.com/destinations/sardinia"
+          "name": "Spots",
+          "item": "https://kitesafaris.com/kite/spots"
         },
         {
           "@type": "ListItem",
           "position": 4,
+          "name": "Sardinia",
+          "item": "https://kitesafaris.com/kite/spots/sardinia"
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
           "name": "Punta Trettu",
-          "item": "https://kitesafaris.com/destinations/sardinia/punta-trettu"
+          "item": "https://kitesafaris.com/kite/spots/sardinia/punta-trettu"
         }
       ]
     }
@@ -179,15 +186,14 @@ export default function PuntaTrettuPage() {
         {/* Breadcrumb */}
         <div className="pt-20 pb-4 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <nav className="flex items-center space-x-2 text-sm">
-              <Link href="/" className="text-gray-500 hover:text-deep-navy">Home</Link>
-              <span className="text-gray-400">/</span>
-              <Link href="/destinations" className="text-gray-500 hover:text-deep-navy">Destinations</Link>
-              <span className="text-gray-400">/</span>
-              <Link href="/destinations/sardinia" className="text-gray-500 hover:text-deep-navy">Sardinia</Link>
-              <span className="text-gray-400">/</span>
-              <span className="text-deep-navy font-medium">Punta Trettu</span>
-            </nav>
+            <BreadcrumbNavigation 
+              items={[
+                { label: "Kite", href: "/kitesurfing-lessons" },
+                { label: "Spots", href: "#" },
+                { label: "Sardinia", href: "/destinations/sardinia" },
+                { label: "Punta Trettu" }
+              ]} 
+            />
           </div>
         </div>
 
